@@ -1,9 +1,10 @@
-{# src/AppBundle/Resources/views/Trick/index.html.twig #}
+{# templates/trick/index.html.twig #}
 
 <!DOCTYPE html>
 <html>
   <head>
     <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
   </head>
   <body>
       <div class="col-xl-4">
@@ -16,5 +17,6 @@
         afficher ce hello world !
         </p>
       </div>
+      <script src="{{ asset('build/app.js') }}"></script>
     </body>
 </html>
