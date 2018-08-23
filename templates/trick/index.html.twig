@@ -1,22 +1,36 @@
 {# templates/trick/index.html.twig #}
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
-    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-  </head>
-  <body>
-      <div class="col-xl-4">
-        <h1>Hello {{ nom }} !</h1>
+{% extends 'trick/layout.html.twig' %}
 
-        <p>
-        Le Hello World est un grand classique en programmation.
-        Il signifie énormément, car cela veut dire que vous avez
-        réussi à exécuter le programme pour accomplir une tâche simple :
-        afficher ce hello world !
-        </p>
-      </div>
-      <script src="{{ asset('build/app.js') }}"></script>
-    </body>
-</html>
+{% block content %}
+
+    <!-- Home ================================================== -->
+
+    <div class="container-fluid">
+        <div id="home" class="row">
+            <img src="{{ asset('./build/images/homepage.jpg') }}">
+            <div id="home-text" class="col-xs-12 text-center">
+                <h2>
+                    <span class="light" style="opacity: 1; display: inline;">Can you build the website of my dreams?</span></h2>
+                <h1>
+                    <span class="bold" style="opacity: 1; display: inline;">Yup, we can do that.</span></h1>
+                <div id="learn-more" class="col-lg-12 text-center">
+                    <span class="medium" style="opacity: 1; display: inline;">Learn More</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4">
+                <h1>Hello
+                    {{ nom }}
+                    !</h1>
+
+                <p>
+                    Le Hello World est un grand classique en programmation. Il signifie énormément, car cela veut dire que vous avez réussi à exécuter le programme pour accomplir une tâche simple : afficher ce hello world !
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
