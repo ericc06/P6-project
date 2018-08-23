@@ -1,0 +1,47 @@
+// customize some Bootstrap variables
+$primary: darken(#428bca, 20%);
+
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    background-color: lightgray;
+    font-family: Helvetica, sans-serif;
+}
+
+.mr-zero {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#home {
+    background: url("/P6-project-flex/public/build/images/homepage.jpg") no-repeat;
+    background-size: 100%;
+    background-position: bottom;
+    opacity: 1;
+    z-index: 11;
+    position: relative;
+}
+
+#home img {
+    opacity: 0;
+    margin-top: 0;
+    width: 100%;
+}
+
+.row:before {
+    display: table;
+    content: " ";
+}
+
+:after, :before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#home-text {
+    position: absolute!important;
+    top: 35.8%!important;
+    color: white;
+}
