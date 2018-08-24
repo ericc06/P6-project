@@ -10,27 +10,33 @@
         <div id="home" class="row">
             <img src="{{ asset('./build/images/homepage.jpg') }}">
             <div id="home-text" class="col-xs-12 text-center">
-                <h2>
-                    <span class="light" style="opacity: 1; display: inline;">Can you build the website of my dreams?</span></h2>
                 <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">Yup, we can do that.</span></h1>
-                <div id="learn-more" class="col-lg-12 text-center">
-                    <span class="medium" style="opacity: 1; display: inline;">Learn More</span></div>
+                    <span class="bold" style="opacity: 1; display: inline;">Welcome to the snowboard tricks paradise!</span></h1>
             </div>
+        </div>
+        <div id="arrow-down">
+            <a href="#tricks-anchor">
+                <i class="fa fa-arrow-down" style="font-size:30px"></i>
+            </a>
         </div>
     </div>
 
     <div class="container">
-        <div class="row">
-            <div class="col-xl-4">
-                <h1>Hello
-                    {{ nom }}
-                    !</h1>
-
-                <p>
-                    Le Hello World est un grand classique en programmation. Il signifie énormément, car cela veut dire que vous avez réussi à exécuter le programme pour accomplir une tâche simple : afficher ce hello world !
-                </p>
-            </div>
-        </div>
+        <a class="anchor" id="tricks-anchor"></a>
+        <section class="row" id="tricks-list">
+            {% for i in 0..2 %}
+                <div class="row">
+                    {% for j in 0..4 %}
+                        <div class="col trick-thumbnail">
+                            <a href="trick-{{ i }}-{{ j }}.php">
+                                <!--<img src="images/tricks/trick-{{ i }}-{{ j }}-thumb.jpg" alt="bla-bla">-->
+                                <img src="{{ asset('./build/images/homepage.jpg') }}" alt="bla-bla">
+                            </a>
+                            <p>bla-bla</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </section>
     </div>
 {% endblock %}
