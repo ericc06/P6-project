@@ -1,12 +1,41 @@
 // customize some Bootstrap variables
 $primary: darken(#428bca, 20%);
 
+// customize some other variables
+
+/// Stroke font-character
+/// @param  {Integer} $stroke - Stroke width
+/// @param  {Color}   $color  - Stroke color
+/// @return {List}            - text-shadow list
+@function stroke($stroke, $color) {
+    $shadow: ();
+    $from: $stroke*-1;
+    @for $i from $from through $stroke {
+     @for $j from $from through $stroke {
+        $shadow: append($shadow, $i*1px $j*1px 0 $color, comma);
+      }
+    }
+    @return $shadow;
+  }
+  /// Stroke font-character
+  /// @param  {Integer} $stroke - Stroke width
+  /// @param  {Color}   $color  - Stroke color
+  /// @return {Style}           - text-shadow
+  @mixin stroke($stroke, $color) {
+    text-shadow: stroke($stroke, $color);
+  }
+
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
 
 body {
     background-color: lightgray;
     font-family: Helvetica, sans-serif;
+}
+
+#override-bs-css-navbar, #override-bs-css-header {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .mr-zero {
@@ -16,8 +45,8 @@ body {
 
 #home {
     background: url("/P6-project-flex/public/build/images/homepage.jpg") no-repeat;
-    background-size: 100%;
-    background-position: bottom;
+    background-size: auto calc(100vh - 56px);
+    background-position: 25%  bottom;
     opacity: 1;
     z-index: 11;
     position: relative;
@@ -26,7 +55,8 @@ body {
 #home img {
     opacity: 0;
     margin-top: 0;
-    width: 100%;
+    /*width: 100%;*/
+    height: calc(100vh - 56px);
 }
 
 .row:before {
@@ -43,5 +73,46 @@ body {
 #home-text {
     position: absolute!important;
     top: 35.8%!important;
-    color: white;
+    width: 100%;
+    color: black;
+    text-shadow: stroke(2, white);
+    /*text-shadow: 0 0 2px #fff; /* horizontal-offset vertical-offset 'blur' colour 
+    -moz-text-shadow: 0 0 2px #fff;
+    -webkit-text-shadow: 0 0 2px #fff;
+    */
+}
+
+#arrow-down {
+    position: relative;
+    float: right;
+    /*margin-left:auto;
+    margin-right:15px;*/
+    margin-top: -70px;
+    z-index: 100;
+}
+
+#arrow-down a {
+    color:black;
+}
+
+#tricks-list {
+    margin-top: 30px;
+}
+.trick-thumbnail {
+    width: 100%;
+    border: 1px solid black;
+    padding: 0px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.trick-thumbnail p {
+    border-top: 1px solid black;
+    margin-bottom: 0px;
+}
+
+.trick-thumbnail img {
+/*    border: 1px solid black;*/
+    width: 186px;
 }
