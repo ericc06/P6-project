@@ -1,0 +1,107 @@
+{# templates/trick/view.html.twig #}
+
+{% extends 'trick/layout.html.twig' %}
+
+{% block content %}
+
+    <!-- Detail page ================================================== -->
+
+    <div class="container-fluid">
+        <div id="home" class="row">
+            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image" class="bg-img">
+        </div>
+    </div>
+    <div class="container main">
+        <div class="container header-img-div">
+            <div class="trick-header row">
+                <img src="{{ asset('./build/images/trick_buttering.jpg') }}">
+                <div id="home-text" class="col-xs-12 text-center">
+                    <h1>
+                        <span class="bold" style="opacity: 1; display: inline;">{{ nom }}
+                            TRICK DETAILS PAGE</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <a class="anchor" id="tricks-anchor"></a>
+            <section class="row" id="trick-detail-list">
+                {% for i in 0..3 %}
+                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnails-div">
+                        <article class="trick-photo-thumbnail">
+                            <a href="trick-{{ i }}.php">
+                                <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="bla-bla">-->
+                                <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="bla-bla">
+                            </a>
+                            <p>bla-bla</p>
+                        </article>
+                    </div>
+                {% endfor %}
+                {% for i in 0..3 %}
+                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
+                        <article class="trick-video-thumbnail">
+                            <iframe class="video-iframe" src="https://www.youtube.com/embed/XKpLbVu3mP4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
+                            <p>bla-bla</p>
+                        </article>
+                    </div>
+                {% endfor %}
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="row col-10 offset-1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="row">
+                <div class="col-2 offset-3 border border-primary rounded">
+                    Créé le 12/08/2018
+                </div>
+                <div class="col-2 border border-primary rounded">
+                    Groupe : Test
+                </div>
+                <div class="col-2 border border-primary rounded">
+                    Modifié le 17/08/2018
+                </div>
+            </section>
+        </div>
+        <hr>
+        <div class="container">
+            <section class="row">
+                <form id="leave-comment-form">
+                    <div id="form-div">
+                        <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
+                        <button type="submit">Leave a comment</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+        <hr>
+        <div class="container">
+            <section class="row">
+                <div class="comment-div">
+                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="comment-div">
+                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </div>
+                <div class="comment-div">
+                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </div>
+                <div class="container">
+                    <section class="row">
+                        <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </div>
+
+{% endblock %}
