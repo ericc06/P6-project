@@ -15,7 +15,7 @@
                 <!-- Navigation ================================================== -->
 
                 <div class="container-fluid" id="override-bs-css-navbar">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light xs-fixed-bottom">
                         <a class="navbar-brand" href="#">Navbar</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -53,6 +53,16 @@
         </div>
 
         {% block body %}{% endblock %}
+
+        <footer class="container-fluid bg-light">
+                <div class="container wide-container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="medium">Copyright © 2018</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
