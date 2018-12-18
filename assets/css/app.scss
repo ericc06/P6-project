@@ -73,9 +73,13 @@ body {
   box-sizing: border-box;
 }
 
-#home-text {
-  position: absolute !important;
-  top: 35.8% !important;
+.text-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*  position: absolute !important;
+  top: 35.8% !important;*/
   width: 100%;
   color: black;
   text-shadow: stroke(2, white);
@@ -105,35 +109,49 @@ body {
 
 /* Home page */
 .trick-thumbnail {
-    width: 100%;
-    border: 1px solid black;
-    padding: 0px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+  width: 100%;
+  border: 1px solid black;
+  padding: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .trick-thumbnail p {
-    border-top: 1px solid black;
-    margin-bottom: 0px;
+  border-top: 1px solid black;
+  margin-bottom: 0px;
 }
 
 .trick-thumbnail img {
-/*    border: 1px solid black;*/
-    width: 100%;
+  /*    border: 1px solid black;*/
+  width: 100%;
 }
 
 /* Trick details page */
+
+.faded-bg-img img {
+  opacity: 0.4;
+  height: calc(100vh - #{$header-height});
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 11;
+  position: relative;
+}
+
 .trick-photo-thumbnail {
   width: 100%;
   border: 1px solid black;
   padding: 0px;
+  margin-top: 10px;
   margin-left: 0px;
   margin-right: 0px;
 }
 
-.trick-photo-thumbnails-div {
-  padding-bottom: 30px;
+.trick-photo-thumbnail-div,
+.trick-video-thumbnail-div {
+  /*padding-bottom: 30px;*/
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .trick-photo-thumbnail p {
@@ -156,15 +174,17 @@ footer {
   padding-top: 20px;
 }
 
-.bg-img {
+#home img.bg-img {
   opacity: 0.5;
 }
 .main {
-  position: relative;
-  margin-top: -88vh;
+  position: absolute;
+  top: 56px;
   z-index: 10000;
-  margin-left: auto;
-  margin-right: auto;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  padding-bottom: 30px;
   background-color: white;
 }
 
@@ -172,7 +192,7 @@ footer {
   padding: 0;
 }
 .trick-header {
-  margin-top: 30px;
+  position: relative;
 }
 
 .trick-header img {
@@ -180,10 +200,49 @@ footer {
   height: 100%;
 }
 
-.trick-video-thumbnail,
-.video-iframe {
-  width: 158px;
-  height: 116px;
+.see-medias-btn-div {
+  margin-top: 15px;
+}
+
+.trick-video-thumbnail {
+  width: 100%;
+  border: 1px solid black;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 10px;
+  padding-top: 55.5%;
+  position: relative;
+}
+.trick-video-thumbnail iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.trick-description {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.trick-info-box {
+  padding: 10px;
+}
+.trick-info-text {
+  display: inline-block;
+  margin: auto;
+}
+
+.inner {
+  display: flex;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px 0;
+  border: 1px solid;
+  height: 100%;
 }
 
 hr {
@@ -213,9 +272,10 @@ hr {
 .comment-avatar {
   display: inline-block;
   white-space: normal;
-  vertical-align: middle;
+  vertical-align: top;
   text-align: center;
   margin-left: 25%;
+  margin-top: 15px;
   width: 40px;
   border-radius: 50%;
 }
@@ -223,11 +283,12 @@ hr {
 .comment-text {
   display: inline-block;
   white-space: normal;
-  vertical-align: middle;
-  text-align: center;
+  vertical-align: top;
+  text-align: left;
   margin: 10px auto 10px 20px;
   width: 40%;
   border: 1px solid black;
+  padding: 5px;
 }
 
 /* max-width: 575px */
@@ -239,9 +300,28 @@ hr {
     left: 0;
     z-index: 1030;
   }
-  .trick-thumbnails-div {
+  .trick-thumbnails-div,
+  .trick-photo-thumbnail-div,
+  .trick-video-thumbnail-div {
     width: 100%;
     flex-basis: unset;
+  }
+  #leave-comment-form {
+    width: 100%;
+  }
+  #form-div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  #leave-comment-text {
+    flex: 1 1 auto;
+  }
+  .comment-avatar {
+    margin-left: 5%;
+  }
+  .comment-text {
+    width: 75%;
   }
 }
 
@@ -254,6 +334,25 @@ hr {
     left: unset;
     z-index: unset;
   }
+
+  #leave-comment-form {
+    width: unset;
+  }
+  #form-div {
+    display: block;
+    width: unset;
+  }
+  #leave-comment-text {
+    flex: unset;
+  }
+
+
+  .comment-avatar {
+    margin-left: 10%;
+  }
+  .comment-text {
+    width: 70%;
+  }
 }
 
 /* min-width: 768px */
@@ -262,10 +361,22 @@ hr {
     flex: 0 0 20%;
     max-width: 20%;
   }
+  .comment-avatar {
+    margin-left: 15%;
+  }
+  .comment-text {
+    width: 60%;
+  }
 }
 
 /* min-width: 992px */
 @include media-breakpoint-up(lg) {
+  .comment-avatar {
+    margin-left: 20%;
+  }
+  .comment-text {
+    width: 45%;
+  }
 }
 
 /* min-width: 1200px */
@@ -273,6 +384,12 @@ hr {
   .col-xl-2_4 {
     flex: 0 0 20%;
     max-width: 20%;
+  }
+  .comment-avatar {
+    margin-left: 25%;
+  }
+  .comment-text {
+    width: 40%;
   }
 }
 
