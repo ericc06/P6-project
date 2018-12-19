@@ -315,7 +315,13 @@ hr {
     width: 100%;
   }
   #leave-comment-text {
-    flex: 1 1 auto;
+    width: unset;
+    margin: 10px;
+  }
+  #form-div button {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
   }
   .comment-avatar {
     margin-left: 5%;
@@ -340,12 +346,23 @@ hr {
   }
   #form-div {
     display: block;
+    flex-direction: unset;
     width: unset;
   }
   #leave-comment-text {
-    flex: unset;
+    width: 300px;
+    height: 30px;
+    margin: unset;
+    top: 5px;
+    position: relative;
   }
-
+  #form-div button {
+    width: unset;
+    margin-left: unset;
+    margin-right: unset;
+    top: -5px;
+    position: relative;
+  }
 
   .comment-avatar {
     margin-left: 10%;
