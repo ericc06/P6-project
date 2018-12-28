@@ -1,6 +1,6 @@
 {# templates/trick/index.html.twig #}
 
-{% extends 'trick/layout.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block content %}
 
@@ -27,7 +27,8 @@
             {% for i in 0..14 %}
                 <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
                     <article class="trick-thumbnail">
-                        <a href="trick-{{ i }}.php">
+                        <!--<a href="trick-{{ i }}.php">-->
+                            <a href="http://localhost/P6-project-flex/public/trick/test">
                             <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="bla-bla">-->
                             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="thumbnail">
                         </a>
