@@ -18,7 +18,7 @@ class TrickController extends AbstractController
         $env = getenv('APP_ENV');
         $content = $this
             ->get('templating')
-            ->render('trick/index.html.twig', array('nom' => $env));
+            ->render('index.html.twig', array('nom' => $env));
         return new Response($content);
         //return new Response("test");
     }
