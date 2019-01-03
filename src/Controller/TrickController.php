@@ -20,7 +20,6 @@ class TrickController extends AbstractController
             ->get('templating')
             ->render('index.html.twig', array('nom' => $env));
         return new Response($content);
-        //return new Response("test");
     }
 
     /**
