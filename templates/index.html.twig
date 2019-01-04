@@ -1,0 +1,48 @@
+{# templates/trick/index.html.twig #}
+
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <!-- Home ================================================== -->
+
+    <div class="container-fluid">
+        <div id="home" class="row">
+            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
+            <div id="home-text" class="col-xs-12 text-center">
+                <h1>
+                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - Welcome to the snowboard tricks paradise!</span></h1>
+            </div>
+        </div>
+        <div id="arrow-down">
+            <a href="#tricks-anchor">
+                <i class="fa fa-arrow-down" style="font-size:30px"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <a class="anchor" id="tricks-anchor"></a>
+        <section class="row" id="tricks-list">
+            {% for i in 0..14 %}
+                <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
+                    <article class="trick-thumbnail">
+                        <!--<a href="trick-{{ i }}.php">-->
+                            <a href="http://localhost/P6-project-flex/public/trick/test">
+                            <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="bla-bla">-->
+                            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="thumbnail">
+                        </a>
+                        <p>bla-bla</p>
+                    </article>
+                </div>
+            {% endfor %}
+        </section>
+    </div>
+
+    <div class="container">
+        <section class="row">
+            <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+        </section>
+    </div>
+
+{% endblock %}

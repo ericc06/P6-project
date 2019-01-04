@@ -1,0 +1,450 @@
+// customize some Bootstrap variables
+$primary: darken(#428bca, 20%);
+
+// customize some other variables
+$header-height: 56px;
+
+/// Stroke font-character
+/// @param  {Integer} $stroke - Stroke width
+/// @param  {Color}   $color  - Stroke color
+/// @return {List}            - text-shadow list
+@function stroke($stroke, $color) {
+  $shadow: ();
+  $from: $stroke * -1;
+  @for $i from $from through $stroke {
+    @for $j from $from through $stroke {
+      $shadow: append($shadow, $i * 1px $j * 1px 0 $color, comma);
+    }
+  }
+  @return $shadow;
+}
+/// Stroke font-character
+/// @param  {Integer} $stroke - Stroke width
+/// @param  {Color}   $color  - Stroke color
+/// @return {Style}           - text-shadow
+@mixin stroke($stroke, $color) {
+  text-shadow: stroke($stroke, $color);
+}
+
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  background-color: lightgray;
+  font-family: Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-bg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 56px;
+}
+
+.page-bg::after {
+  content: "";
+  background-image: url(/P6-project-flex/public/./build/images/trick_buttering.jpg);
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1; 
+}
+
+#override-bs-css-navbar,
+#override-bs-css-header {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.mr-zero {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+#home {
+  background: url("/P6-project-flex/public/build/images/homepage.jpg") no-repeat;
+  background-size: auto calc(100vh - #{$header-height});
+  background-position: 25% bottom;
+  opacity: 1;
+  z-index: 11;
+  position: relative;
+}
+
+#home img {
+  opacity: 0;
+  margin-top: 0;
+  width: 100%;
+  height: calc(100vh - #{$header-height});
+}
+
+.row:before {
+  display: table;
+  content: " ";
+}
+
+:after,
+:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.text-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*  position: absolute !important;
+  top: 35.8% !important;*/
+  width: 100%;
+  color: black;
+  text-shadow: stroke(2, white);
+  /*text-shadow: 0 0 2px #fff; /* horizontal-offset vertical-offset 'blur' colour 
+    -moz-text-shadow: 0 0 2px #fff;
+    -webkit-text-shadow: 0 0 2px #fff;
+    */
+}
+
+#arrow-down {
+  position: relative;
+  float: right;
+  /*margin-left:auto;
+    margin-right:15px;*/
+  margin-top: -70px;
+  z-index: 100;
+}
+
+#arrow-down a {
+  color: black;
+}
+
+#tricks-list {
+  margin-top: 30px;
+  align-content: center;
+}
+
+/* Home page */
+.trick-thumbnail {
+  width: 100%;
+  border: 1px solid black;
+  padding: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.trick-thumbnail p {
+  border-top: 1px solid black;
+  margin-bottom: 0px;
+}
+
+.trick-thumbnail img {
+  /*    border: 1px solid black;*/
+  width: 100%;
+}
+
+/* Trick details page */
+
+.faded-bg-img img {
+  opacity: 0.4;
+  height: calc(100vh - #{$header-height});
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 11;
+  position: relative;
+}
+
+.trick-photo-thumbnail {
+  width: 100%;
+  border: 1px solid black;
+  padding: 0px;
+  margin-top: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.trick-photo-thumbnail-div,
+.trick-video-thumbnail-div {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.trick-photo-thumbnail p {
+  border-top: 1px solid black;
+  margin-bottom: 0px;
+}
+
+.trick-photo-thumbnail img {
+  width: 100%;
+}
+
+.center-button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  margin-top: 30px;
+  padding-top: 20px;
+}
+
+#home img.bg-img {
+  opacity: 0.5;
+}
+.main {
+  /*  position: absolute;
+  top: 56px;
+  z-index: 10000;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);*/
+  padding-bottom: 30px;
+  background-color: white;
+  margin-top: 4vw;
+}
+
+.header-img-div {
+  padding: 0;
+}
+.trick-header {
+  position: relative;
+}
+
+.trick-header img {
+  width: 100%;
+  height: 100%;
+}
+
+.see-medias-btn-div {
+  margin-top: 15px;
+}
+
+.trick-video-thumbnail {
+  width: 100%;
+  border: 1px solid black;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 10px;
+  padding-top: 55.5%;
+  position: relative;
+}
+
+.trick-video-thumbnail iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.trick-description {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.trick-info-box {
+  padding: 10px;
+}
+.trick-info-text {
+  display: inline-block;
+  margin: auto;
+}
+
+.inner {
+  display: flex;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px 0;
+  border: 1px solid;
+  height: 100%;
+}
+
+hr {
+  width: 55%;
+  border-color: #444;
+}
+#leave-comment-form {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#form-div {
+  display: inline-block;
+}
+
+#leave-comment-text {
+  width: 300px;
+  margin-bottom: -10px;
+}
+
+.comment-div {
+  width: 100%;
+  display: inline-block;
+  /*border: 1px dotted red;*/
+}
+
+.comment-avatar {
+  display: inline-block;
+  white-space: normal;
+  vertical-align: top;
+  text-align: center;
+  margin-left: 25%;
+  margin-top: 15px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.comment-text {
+  display: inline-block;
+  white-space: normal;
+  vertical-align: top;
+  text-align: left;
+  margin: 10px auto 10px 20px;
+  width: 40%;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+/* max-width: 575px */
+@include media-breakpoint-up(xs) {
+  .xs-fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+  }
+  .trick-thumbnails-div,
+  .trick-photo-thumbnail-div,
+  .trick-video-thumbnail-div {
+    width: 100%;
+    flex-basis: unset;
+  }
+  #leave-comment-form {
+    width: 100%;
+  }
+  #form-div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  #leave-comment-text {
+    width: unset;
+    margin: 10px;
+  }
+  #form-div button {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .comment-avatar {
+    margin-left: 5%;
+  }
+  .comment-text {
+    width: 75%;
+  }
+}
+
+/* min-width: 576px */
+@include media-breakpoint-up(sm) {
+  .xs-fixed-bottom {
+    position: unset;
+    right: unset;
+    bottom: unset;
+    left: unset;
+    z-index: unset;
+  }
+
+  #leave-comment-form {
+    width: unset;
+  }
+  #form-div {
+    display: block;
+    flex-direction: unset;
+    width: unset;
+  }
+  #leave-comment-text {
+    width: 300px;
+    height: 30px;
+    margin: unset;
+    top: 5px;
+    position: relative;
+  }
+  #form-div button {
+    width: unset;
+    margin-left: unset;
+    margin-right: unset;
+    top: -5px;
+    position: relative;
+  }
+
+  .comment-avatar {
+    margin-left: 10%;
+  }
+  .comment-text {
+    width: 70%;
+  }
+}
+
+/* min-width: 768px */
+@include media-breakpoint-up(md) {
+  .col-lg-2_4 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+  .comment-avatar {
+    margin-left: 15%;
+  }
+  .comment-text {
+    width: 60%;
+  }
+}
+
+/* min-width: 992px */
+@include media-breakpoint-up(lg) {
+  .comment-avatar {
+    margin-left: 20%;
+  }
+  .comment-text {
+    width: 45%;
+  }
+}
+
+/* min-width: 1200px */
+@include media-breakpoint-up(xl) {
+  .col-xl-2_4 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+  .comment-avatar {
+    margin-left: 25%;
+  }
+  .comment-text {
+    width: 40%;
+  }
+}
+
+/*
+@media (min-width:992px) and (max-width:1199px ){
+}
+
+@media (min-width:768px) and (max-width:991px ){
+}
+
+@media (min-width:576px) and (max-width:767px ){
+}
+
+@media (max-width:575px ){
+}
+*/
