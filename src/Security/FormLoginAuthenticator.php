@@ -32,13 +32,13 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     {
         $this->entityManager = $entityManager;
         $this->router = $router;
-        $this->csrfTokenManager = $csrfTokenManager;
+        //$this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
     }
 
     public function supports(Request $request)
     {
-        return 'security_login' === $request->attributes->get('_route')
+        return 'user_registration' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -47,7 +47,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         $credentials = [
             'username' => $request->request->get('username'),
             'password' => $request->request->get('password'),
-            'csrf_token' => $request->request->get('_csrf_token'),
+            //'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
@@ -59,11 +59,12 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+        /*
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-
+        */
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
@@ -90,6 +91,6 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     protected function getLoginUrl()
     {
-        return $this->router->generate('security_login');
+        return $this->router->generate('user_registration');
     }
 }
