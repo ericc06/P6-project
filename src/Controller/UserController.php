@@ -14,6 +14,28 @@ class UserController extends AbstractController
     /**
      * @Route("/registration", name="user_registration")
      */
+    public function registration(AuthenticationUtils $authenticationUtils): Response
+    {
+        // Instancier objet User
+        // création de formulaire FormType
+        // handle request / isvalid
+        // Utilisation de l'encodeur de mdp de Symfony
+        // Entitymanager
+
+        // erreur d'authentification (s'il y en a une)
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // dernier identifiant de connexion utilisé
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('user/registration.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+            ]
+        );
+    }
+    /**
+     * @Route("/login", name="user_login")
+     */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // erreur d'authentification (s'il y en a une)
@@ -21,7 +43,7 @@ class UserController extends AbstractController
         // dernier identifiant de connexion utilisé
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('user/registration.html.twig', [
+        return $this->render('user/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
             ]
