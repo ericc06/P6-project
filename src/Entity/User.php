@@ -24,25 +24,43 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
-    private $fullName;
+    private $fullName = "";
 
     /**
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
-    private $username;
+    private $username = "";
 
     /**
      * @ORM\Column(type="string", unique=true)
      * @Assert\Email()
      */
-    private $email;
+    private $email = "";
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $password ="";
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank(message="Merci de charger votre photo.")
+     * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif" })
+     */
+    private $avatar;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActiveAccount;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $activationToken;
 
     /**
      * @ORM\Column(type="json")
@@ -92,6 +110,42 @@ class User implements UserInterface
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getIsActiveAccount()
+    {
+        return $this->avatar;
+    }
+
+    public function setIsActiveAccount($isActiveAccount)
+    {
+        $this->isActiveAccount = $isActiveAccount;
+
+        return $this;
+    }
+
+    public function getActivationToken()
+    {
+        return $this->activationToken;
+    }
+
+    public function setActivationToken($activationToken)
+    {
+        $this->activationToken = $activationToken;
+
+        return $this;
     }
 
     public function getRoles(): array

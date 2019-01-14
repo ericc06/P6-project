@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-sm-5">
             <div class="well">
-                <form action="{{ path('user_registration') }}" method="post">
+                <form action="{{ path('user_login') }}" method="post">
                     <fieldset>
                         <legend><i class="fa fa-lock" aria-hidden="true"></i> {{ 'title.login'|trans }}</legend>
                         <div class="form-group">
@@ -22,7 +22,7 @@
                             <input type="password" id="password" name="password" class="form-control" />
                         </div>
                         <input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}"/>
-                        {#<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>#}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-sign-in" aria-hidden="true"></i> {{ 'action.sign_in'|trans }}
                         </button>

@@ -14,6 +14,8 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 62fd2fd775354fe3d9cbb65c770aac7ea687a6cd
+    locale: 'en'
+    images_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
     # default configuration for services in *this* file
