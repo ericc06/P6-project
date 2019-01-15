@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
@@ -26,7 +27,7 @@ class UserController extends Controller
      *
      * @Route("/registration", name="user_registration")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
         // On crée un objet User
         $user = new User();
@@ -55,13 +56,18 @@ class UserController extends Controller
 
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
+
+                $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+                $user->setPassword($encoded);
+
                 // $file stores the uploaded image file
                 /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
                 $file = $user->getAvatar();
 
                 $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
 
-                // Move the file to the directory where iamges are stored
+                // Move the file to the directory where images are stored
                 try {
                     $file->move(
                         $this->getParameter('images_directory'),
@@ -71,6 +77,7 @@ class UserController extends Controller
                     // ... handle exception if something happens during file upload
                     // TODO...
                 }
+
 
                 // updates the 'avatar' property to store the image file name
                 // instead of its contents
@@ -113,6 +120,7 @@ class UserController extends Controller
     /**
      * @Route("/registration2", name="user_registration2")
      */
+    /*
     public function registration(AuthenticationUtils $authenticationUtils): Response
     {
         // Instancier objet User
@@ -132,6 +140,8 @@ class UserController extends Controller
         ]
         );
     }
+    */
+    
     /**
      * @Route("/login", name="user_login")
      */
