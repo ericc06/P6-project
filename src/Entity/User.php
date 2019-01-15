@@ -58,7 +58,7 @@ class User implements UserInterface
     private $isActiveAccount;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $activationToken;
 
