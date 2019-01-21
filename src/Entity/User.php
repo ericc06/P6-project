@@ -22,7 +22,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\NotBlank()
      */
     private $fullName = "";
 
@@ -47,7 +46,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank(message="Merci de charger votre photo.")
      * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif" })
      */
     private $avatar;
