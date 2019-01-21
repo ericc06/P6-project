@@ -37,11 +37,73 @@ class UserController extends Controller
 
         // On ajoute les champs de l'entité que l'on veut à notre formulaire
         $formBuilder
-            ->add('fullname', TextType::class)
+            //->add('fullname', TextType::class)
             ->add('username', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
-            ->add('avatar', FileType::class, array('label' => 'Votre avatar'))
+            //->add('avatar', FileType::class, array('label' => 'Votre avatar'))
+            ->add('save', SubmitType::class)
+        ;
+
+        // À partir du formBuilder, on génère le formulaire
+        $form = $formBuilder->getForm();
+
+        // Si la requête est en POST
+        if ($request->isMethod('POST')) {
+            // On fait le lien Requête <-> Formulaire
+            // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
+            $form->handleRequest($request);
+
+            // On vérifie que les valeurs entrées sont correctes
+            if ($form->isValid()) {
+                $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+                $user->setPassword($encoded);
+
+                $user->setIsActiveAccount(false);
+                $user->setActivationToken(random_int(1000000000, 9999999999));
+
+                // On enregistre notre objet $user dans la base de données
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+
+                $request->getSession()->getFlashBag()->add('notice', 'Un email de validation vous a été envoyé. Merci de le vérifier.');
+
+                // On redirige vers la page d'accueil
+                return $this->redirectToRoute('homepage', array());
+            }
+        }
+        
+        // À ce stade, le formulaire n'est pas valide car :
+        // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
+        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
+
+        return $this->render('user/add.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * User profile modification form.
+     *
+     * @Route("/edit-profile", name="user_profile_edition")
+     */
+    public function editAction(Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        // On crée un objet User
+        $user = new User();
+
+        // On crée le FormBuilder grâce au service form factory
+        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $user);
+
+        // On ajoute les champs de l'entité que l'on veut à notre formulaire
+        $formBuilder
+            //->add('fullname', TextType::class)
+            ->add('username', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('password', PasswordType::class)
+            //->add('avatar', FileType::class, array('label' => 'Votre avatar'))
             ->add('save', SubmitType::class)
         ;
 
