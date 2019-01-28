@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -31,18 +32,19 @@ class UserController extends Controller
         $user = new User();
 
         // On crée le FormBuilder grâce au service form factory
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $user);
-
+        //$formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $user);
+        $formBuilder = $this->get('form.factory')->createBuilder(UserType::class, $user);
+/*
         // On ajoute les champs de l'entité que l'on veut à notre formulaire
         $formBuilder
-        //->add('fullname', TextType::class)
-        ->add('username', TextType::class)
+            //->add('fullname', TextType::class)
+            ->add('username', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
-        //->add('avatar', FileType::class, array('label' => 'Votre avatar'))
+            //->add('avatar', FileType::class, array('label' => 'Votre avatar'))
             ->add('save', SubmitType::class)
         ;
-
+*/
         // À partir du formBuilder, on génère le formulaire
         $form = $formBuilder->getForm();
 
@@ -66,18 +68,25 @@ class UserController extends Controller
                 $em->persist($user);
                 $em->flush();
 
+                /*$validation_url = $this->generateUrl(
+                    'registration_confirm',
+                    [
+                        'm' => $user->getEmail(),
+                        't' => $user->getActivationToken()
+                    ]
+                );*/
                 $validation_url = "http://localhost/P6-project-flex/public/confirm?m=".$user->getEmail()."t=".$user->getActivationToken();
 
                 // Le message
-                $message = "Bonjour,\r\nVous avez demandé la création d'une compte utilisateur sur le site de référence du snowboard.\r\nPour confirmer votre inscription, veuillez cliquer sur ce lien.\r\nMerci.\r\nA très bientôt.";
+                $message = "Bonjour,\r\nVous avez demandé la création d'une compte utilisateur sur le site de référence du snowboard.\r\nPour confirmer votre inscription, veuillez cliquer <a href='" . $validation_url . "' target='_blank'>sur ce lien</a>.\r\nMerci.\r\nA très bientôt.";
 
                 // Dans le cas où nos lignes comportent plus de 70 caractères, nous les coupons en utilisant wordwrap()
                 $message = wordwrap($message, 70, "\r\n");
 
                 // Envoi du mail
                 //mail($user->getEmail, "Demande de confirmation d'inscription", $message);
-                mail("eric.codron@gmail.com", "Demande de confirmation d'inscription", $message);
-
+/*                mail("eric.codron@gmail.com", "Demande de confirmation d'inscription", $message);
+*/
 
                 $request->getSession()->getFlashBag()->add('notice', 'Un email de validation vous a été envoyé. Merci de le vérifier.');
 
