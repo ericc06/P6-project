@@ -1,12 +1,22 @@
 {# templates/user/add.html.twig #}
 {% extends 'layout.html.twig' %}
 {% block content %}
-    <div class="row">
-        <div class="col-sm-5">
-            <div class="well">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-                {{ form_end(form) }}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="well">
+                    {{ form_start(form) }}
+                    <legend>
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        {% trans %}Create an account{% endtrans %}
+                    </legend>
+                    {# form_widget(form) #}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                    <input class="btn" type="submit" value="Create"/>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
             </div>
         </div>
     </div>
