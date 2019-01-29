@@ -5,15 +5,20 @@
         <div class="row">
             <div class="col-sm-5">
                 <div class="well">
+                    {{ flashBag }}
                     {{ form_start(form) }}
                     <legend>
                         <i class="fa fa-lock" aria-hidden="true"></i>
                         {% trans %}Create an account{% endtrans %}
                     </legend>
+                    <div class="my-custom-class-for-errors">
+                        {{ form_errors(form) }}
+                    </div>
                     {# form_widget(form) #}
                     {{ form_row(form.username) }}
                     {{ form_row(form.email) }}
                     {{ form_row(form.password) }}
+                    {{ form_row(form._token) }}
                     <input class="btn" type="submit" value="Create"/>
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
