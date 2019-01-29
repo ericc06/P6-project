@@ -1,0 +1,10 @@
+{# templates/emails/registration.html.twig #}
+<h3>Votre demande d'enregistrement a bien été prise en compte !</h3>
+
+<p>Bonjour {{ userName }},<p>
+<p>Vous avez demandé la création d'une compte utilisateur sur le site de référence du snowboard.</p>
+<p>Pour confirmer votre inscription, veuillez cliquer <a href="{{ validationUrl }}" target="_blank">sur ce lien</a>.</p>
+<p>Merci. A très bientôt.</p>
+
+{# Makes an absolute URL to the /images/logo.png file #}
+<img src="{{ absolute_url(asset('images/logo.png')) }}">
