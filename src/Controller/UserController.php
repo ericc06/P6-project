@@ -38,12 +38,12 @@ class UserController extends Controller
         // On crée le formulaire
         $form = $this->createForm(UserType::class, $user);
 
-        $flashBag = "";
+        /*$flashBag = "";
         foreach ($session->getFlashBag()->all() as $type => $messages) {
             foreach ($messages as $message) {
                 $flashBag .= '<div class="flash-' . $type . '">' . $message . '</div>';
             }
-        }
+        }*/
 
         // Si la requête est en POST
         if ($request->isMethod('POST')) {
@@ -52,20 +52,22 @@ class UserController extends Controller
 
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
-                $this->userManager->persistUser($user);
-
-                if (true === $this->userManager->sendValidationEmail($user, $request)) {
-                    /*return $this->render('index.html.twig', array(
+                if (true === $this->userManager->persistUser($user, $request)) {
+                    if (true === $this->userManager->sendValidationEmail($user, $request)) {
+                        /*return $this->render('index.html.twig', array(
                         'nom' => 'dev',
                         'flashBag' => $flashBag
-                    ));*/
-                    return $this->redirectToRoute('homepage');
+                        ));*/
+                        return $this->redirectToRoute('homepage');
+                    } else {
+                        /*return $this->render('user/add.html.twig', array(
+                            'form' => $form->createView(),
+                            'flashBag' => $flashBag,
+                        ));*/
+                        return $this->redirectToRoute('user_registration');
+                    }
                 } else {
-                    return $this->render('user/add.html.twig', array(
-                        'form' => $form->createView(),
-                        'flashBag' => $flashBag,
-                    ));
-                    //return $this->redirectToRoute('user_registration');
+                    return $this->redirectToRoute('user_login');
                 }
             }
         }
@@ -75,8 +77,7 @@ class UserController extends Controller
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
 
         return $this->render('user/add.html.twig', array(
-            'form' => $form->createView(),
-            'flashBag' => $flashBag,
+            'form' => $form->createView()
         ));
     }
 
