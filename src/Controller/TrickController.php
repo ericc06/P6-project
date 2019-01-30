@@ -17,19 +17,10 @@ class TrickController extends AbstractController
      */
     public function index(Request $request)
     {
-        /*$session = new Session();
-        $session->start();*/
-        $session = $request->getSession();
         $env = getenv('APP_ENV');
-        $flashBag = "NOTIF : ";
-        foreach ($session->getFlashBag()->all() as $type => $messages) {
-            foreach ($messages as $message) {
-                $flashBag .= '<div class="flash-'.$type.'">'.$message.'</div>';
-            }
-        }
+
         return $this->render('index.html.twig', array(
-            'nom' => $env,
-            'flashBag' => $flashBag
+            'nom' => $env
         ));
     }
 

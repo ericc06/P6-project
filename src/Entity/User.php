@@ -54,7 +54,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActiveAccount;
+    private $isActiveAccount = false;
 
     /**
      * @ORM\Column(type="string")
@@ -71,14 +71,14 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function setFullName(string $fullName): void
-    {
-        $this->fullName = $fullName;
-    }
-
     public function getFullName(): string
     {
         return $this->fullName;
+    }
+
+    public function setFullName(string $fullName): void
+    {
+        $this->fullName = $fullName;
     }
 
     public function getUsername(): string
@@ -116,23 +116,19 @@ class User implements UserInterface
         return $this->avatar;
     }
 
-    public function setAvatar($avatar)
+    public function setAvatar(file $avatar): void
     {
         $this->avatar = $avatar;
-
-        return $this;
     }
 
     public function getIsActiveAccount()
     {
-        return $this->avatar;
+        return $this->isActiveAccount;
     }
 
-    public function setIsActiveAccount($isActiveAccount)
+    public function setIsActiveAccount(bool $isActiveAccount): void
     {
         $this->isActiveAccount = $isActiveAccount;
-
-        return $this;
     }
 
     public function getActivationToken()
@@ -140,7 +136,7 @@ class User implements UserInterface
         return $this->activationToken;
     }
 
-    public function setActivationToken($activationToken)
+    public function setActivationToken(string $activationToken)
     {
         $this->activationToken = $activationToken;
 

@@ -4,12 +4,12 @@
 namespace App\Service;
 
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserManager extends Controller
@@ -26,19 +26,31 @@ class UserManager extends Controller
         $this->encoder = $encoder;
         $this->container = $container;
         $this->mailer = $mailer;
+        $this->em = $this->getDoctrine()->getManager();
     }
+
+    public function saveUserToDB(User $user)
+    {
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
+    public function deleteUserFromDB(User $user)
+    {
+        $this->em->remove($user);
+        $this->em->flush();
+    }
+
 
     public function persistUser(User $user, Request $request)
     {
         $this->logger->info('IN persistUser  <<<<<<<<<<<<');
 
-        $repository = $this->getDoctrine()->getRepository(User::class);
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
 
         // Recherche d'un compte utilisateur à partir de l'adresse e-mail
         // pour éviter de créer le compte une seconde fois.
-        //$user = $repository->findOneBy(['email' => $user->getEmail]);
-
-        $userAccountAlreadyExists = ($repository->count(['email' => $user->getEmail()]) === 0) ? false : true;
+        $userAccountAlreadyExists = ($userRepository->count(['email' => $user->getEmail()]) === 0) ? false : true;
 
         if (false === $userAccountAlreadyExists) {
             $encoded = $this->encoder->encodePassword($user, $user->getPassword());
@@ -50,10 +62,8 @@ class UserManager extends Controller
             $user->setRoles(["ROLE_USER"]);
 
             // On enregistre notre objet $user dans la base de données
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
+            $this->saveUserToDB($user);
+ 
             return true;
         } else {
             $request->getSession()->getFlashBag()->add('notice', "Un compte existe déjà avec cet e-mail. Merci de vous connecter.");
@@ -64,9 +74,6 @@ class UserManager extends Controller
 
     public function sendValidationEmail(User $user, Request $request)
     {
-        //$this->logger->info('About to find a happy message!');
-        //$mailer = $this->container->get('mailer');
-
         $validation_url = $this->generateUrl(
             'registration_confirm',
             [
@@ -76,14 +83,11 @@ class UserManager extends Controller
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        //$validation_url = "http://localhost/P6-project-flex/public/confirm?m=" . $user->getEmail() . "t=" . $user->getActivationToken();
-
         $message = (new \Swift_Message("Demande de confirmation d'inscription"))
-            ->setFrom('eric.codron@gmail.com')
+            ->setFrom('contact@monsite.loc')
             ->setTo('eric.codron@gmail.com')
             ->setBody(
                 $this->renderView(
-                    // templates/emails/registration.html.twig
                     'emails/registration.html.twig',
                     [
                         'userName' => $user->getUsername(),
@@ -95,30 +99,41 @@ class UserManager extends Controller
 
         $result = $this->mailer->send($message);
 
-        $this->logger->info('MAIL SEND RESULT: ' . $result .' <<<<<<<<<<<<');
-
-        /*$message = "COUCOU !";
-        // Envoi du mail
-        //mail($user->getEmail, "Demande de confirmation d'inscription", $message);
-        mail("eric.codron@gmail.com", "Demande de confirmation d'inscription", $message);
-        */
+        //$result = 0;
 
         if (0 !== $result) {
-            $this->logger->info('> > > > > > > > > > > IN IF < < < < < < < < < < <');
-            $request->getSession()->getFlashBag()->add('notice', "Un email de validation vous a été envoyé. Merci de le vérifier.");
+            $request->getSession()->getFlashBag()->add('notice', "Un email de vérification vous a été envoyé. Merci de le consulter.");
+
             return true;
         } else {
-            $this->logger->info('> > > > > > > > > > > IN ELSE < < < < < < < < < < <');
-            $request->getSession()->getFlashBag()->add('error', "Une erreur est survenue lors de l'envoi du mail de confirmation. Merci de recommencer.");
+            // En cas d'échec d'envoi du mail de vérification, on supprime le compte
+            // pour permettre à l'utilisateur de le recréer pour renvoyer le mail.
+            $userToDelete = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($user->getEmail());
+
+            if ($userToDelete) {
+                $this->deleteUserFromDB($user);
+            }
+
+            $request->getSession()->getFlashBag()->add('error', "Une erreur est survenue lors de l'envoi du mail de confirmation. Merci de réessayer dans quelques instants.");
+
             return false;
         }
     }
 
     public function confirmUserRegistration(Request $request)
     {
-        // TODO: First we need to check the email address and token consistency...
+        // First we need to check the email address and token consistency.
 
-        if (true) {
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($request->query->get('m'));
+
+        $urlToken = $request->query->get('t');
+
+        if ($urlToken === $user->getActivationToken()) {
+            $user->setIsActiveAccount(true);
+            $this->saveUserToDB($user);
+        }
+
+        if (true === $user->getIsActiveAccount()) {
             $request->getSession()->getFlashBag()->add('notice', 'Votre compte a bien été validé. Vous pouvez vous connecter.');
             return true;
         } else {
