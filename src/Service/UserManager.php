@@ -28,24 +28,38 @@ class UserManager extends Controller
         $this->mailer = $mailer;
     }
 
-    public function persistUser(User $user)
+    public function persistUser(User $user, Request $request)
     {
         $this->logger->info('IN persistUser  <<<<<<<<<<<<');
 
-        // TODO: Check if user already exists!!!
+        $repository = $this->getDoctrine()->getRepository(User::class);
 
-        $encoded = $this->encoder->encodePassword($user, $user->getPassword());
+        // Recherche d'un compte utilisateur à partir de l'adresse e-mail
+        // pour éviter de créer le compte une seconde fois.
+        //$user = $repository->findOneBy(['email' => $user->getEmail]);
 
-        $user->setPassword($encoded);
+        $userAccountAlreadyExists = ($repository->count(['email' => $user->getEmail()]) === 0) ? false : true;
 
-        $user->setIsActiveAccount(false);
-        $user->setActivationToken(random_int(1000000000, 9999999999));
-        $user->setRoles(["ROLE_USER"]);
+        if (false === $userAccountAlreadyExists) {
+            $encoded = $this->encoder->encodePassword($user, $user->getPassword());
 
-        // On enregistre notre objet $user dans la base de données
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
+            $user->setPassword($encoded);
+
+            $user->setIsActiveAccount(false);
+            $user->setActivationToken(random_int(1000000000, 9999999999));
+            $user->setRoles(["ROLE_USER"]);
+
+            // On enregistre notre objet $user dans la base de données
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return true;
+        } else {
+            $request->getSession()->getFlashBag()->add('notice', "Un compte existe déjà avec cet e-mail. Merci de vous connecter.");
+
+            return false;
+        }
     }
 
     public function sendValidationEmail(User $user, Request $request)
