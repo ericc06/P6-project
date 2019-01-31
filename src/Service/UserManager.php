@@ -41,7 +41,6 @@ class UserManager extends Controller
         $this->em->flush();
     }
 
-
     public function persistUser(User $user, Request $request)
     {
         $this->logger->info('IN persistUser  <<<<<<<<<<<<');
@@ -50,7 +49,23 @@ class UserManager extends Controller
 
         // Recherche d'un compte utilisateur à partir de l'adresse e-mail
         // pour éviter de créer le compte une seconde fois.
-        $userAccountAlreadyExists = ($userRepository->count(['email' => $user->getEmail()]) === 0) ? false : true;
+        // S'il existe un compte encore inactif, on le supprime et on le recrée.
+        // S'il existe un compte actif, on invite l'utilisateur à se connecter.
+
+        $existingUser = $userRepository->findOneByEmail($user->getEmail());
+
+        if ($existingUser) {
+            if (!$existingUser->getIsActiveAccount()) {
+                $this->deleteUserFromDB($existingUser);
+                $userAccountAlreadyExists = false;
+            } else {
+                $userAccountAlreadyExists = true;
+            }
+        } else {
+            $userAccountAlreadyExists = false;
+        }
+
+        //// $userAccountAlreadyExists = ($userRepository->count(['email' => $user->getEmail()]) === 0) ? false : true;
 
         if (false === $userAccountAlreadyExists) {
             $encoded = $this->encoder->encodePassword($user, $user->getPassword());
@@ -63,7 +78,7 @@ class UserManager extends Controller
 
             // On enregistre notre objet $user dans la base de données
             $this->saveUserToDB($user);
- 
+
             return true;
         } else {
             $request->getSession()->getFlashBag()->add('notice', "Un compte existe déjà avec cet e-mail. Merci de vous connecter.");
@@ -86,16 +101,18 @@ class UserManager extends Controller
         $message = (new \Swift_Message("Demande de confirmation d'inscription"))
             ->setFrom('contact@monsite.loc')
             ->setTo('eric.codron@gmail.com')
-            ->setBody(
-                $this->renderView(
-                    'emails/registration.html.twig',
-                    [
-                        'userName' => $user->getUsername(),
-                        'validationUrl' => $validation_url,
-                    ]
-                ),
-                'text/html'
-            );
+        ;
+
+        $data = [
+            'userName' => $user->getUsername(),
+            'validationUrl' => $validation_url,
+            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__."\\..\\..\\")."\\public\\build\\images\\emails\\homepage-500.jpg")),
+        ];
+
+        $message->setBody(
+            $this->renderView('emails/registration.html.twig', $data),
+            'text/html'
+        );
 
         $result = $this->mailer->send($message);
 
