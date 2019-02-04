@@ -106,7 +106,7 @@ class UserManager extends Controller
         $data = [
             'userName' => $user->getUsername(),
             'validationUrl' => $validation_url,
-            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__."\\..\\..\\")."\\public\\build\\images\\emails\\homepage-500.jpg")),
+            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg")),
         ];
 
         $message->setBody(
@@ -155,6 +155,104 @@ class UserManager extends Controller
             return true;
         } else {
             $request->getSession()->getFlashBag()->add('warning', 'La validation de votre compte a échoué. Merci de vous enregistrer de nouveau.');
+            return false;
+        }
+    }
+
+    public function getUserByEmail(String $email, Request $request)
+    {
+        $this->logger->info('> > > > > > IN userEmailExists  < < < < < <');
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email);
+
+        if (null !== $user) {
+            return $user;
+        } else {
+            $request->getSession()->getFlashBag()->add('warning', "Il n'existe pas de compte d'utilisateur avec cette adresse e-mail. Merci de réessayer.");
+            return null;
+        }
+    }
+
+    public function sendPwdResetEmail(User $user, Request $request)
+    {
+        $this->logger->info('> > > > > > IN sendPwdResetEmail  < < < < < <');
+
+        // TODO : Remplacer ActivationToken pas PwdResetToken
+
+        $user->setActivationToken(random_int(1000000000, 9999999999));
+        $this->persistUser($user, $request);
+
+        $pwd_reset_url = $this->generateUrl(
+            'pwd_reset_confirm',
+            [
+                'm' => $user->getEmail(),
+                //'t' => $user->getPwdResetToken(),
+                't' => $user->getActivationToken(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $message = (new \Swift_Message("Réinitialisation de votre mot de passe."))
+            ->setFrom('contact@monsite.loc')
+            ->setTo('eric.codron@gmail.com')
+        ;
+
+        $data = [
+            'userName' => $user->getUsername(),
+            'pwdResetUrl' => $pwd_reset_url,
+            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg")),
+        ];
+
+        $message->setBody(
+            $this->renderView('emails/pwdReset.html.twig', $data),
+            'text/html'
+        );
+
+        $result = $this->mailer->send($message);
+
+        //$result = 0;
+
+        if (0 !== $result) {
+            $request->getSession()->getFlashBag()->add('notice', "Un email de réinitialisation de votre mot de passe vous a été envoyé. Merci de le consulter.");
+
+            return true;
+        } else {
+            // En cas d'échec d'envoi du mail
+            $request->getSession()->getFlashBag()->add('error', "Une erreur est survenue lors de l'envoi du mail de réinitialisation de votre mot de passe. Merci de réessayer dans quelques instants.");
+
+            return false;
+        }
+    }
+
+    public function confirmPwdResetEmail(Request $request)
+    {
+        // First we need to check the email address and reset token consistency.
+
+        /*
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($request->query->get('m'));
+
+        $urlToken = $request->query->get('t');
+
+        if ($urlToken === $user->getActivationToken()) {
+        $user->setIsActiveAccount(true);
+        $this->saveUserToDB($user);
+        }
+         */
+
+        if (true === $user->getIsActiveAccount()) {
+            return true;
+        } else {
+            $request->getSession()->getFlashBag()->add('warning', "La vérification des informations de réinitialisation de votre mot de passe a échoué. Merci d'essayer de nouveau.");
+            return false;
+        }
+    }
+
+    public function checkNewPdw(String $pwd1, String $pwd2)
+    {
+        if ($pwd1 === $pwd2) {
+            $request->getSession()->getFlashBag()->add('info', "Votre mot de passe a été modifié avec succès.");
+            return true;
+        } else {
+            $request->getSession()->getFlashBag()->add('warning', "Vous avez saisi deux mots de passe différents. Merci d'essayer de nouveau.");
             return false;
         }
     }
