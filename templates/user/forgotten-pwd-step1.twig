@@ -1,12 +1,13 @@
 {% extends 'layout.html.twig' %}
 {% trans_default_domain 'messages' %}
 {% block content %}
-    <div class="container">
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
-            </div>
-        {% endif %}
+    <div
+        class="container">
+        {# if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif #}
         <div class="row">
             <div class="col-sm-5">
                 <div
@@ -19,30 +20,24 @@
                             </div>
                         {% endfor %}
                     {% endfor %}
-                    <form action="{{ path('user_login') }}" method="post">
+                    <form action="{{ path('user_forgotten_pwd') }}" method="post">
                         <fieldset>
                             <legend>
                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                {% trans %}Login{% endtrans %}</legend>
+                                {% trans %}Password reset request{% endtrans %}</legend>
                             <div class="form-group">
-                                <label for="username">
-                                    {% trans %}Username{% endtrans %}</label>
-                                <input type="text" id="username" name="username" value="{{ last_username }}" class="form-control"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">
-                                    {% trans %}Password{% endtrans %}</label>
-                                <input class="form-control" id="password" name="password" type="password"/>
+                                <label for="email">
+                                    {% trans %}Your email address{% endtrans %}</label>
+                                <input class="form-control" id="email" name="email" type="text"/>
                             </div>
                             <input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}"/>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                {% trans %}Sign in{% endtrans %}
+                                {% trans %}Send request{% endtrans %}
                             </button>
                         </fieldset>
                     </form>
-                    <div class="forgotten-pwd-div"><a href="{{ path('user_forgotten_pwd') }}">{% trans %}Forgot your password?{% endtrans %}</a></div>
                 </div>
             </div>
         </div>

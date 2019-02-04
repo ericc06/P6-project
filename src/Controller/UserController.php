@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+//use App\Form\FormType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use App\Service\UserManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,9 +20,10 @@ class UserController extends Controller
 {
     private $userManager;
 
-    public function __construct(UserManager $userManager)
+    public function __construct(UserManager $userManager, LoggerInterface $logger)
     {
         $this->userManager = $userManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -40,9 +43,9 @@ class UserController extends Controller
 
         /*$flashBag = "";
         foreach ($session->getFlashBag()->all() as $type => $messages) {
-            foreach ($messages as $message) {
-                $flashBag .= '<div class="flash-' . $type . '">' . $message . '</div>';
-            }
+        foreach ($messages as $message) {
+        $flashBag .= '<div class="flash-' . $type . '">' . $message . '</div>';
+        }
         }*/
 
         // Si la requête est en POST
@@ -61,8 +64,8 @@ class UserController extends Controller
                         return $this->redirectToRoute('homepage');
                     } else {
                         /*return $this->render('user/add.html.twig', array(
-                            'form' => $form->createView(),
-                            'flashBag' => $flashBag,
+                        'form' => $form->createView(),
+                        'flashBag' => $flashBag,
                         ));*/
                         return $this->redirectToRoute('user_registration');
                     }
@@ -77,7 +80,7 @@ class UserController extends Controller
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
 
         return $this->render('user/add.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ));
     }
 
@@ -138,4 +141,77 @@ class UserController extends Controller
     {
         throw new \Exception('This should never be reached!');
     }
+
+    /**
+     * Forgotten password.
+     *
+     * @Route("/forgotten-pwd", name="user_forgotten_pwd")
+     */
+    public function pwdForgotten(Request $request)
+    {
+        $this->logger->info('> > > > > > IN pwdForgotten < < < < < <');
+
+        $session = $request->getSession();
+        $em = $this->userManager;
+        //$user = new User();
+        $form = $this->createForm(FormType::class, null);
+
+        if ($request->isMethod('POST')) {
+            $this->logger->info('> > > > > > FORM POSTED < < < < < <');
+            //if ($form->isSubmitted() && $form->isValid()) {
+            //if ($form->isValid()) {
+            if (true) {
+                $this->logger->info('> > > > > > FORM VALID < < < < < <');
+                $email = $request->request->get('email');
+                if (null !== $user = $em->getUserByEmail($email, $request)) {
+                    if (true === $em->sendPwdResetEmail($user, $request)) {
+                        return $this->render('user/pwd-reset-email-sent.html.twig', array());
+                    } else {
+                        return $this->redirectToRoute('user_forgotten_pwd');
+                    }
+                }
+            }
+        }
+        return $this->render('user/forgotten-pwd-step1.twig', array());
+    }
+
+    /**
+     * User password reset management.
+     *
+     * @Route("/registration-confirm", name="pwd_reset_confirm")
+     */
+    public function confirmPwdReset(Request $request)
+    {
+        if (true === $this->userManager->confirmPwdResetEmail($request)) {
+            return $this->redirectToRoute('homepage');
+        } else {
+            return $this->redirectToRoute('user_forgotten_pwd');
+        }
+    }
+
+    /**
+     * Forgotten password.
+     *
+     * @Route("/new-pwd", name="user_new_pwd")
+     */
+    public function userNewPdw(Request $request)
+    {
+        $session = $request->getSession();
+
+        if ($request->isMethod('POST')) {
+            if ($form->isValid()) {
+                $pwd1 = $request->request->get('pwd1');
+                $pwd2 = $request->request->get('pwd2');
+                if (true === $this->userManager->checkNewPdw($pwd1, $pwd2)) {
+                    /* message : pwd reset successfully */
+                    return $this->redirectToRoute('user_login');
+                } else {
+                    /* message : pwd reset failure */
+                    return $this->render('user/forgotten-pwd-step2.twig', array());
+                }
+            }
+        }
+        return $this->render('user/forgotten-pwd-step2.twig', array());
+    }
+
 }
