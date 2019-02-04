@@ -5,21 +5,23 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TrickController extends AbstractController
 {
     /**
      * @Route("/", name="homepage")
      */
-    public function index()
+    public function index(Request $request)
     {
         $env = getenv('APP_ENV');
-        $content = $this
-            ->get('templating')
-            ->render('index.html.twig', array('nom' => $env));
-        return new Response($content);
+
+        return $this->render('index.html.twig', array(
+            'nom' => $env
+        ));
     }
 
     /**

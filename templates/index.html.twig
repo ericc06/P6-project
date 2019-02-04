@@ -1,4 +1,4 @@
-{# templates/trick/index.html.twig #}
+{# templates/index.html.twig #}
 
 {% extends 'layout.html.twig' %}
 
@@ -11,7 +11,16 @@
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
             <div id="home-text" class="col-xs-12 text-center">
                 <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - Welcome to the snowboard tricks paradise!</span></h1>
+                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - Welcome to the snowboard tricks paradise!</span>
+                </h1>
+                    {# On affiche tous les messages flash #}
+                    {% for label, messages in app.session.flashbag.all %}
+                        {% for message in messages %}
+                            <div class="flash-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
             </div>
         </div>
         <div id="arrow-down">
