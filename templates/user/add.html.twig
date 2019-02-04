@@ -1,0 +1,36 @@
+{# templates/user/add.html.twig #}
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div
+                    class="well">
+                    {# On affiche tous les messages flash #}
+                    {% for label, messages in app.session.flashbag.all %}
+                        {% for message in messages %}
+                            <div class="flash-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ form_start(form) }}
+                    <legend>
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        {% trans %}Create an account{% endtrans %}
+                    </legend>
+                    <div class="my-custom-class-for-errors">
+                        {{ form_errors(form) }}
+                    </div>
+                    {# form_widget(form) #}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                    {{ form_row(form._token) }}
+                    <input class="btn" type="submit" value="Create"/>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
