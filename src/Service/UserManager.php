@@ -227,18 +227,11 @@ class UserManager extends Controller
     {
         // First we need to check the email address and reset token consistency.
 
-        /*
         $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($request->query->get('m'));
 
         $urlToken = $request->query->get('t');
 
         if ($urlToken === $user->getActivationToken()) {
-        $user->setIsActiveAccount(true);
-        $this->saveUserToDB($user);
-        }
-         */
-
-        if (true === $user->getIsActiveAccount()) {
             return true;
         } else {
             $request->getSession()->getFlashBag()->add('warning', "La vérification des informations de réinitialisation de votre mot de passe a échoué. Merci d'essayer de nouveau.");

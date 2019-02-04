@@ -157,11 +157,9 @@ class UserController extends Controller
         $form = $this->createForm(FormType::class, null);
 
         if ($request->isMethod('POST')) {
-            $this->logger->info('> > > > > > FORM POSTED < < < < < <');
             //if ($form->isSubmitted() && $form->isValid()) {
             //if ($form->isValid()) {
             if (true) {
-                $this->logger->info('> > > > > > FORM VALID < < < < < <');
                 $email = $request->request->get('email');
                 if (null !== $user = $em->getUserByEmail($email, $request)) {
                     if (true === $em->sendPwdResetEmail($user, $request)) {
@@ -183,7 +181,7 @@ class UserController extends Controller
     public function confirmPwdReset(Request $request)
     {
         if (true === $this->userManager->confirmPwdResetEmail($request)) {
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('user_new_pwd');
         } else {
             return $this->redirectToRoute('user_forgotten_pwd');
         }
