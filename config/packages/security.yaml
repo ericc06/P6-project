@@ -1,4 +1,4 @@
-# config/security.yaml
+# config\packages\security.yaml
 
 security:
     encoders:
@@ -17,7 +17,8 @@ security:
             pattern: ^/
             anonymous: true
             logout:
-                path: security_logout
+                path: app_logout
+                #target: homepage
             guard:
                 authenticators:
                     - App\Security\FormLoginAuthenticator

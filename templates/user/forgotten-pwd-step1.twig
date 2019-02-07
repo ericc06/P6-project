@@ -1,0 +1,47 @@
+{# templates/user/forgotten-pwd-step1.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <div
+        class="container">
+        {# if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif #}
+        <div class="row">
+            <div class="col-sm-5">
+                <div
+                    class="well">
+                    {# On affiche tous les messages flash #}
+                    {% for label, messages in app.session.flashbag.all %}
+                        {% for message in messages %}
+                            <div class="flash-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <form action="{{ path('user_forgotten_pwd') }}" method="post">
+                        <fieldset>
+                            <legend>
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                {{ 'password_reset_request'|trans }}</legend>
+                            <div class="form-group">
+                                <label for="email">
+                                    {{ 'your_email_address'|trans }}</label>
+                                <input class="form-control" id="email" name="email" type="text" required/>
+                            </div>
+                            {{ form_row(form._token) }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                {{ 'send_request'|trans }}
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
