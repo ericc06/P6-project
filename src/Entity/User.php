@@ -21,7 +21,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $fullName = "";
 
@@ -45,7 +45,7 @@ class User implements UserInterface
     private $password ="";
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif" })
      */
@@ -57,14 +57,24 @@ class User implements UserInterface
     private $isActiveAccount = false;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $activationToken;
-
+    
     /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $pwdResetToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $pwdTokenCreationDate;
 
     public function getId(): int
     {
@@ -167,5 +177,29 @@ class User implements UserInterface
 
     public function eraseCredentials(): void
     {
+    }
+
+    public function getPwdResetToken(): ?string
+    {
+        return $this->pwdResetToken;
+    }
+
+    public function setPwdResetToken(?string $pwdResetToken): self
+    {
+        $this->pwdResetToken = $pwdResetToken;
+
+        return $this;
+    }
+
+    public function getPwdTokenCreationDate(): ?\DateTimeInterface
+    {
+        return $this->pwdTokenCreationDate;
+    }
+
+    public function setPwdTokenCreationDate(?\DateTimeInterface $pwdTokenCreationDate): self
+    {
+        $this->pwdTokenCreationDate = $pwdTokenCreationDate;
+
+        return $this;
     }
 }
