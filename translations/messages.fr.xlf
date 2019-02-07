@@ -1,0 +1,51 @@
+<?xml version="1.0"?> <!-- translations/messages.fr_FR.xlf -->
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="account_creation_check_email_sent">
+                <source>account_creation_check_email_sent</source>
+                <target>Un email de vérification vous a été envoyé. Merci de le consulter.</target>
+            </trans-unit>
+            <trans-unit id="error_sending_confirmation_email">
+                <source>error_sending_confirmation_email</source>
+                <target>Une erreur est survenue lors de l'envoi du mail de confirmation. Merci de réessayer dans quelques instants.</target>
+            </trans-unit>
+            <trans-unit id="account_already_exists">
+                <source>account_already_exists</source>
+                <target>Un compte existe déjà avec cet e-mail. Merci de vous connecter.</target>
+            </trans-unit>
+            <trans-unit id="account_validated">
+                <source>account_validated</source>
+                <target>Votre compte a bien été validé. Vous pouvez vous connecter.</target>
+            </trans-unit>
+            <trans-unit id="account_validation_failed">
+                <source>account_validation_failed</source>
+                <target>La validation de votre compte a échoué. Merci de vous enregistrer de nouveau.</target>
+            </trans-unit>
+            <trans-unit id="error_sending_pwd_reset_email">
+                <source>error_sending_pwd_reset_email</source>
+                <target>Une erreur est survenue lors de l'envoi du mail de réinitialisation de votre mot de passe. Merci de réessayer dans quelques instants.</target>
+            </trans-unit>
+            <trans-unit id="no_account_found_with_this_email">
+                <source>no_account_found_with_this_email</source>
+                <target>Il n'existe pas de compte d'utilisateur avec cette adresse e-mail. Merci de réessayer.</target>
+            </trans-unit>
+            <trans-unit id="new_pwd_successfuly_saved">
+                <source>new_pwd_successfuly_saved</source>
+                <target>Votre mot de passe a été modifié avec succès.</target>
+            </trans-unit>
+            <trans-unit id="new_pwd_confirmation_failed">
+                <source>new_pwd_confirmation_failed</source>
+                <target>Vous avez saisi deux mots de passe différents. Merci d'essayer de nouveau.</target>
+            </trans-unit>
+            <trans-unit id="pwd_reset_check_failed">
+                <source>pwd_reset_check_failed</source>
+                <target>La vérification des informations de réinitialisation de votre mot de passe a échoué (causes possibles : jeton invalide ou ayant expiré). Merci d'essayer de nouveau.</target>
+            </trans-unit>
+            <trans-unit id="XXXXXXXX">
+                <source>XXXXXXXX</source>
+                <target>xxxxxxxxxxxxxxxx</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
