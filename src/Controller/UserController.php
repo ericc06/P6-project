@@ -70,10 +70,6 @@ class UserController extends Controller
             }
         }
 
-        // À ce stade, le formulaire n'est pas valide car :
-        // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
-        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-
         return $this->render('user/add.html.twig', array(
             'form' => $form->createView(),
         ));
@@ -170,7 +166,7 @@ class UserController extends Controller
      */
     public function userNewPwd(Request $request)
     {
-        $this->logger->info('> > > > > > IN userNewPwd < < < < < <');
+        //$this->logger->info('> > > > > > IN userNewPwd  < < < < < <');
 
         $form = $this->createForm(FormType::class, null);
 
@@ -178,8 +174,8 @@ class UserController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (true === $this->userManager->checkAndSaveNewPwd(
-                $request->query->get('m'),
-                $request->query->get('t'),
+                $request->request->get('m'),
+                $request->request->get('t'),
                 $request
             )
             ) {
@@ -195,7 +191,14 @@ class UserController extends Controller
                     $this->i18n->trans('new_pwd_confirmation_failed')
                 );
 
-                return $this->render('user/forgotten-pwd-step2.twig', array('form' => $form->createView()));
+                return $this->render(
+                    'user/forgotten-pwd-step2.twig',
+                    array(
+                        'form' => $form->createView(),
+                        'email' => $request->request->get('m'),
+                        'token' => $request->request->get('t')
+                    )
+                );
             }
         }
 
@@ -205,7 +208,7 @@ class UserController extends Controller
                 array(
                     'form' => $form->createView(),
                     'email' => $request->query->get('m'),
-                    'token' => $request->query->get('t'),
+                    'token' => $request->query->get('t')
                 )
             );
         } else {

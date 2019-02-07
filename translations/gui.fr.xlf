@@ -10,6 +10,14 @@
         <source>register</source>
         <target>S'enregistrer</target>
       </trans-unit>
+      <trans-unit id="logout">
+        <source>logout</source>
+        <target>Se déconnecter</target>
+      </trans-unit>
+      <trans-unit id="user_account">
+        <source>user_account</source>
+        <target>Mon compte</target>
+      </trans-unit>
       <trans-unit id="create_an_account">
         <source>create_an_account</source>
         <target>Créer un compte</target>
@@ -45,6 +53,10 @@
       <trans-unit id="login">
         <source>login</source>
         <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="login_menu">
+        <source>login_menu</source>
+        <target>Se connecter</target>
       </trans-unit>
       <trans-unit id="sign_in">
         <source>sign_in</source>
