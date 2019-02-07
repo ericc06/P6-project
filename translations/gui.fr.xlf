@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="home">
+        <source>home</source>
+        <target>Accueil</target>
+      </trans-unit>
+      <trans-unit id="register">
+        <source>register</source>
+        <target>S'enregistrer</target>
+      </trans-unit>
+      <trans-unit id="create_an_account">
+        <source>create_an_account</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="welcome_homepage">
+        <source>welcome_homepage</source>
+        <target>Bienvenue au paradis des tricks de snowboard !</target>
+      </trans-unit>
+      <trans-unit id="full_name">
+        <source>full_name</source>
+        <target>Nom complet</target>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>username</source>
+        <target>Identifiant</target>
+      </trans-unit>
+      <trans-unit id="email_address">
+        <source>email_address</source>
+        <target>Adresse e-mail</target>
+      </trans-unit>
+      <trans-unit id="password">
+        <source>password</source>
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="profile_image">
+        <source>profile_image</source>
+        <target>Image de profil</target>
+      </trans-unit>
+      <trans-unit id="create_account">
+        <source>create_account</source>
+        <target>Créer mon compte</target>
+      </trans-unit>
+      <trans-unit id="login">
+        <source>login</source>
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="sign_in">
+        <source>sign_in</source>
+        <target>Se connecter</target>
+      </trans-unit>
+      <trans-unit id="forgot_your_password">
+        <source>forgot_your_password</source>
+        <target>Mot de passe oublié ?</target>
+      </trans-unit>
+            <trans-unit id="password_reset_request">
+        <source>password_reset_request</source>
+        <target>Demande de nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit id="your_email_address">
+        <source>your_email_address</source>
+        <target>Votre adresse e-mail</target>
+      </trans-unit>
+      <trans-unit id="send_request">
+        <source>send_request</source>
+        <target>Envoyer</target>
+      </trans-unit>
+      <trans-unit id="new_password_creation">
+        <source>new_password_creation</source>
+        <target>Nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit id="your_new_password">
+        <source>your_new_password</source>
+        <target>Votre nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit id="confirm_new_password">
+        <source>confirm_new_password</source>
+        <target>Confirmer le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="send">
+        <source>send</source>
+        <target>Envoyer</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,4 +1,4 @@
-{# templates/user/forgotten-pwd-step1.html.twig #}
+{# templates/user/forgotten-pwd-step2.html.twig #}
 
 {% trans_default_domain 'gui' %}
 
@@ -7,10 +7,10 @@
     <div
         class="container">
         {# if error %}
-                    <div class="alert alert-danger">
-                        {{ error.messageKey|trans(error.messageData, 'security') }}
-                    </div>
-                {% endif #}
+                            <div class="alert alert-danger">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                        {% endif #}
         <div class="row">
             <div class="col-sm-5">
                 <div
@@ -23,20 +23,26 @@
                             </div>
                         {% endfor %}
                     {% endfor %}
-                    <form action="{{ path('user_forgotten_pwd') }}" method="post">
+                    <form action="{{ path('user_new_pwd') }}" method="post">
                         <fieldset>
                             <legend>
                                 <i class="fa fa-lock" aria-hidden="true"></i>
-                                {{ 'password_reset_request'|trans }}</legend>
+                                {{ 'new_password_creation'|trans }}
+                            </legend>
                             <div class="form-group">
                                 <label for="email">
-                                    {{ 'your_email_address'|trans }}</label>
-                                <input class="form-control" id="email" name="email" type="text" required/>
+                                    {{ 'your_new_password'|trans }}</label>
+                                <input class="form-control" id="pwd1" name="pwd1" type="text"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">
+                                    {{ 'confirm_new_password'|trans }}</label>
+                                <input class="form-control" id="pwd2" name="pwd2" type="text"/>
                             </div>
                             {{ form_row(form._token) }}
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                {{ 'send_request'|trans }}
+                                {{ 'send'|trans }}
                             </button>
                         </fieldset>
                     </form>
