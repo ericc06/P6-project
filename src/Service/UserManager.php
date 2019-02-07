@@ -55,6 +55,12 @@ class UserManager extends Controller
         $this->em->flush();
     }
 
+    // Returns an encoded user password.
+    public function generateEncodedPwd(User $user, String $pwd)
+    {
+        return $this->encoder->encodePassword($user, $pwd);
+    }
+
     // Generates and returns a token.
     public function generateToken()
     {
@@ -90,10 +96,7 @@ class UserManager extends Controller
         }
 
         if (false === $userAccountAlreadyExists) {
-            $encoded = $this->encoder->encodePassword($user, $user->getPassword());
-
-            $user->setPassword($encoded);
-
+            $user->setPassword($this->generateEncodedPwd($user, $user->getPassword()));
             $user->setIsActiveAccount(false);
             $user->setActivationToken($this->generateToken());
             $user->setRoles(["ROLE_USER"]);
@@ -255,13 +258,19 @@ class UserManager extends Controller
     // Returns false if the verification fails.
     public function checkAndSaveNewPwd(String $email, String $token, Request $request)
     {
+
+        // TODO: Check that pwd length is < 4096 haracters
+        // (https://symfony.com/doc/4.0/security/password_encoding.html)
+
         // For the second and last time, we check the email address and token consistency.
         $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email);
 
         if ($token === $user->getPwdResetToken() &&
             $request->get('pwd1') === $request->get('pwd2')) {
-                $user->setPassword($request->get('pwd1'));
+                $user->setPassword($this->generateEncodedPwd($user, $request->get('pwd1')));
                 $user->setPwdResetToken(null);
+                $user->setPwdTokenCreationDate(null);
+                $this->saveUserToDB($user);
             return true;
         } else {
             return false;
