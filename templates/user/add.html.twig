@@ -1,7 +1,10 @@
 {# templates/user/add.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
 {% extends 'layout.html.twig' %}
 {% block content %}
-    <div class="container">
+    <div class="container full-height-container">
         <div class="row">
             <div class="col-sm-5">
                 <div
@@ -16,8 +19,8 @@
                     {% endfor %}
                     {{ form_start(form) }}
                     <legend>
-                        <i class="fa fa-lock" aria-hidden="true"></i>
-                        {% trans %}Create an account{% endtrans %}
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        {{'create_an_account'|trans }}
                     </legend>
                     <div class="my-custom-class-for-errors">
                         {{ form_errors(form) }}
@@ -27,7 +30,7 @@
                     {{ form_row(form.email) }}
                     {{ form_row(form.password) }}
                     {{ form_row(form._token) }}
-                    <input class="btn" type="submit" value="Create"/>
+                    <input class="btn btn-primary" type="submit" value="{{'create_account'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>

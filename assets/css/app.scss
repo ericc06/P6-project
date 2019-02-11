@@ -34,6 +34,15 @@ body {
   font-family: Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+.full-height-container {
+    flex: 1 100%;
+    .row {
+        justify-content: center;
+        margin-top: 50px;
+    }
 }
 
 .page-bg {
@@ -110,6 +119,16 @@ body {
     -moz-text-shadow: 0 0 2px #fff;
     -webkit-text-shadow: 0 0 2px #fff;
     */
+}
+
+.forgotten-pwd-div {
+    margin-top: -30px;
+    text-align: right;
+}
+
+.go-back-to-homepage {
+    margin-top: 30px;
+    text-align: center;
 }
 
 #arrow-down {

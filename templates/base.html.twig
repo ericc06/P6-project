@@ -1,10 +1,12 @@
+{# templates/user/base.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>
-            {% block title %}Welcome to the snowboard tricks web site!{% endblock %}
-        </title>
+        <title>{% block title %}{{ 'welcome_homepage'|trans}}{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -16,7 +18,7 @@
 
                 <div class="container-fluid" id="override-bs-css-navbar">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light xs-fixed-bottom">
-                        <a class="navbar-brand" href="#">Navbar</a>
+                        <a class="navbar-brand" href="#">Navbar [{{ app.request.getLocale() }}]</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -24,17 +26,25 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-zero">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="http://localhost/P6-project-flex/public/">Home
+                                    <a class="nav-link" href={{ path('homepage') }}>{{ 'home'|trans }}
+                                        <span class="sr-only">(current)</span></a>
+                                </li>
+                                {% if app.user %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('app_logout') }}>{{ 'logout'|trans }}
+                                        <span class="sr-only">(current)</span></a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('user_registration') }}>{{ 'register'|trans }}
                                         <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="http://localhost/P6-project-flex/public/registration">Register
+                                    <a class="nav-link" href={{ path('user_login') }}>{{ 'login_menu'|trans }}
                                         <span class="sr-only">(current)</span></a>
                                 </li>
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="http://localhost/P6-project-flex/public/login">Login
-                                        <span class="sr-only">(current)</span></a>
-                                </li>
+                                {% endif %}
+                                {#
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Link</a>
                                 </li>
@@ -52,6 +62,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link disabled" href="#">Disabled</a>
                                 </li>
+                                #}
                             </ul>
                         </div>
                     </nav>
@@ -63,14 +74,10 @@
         {% block body %}{% endblock %}
 
         <footer class="container-fluid bg-light">
-                <div class="container wide-container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <p class="medium">Copyright © 2019</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <div class="col-xs-12">
+                <p class="medium">Copyright © 2019</p>
+            </div>
+        </footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html> 
