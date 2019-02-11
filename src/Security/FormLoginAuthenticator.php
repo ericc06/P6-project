@@ -18,6 +18,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Psr\Log\LoggerInterface;
 
 class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -28,12 +29,18 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     private $csrfTokenManager;
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, RouterInterface $router, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        RouterInterface $router,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $passwordEncoder,
+        LoggerInterface $logger
+    ) {
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->logger = $logger;
     }
 
     public function supports(Request $request)
@@ -82,10 +89,14 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        $this->logger->info('> > > > > > IN onAuthenticationSuccess  < < < < < <');
+        $this->logger->info('> > > > > > IN onAuthenticationSuccess - providerKey : ' . $providerKey . ' < < < < < <');
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+            $this->logger->info('> > > > > > IN onAuthenticationSuccess. TRUE. GO to ' . $targetPath . ' < < < < < <');
             return new RedirectResponse($targetPath);
         }
 
+        $this->logger->info('> > > > > > IN onAuthenticationSuccess. FALSE. GO to ' . $this->router->generate('homepage') . ' < < < < < <');
         return new RedirectResponse($this->router->generate('homepage'));
     }
 
