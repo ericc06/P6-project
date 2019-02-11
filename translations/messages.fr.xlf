@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="pwd_reset_email_sent">
                 <source>pwd_reset_email_sent</source>
-                <target>Un e-mail vous a été envoyé. Merci de l'ouvrir et de cliquer sur le lien qu'il contient.</target>
+                <target>Un e-mail de réinitialisation de votre mot de passe vous a été envoyé. Merci de l'ouvrir et de cliquer sur le lien qu'il contient.</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
