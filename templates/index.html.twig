@@ -13,7 +13,7 @@
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
             <div id="home-text" class="col-xs-12 text-center">
                 <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - {{ 'welcome_homepage'|trans}}</span>
+                    <p class="bold">[{{ env_name }}] - {{ 'welcome_homepage'|trans}}</p>
                 </h1>
                     {# On affiche tous les messages flash #}
                     {% for label, messages in app.session.flashbag.all %}

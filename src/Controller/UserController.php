@@ -22,8 +22,8 @@ class UserController extends Controller
 
     public function __construct(
         UserManager $userManager,
-        LoggerInterface $logger,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LoggerInterface $logger
     ) {
         $this->userManager = $userManager;
         $this->i18n = $translator;
@@ -44,6 +44,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $result = toto(); // call persistUserRegistration & sendValidationEmail
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                $this->i18n->trans($result['message_key'])
+            );
+            return $this->redirectToRoute($result['page']);
+        }
+            /*
             if (true === $this->userManager->persistUserRegistration($user)) {
                 if (true === $this->userManager->sendValidationEmail($user)) {
                     $request->getSession()->getFlashBag()->add(
@@ -69,6 +77,7 @@ class UserController extends Controller
                 return $this->redirectToRoute('user_login');
             }
         }
+        */
 
         return $this->render('user/add.html.twig', array(
             'form' => $form->createView(),
