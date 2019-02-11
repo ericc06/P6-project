@@ -18,6 +18,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
 
 class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
@@ -34,12 +35,14 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         RouterInterface $router,
         CsrfTokenManagerInterface $csrfTokenManager,
         UserPasswordEncoderInterface $passwordEncoder,
+        TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->i18n = $translator;
         $this->logger = $logger;
     }
 
@@ -76,7 +79,9 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            // Original message too explicit (security concerns).
+            //throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Invalid credentials.');
         }
 
         return $user;
@@ -85,7 +90,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         if (!$user->getIsActiveAccount()) {
-            throw new CustomUserMessageAuthenticationException("Votre compte n'a pas encore été activé. Merci de consulter votre e-mail d'activation.");
+            throw new CustomUserMessageAuthenticationException($this->i18n->trans('account_not_activated_yet'));
             return false;
         }
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
@@ -93,14 +98,10 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $this->logger->info('> > > > > > IN onAuthenticationSuccess  < < < < < <');
-        $this->logger->info('> > > > > > IN onAuthenticationSuccess - providerKey : ' . $providerKey . ' < < < < < <');
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            $this->logger->info('> > > > > > IN onAuthenticationSuccess. TRUE. GO to ' . $targetPath . ' < < < < < <');
             return new RedirectResponse($targetPath);
         }
 
-        $this->logger->info('> > > > > > IN onAuthenticationSuccess. FALSE. GO to ' . $this->router->generate('homepage') . ' < < < < < <');
         return new RedirectResponse($this->router->generate('homepage'));
     }
 
