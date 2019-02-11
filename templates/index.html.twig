@@ -1,5 +1,7 @@
 {# templates/index.html.twig #}
 
+{% trans_default_domain 'gui' %}
+
 {% extends 'layout.html.twig' %}
 
 {% block content %}
@@ -11,13 +13,13 @@
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
             <div id="home-text" class="col-xs-12 text-center">
                 <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - Welcome to the snowboard tricks paradise!</span>
+                    <p class="bold">[{{ env_name }}] - {{ 'welcome_homepage'|trans}}</p>
                 </h1>
                     {# On affiche tous les messages flash #}
                     {% for label, messages in app.session.flashbag.all %}
                         {% for message in messages %}
                             <div class="flash-{{ label }}">
-                                {{ message }}
+                                    {{ message }}
                             </div>
                         {% endfor %}
                     {% endfor %}

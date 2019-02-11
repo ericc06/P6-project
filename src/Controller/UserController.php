@@ -9,18 +9,25 @@ use App\Form\UserType;
 use App\Service\UserManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
     private $userManager;
 
-    public function __construct(UserManager $userManager)
-    {
+    public function __construct(
+        UserManager $userManager,
+        TranslatorInterface $translator,
+        LoggerInterface $logger
+    ) {
         $this->userManager = $userManager;
+        $this->i18n = $translator;
+        $this->logger = $logger;
     }
 
     /**
@@ -30,54 +37,50 @@ class UserController extends Controller
      */
     public function add(Request $request, LoggerInterface $logger)
     {
-        $session = $request->getSession();
-
-        // On crée un objet User
         $user = new User();
 
-        // On crée le formulaire
         $form = $this->createForm(UserType::class, $user);
 
-        /*$flashBag = "";
-        foreach ($session->getFlashBag()->all() as $type => $messages) {
-            foreach ($messages as $message) {
-                $flashBag .= '<div class="flash-' . $type . '">' . $message . '</div>';
-            }
-        }*/
+        $form->handleRequest($request);
 
-        // Si la requête est en POST
-        if ($request->isMethod('POST')) {
-            // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
-            $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result = toto(); // call persistUserRegistration & sendValidationEmail
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                $this->i18n->trans($result['message_key'])
+            );
+            return $this->redirectToRoute($result['page']);
+        }
+            /*
+            if (true === $this->userManager->persistUserRegistration($user)) {
+                if (true === $this->userManager->sendValidationEmail($user)) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        $this->i18n->trans('account_creation_check_email_sent')
+                    );
 
-            // On vérifie que les valeurs entrées sont correctes
-            if ($form->isValid()) {
-                if (true === $this->userManager->persistUser($user, $request)) {
-                    if (true === $this->userManager->sendValidationEmail($user, $request)) {
-                        /*return $this->render('index.html.twig', array(
-                        'nom' => 'dev',
-                        'flashBag' => $flashBag
-                        ));*/
-                        return $this->redirectToRoute('homepage');
-                    } else {
-                        /*return $this->render('user/add.html.twig', array(
-                            'form' => $form->createView(),
-                            'flashBag' => $flashBag,
-                        ));*/
-                        return $this->redirectToRoute('user_registration');
-                    }
+                    return $this->redirectToRoute('homepage');
                 } else {
-                    return $this->redirectToRoute('user_login');
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $this->i18n->trans('error_sending_confirmation_email')
+                    );
+
+                    return $this->redirectToRoute('user_registration');
                 }
+            } else {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    $this->i18n->trans('account_already_exists')
+                );
+
+                return $this->redirectToRoute('user_login');
             }
         }
-
-        // À ce stade, le formulaire n'est pas valide car :
-        // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
-        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
+        */
 
         return $this->render('user/add.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ));
     }
 
@@ -89,8 +92,17 @@ class UserController extends Controller
     public function confirmAccount(Request $request)
     {
         if (true === $this->userManager->confirmUserRegistration($request)) {
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                $this->i18n->trans('account_validated')
+            );
+
             return $this->redirectToRoute('homepage');
         } else {
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                $this->i18n->trans('account_validation_failed')
+            );
             return $this->redirectToRoute('user_registration');
         }
     }
@@ -103,16 +115,6 @@ class UserController extends Controller
     public function edit(Request $request/*,UserPasswordEncoderInterface $encoder*/)
     {
         // TODO
-    }
-
-    /**
-     * @return string
-     */
-    private function generateUniqueFileName()
-    {
-        // md5() reduces the similarity of the file names generated by
-        // uniqid(), which is based on timestamps
-        return md5(uniqid());
     }
 
     /**
@@ -132,10 +134,99 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/logout", name="user_logout")
+     * Forgotten password.
+     *
+     * @Route("/forgotten-pwd", name="user_forgotten_pwd")
      */
-    public function logout(): void
+    public function pwdForgotten(Request $request)
     {
-        throw new \Exception('This should never be reached!');
+        $form = $this->createForm(FormType::class, null);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $request->request->get('email');
+
+            if (null !== $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email)) {
+                if (true === $this->userManager->sendPwdResetEmail($user)) {
+                    return $this->render('user/pwd-reset-email-sent.html.twig', array());
+                } else {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $this->i18n->trans('error_sending_pwd_reset_email')
+                    );
+
+                    return $this->render('user/forgotten-pwd-step1.twig', array('form' => $form->createView()));
+                }
+            } else {
+                $request->getSession()->getFlashBag()->add(
+                    'error',
+                    $this->i18n->trans('no_account_found_with_this_email')
+                );
+            }
+        }
+        return $this->render('user/forgotten-pwd-step1.twig', array('form' => $form->createView()));
+    }
+
+    /**
+     * Forgotten password.
+     *
+     * @Route("/new-pwd", name="user_new_pwd")
+     */
+    public function userNewPwd(Request $request)
+    {
+        //$this->logger->info('> > > > > > IN userNewPwd  < < < < < <');
+
+        $form = $this->createForm(FormType::class, null);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (true === $this->userManager->checkAndSaveNewPwd(
+                $request->request->get('m'),
+                $request->request->get('t'),
+                $request
+            )
+            ) {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    $this->i18n->trans('new_pwd_successfuly_saved')
+                );
+
+                return $this->redirectToRoute('user_login');
+            } else {
+                $request->getSession()->getFlashBag()->add(
+                    'warning',
+                    $this->i18n->trans('new_pwd_confirmation_failed')
+                );
+
+                return $this->render(
+                    'user/forgotten-pwd-step2.twig',
+                    array(
+                        'form' => $form->createView(),
+                        'email' => $request->request->get('m'),
+                        'token' => $request->request->get('t')
+                    )
+                );
+            }
+        }
+
+        if (true === $this->userManager->confirmPwdResetEmail($request)) {
+            return $this->render(
+                'user/forgotten-pwd-step2.twig',
+                array(
+                    'form' => $form->createView(),
+                    'email' => $request->query->get('m'),
+                    'token' => $request->query->get('t')
+                )
+            );
+        } else {
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                $this->i18n->trans('pwd_reset_check_failed')
+            );
+
+            return $this->redirectToRoute('user_forgotten_pwd');
+        }
     }
 }

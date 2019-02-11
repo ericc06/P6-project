@@ -24,10 +24,23 @@ class UserType extends AbstractType
                     'empty_data' => ""
                 )
             )
-            ->add('username', TextType::class)
-            ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
-            ->add('avatar', FileType::class, array('required' => false))
+            ->add('username', TextType::class, [
+                'label' => 'username',
+                'translation_domain' => 'gui'
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'email_address',
+                'translation_domain' => 'gui'
+            ])
+            ->add('password', PasswordType::class, [
+                'label' => 'password',
+                'translation_domain' => 'gui'
+            ])
+            ->add('avatar', FileType::class, [
+                'label' => 'password',
+                'translation_domain' => 'gui',
+                'required' => false
+            ])
         ;
     }
 
