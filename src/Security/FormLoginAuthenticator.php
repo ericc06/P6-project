@@ -84,6 +84,10 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if (!$user->getIsActiveAccount()) {
+            throw new CustomUserMessageAuthenticationException("Votre compte n'a pas encore été activé. Merci de consulter votre e-mail d'activation.");
+            return false;
+        }
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
