@@ -6,9 +6,6 @@
     <div class="container-fluid">
         <div class="row" id="home">
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
-                <div class="flash flash-success alert-success text-center">
-                    Un email de vérification vous a été envoyé. Merci de le consulter.
-                </div>
                 <div class="col-xs-12 text-center" id="home-text">
                     <h1>
                         <p class="bold">[{{ env_name }}] -
@@ -18,7 +15,7 @@
                 {# On affiche tous les messages flash #}
                 {% for label, messages in app.session.flashbag.all %}
                     {% for message in messages %}
-                        <div class="flash flash-{{ label }} alert-{{ label }} text-center">
+                        <div class="flash flash-{{ label }} alert-{{ label }}">
                             {{ message }}
                         </div>
                     {% endfor %}

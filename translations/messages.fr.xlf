@@ -14,6 +14,10 @@
                 <source>account_already_exists</source>
                 <target>Un compte existe déjà avec cet e-mail. Merci de vous connecter.</target>
             </trans-unit>
+            <trans-unit id="username_already_exists">
+                <source>username_already_exists</source>
+                <target>Un compte existe déjà avec cet identifiant. Merci d'en choisir un autre.</target>
+            </trans-unit>
             <trans-unit id="account_validated">
                 <source>account_validated</source>
                 <target>Votre compte a bien été validé. Vous pouvez vous connecter.</target>
