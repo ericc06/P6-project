@@ -50,7 +50,7 @@ class UserController extends Controller
                 $result['msg_type'],
                 $this->i18n->trans($result['message'])
             );
-            
+
             return $this->redirectToRoute($result['dest_page']);
         }
 
@@ -68,14 +68,14 @@ class UserController extends Controller
     {
         if (true === $this->userManager->confirmUserRegistration($request)) {
             $request->getSession()->getFlashBag()->add(
-                'notice',
+                'success',
                 $this->i18n->trans('account_validated')
             );
 
             return $this->redirectToRoute('homepage');
         } else {
             $request->getSession()->getFlashBag()->add(
-                'warning',
+                'danger',
                 $this->i18n->trans('account_validation_failed')
             );
             return $this->redirectToRoute('user_registration');
