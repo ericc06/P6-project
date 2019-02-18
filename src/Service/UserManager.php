@@ -155,6 +155,31 @@ class UserManager extends Controller
         }
     }
 
+    // Performs the actions required after a user add form submission.
+    // Returns an array with the relevant pieces of information.
+    public function checkAddUser(User $user)
+    {
+        $result = [];
+
+        if (true === self::persistUserRegistration($user)) {
+            if (true === self::sendValidationEmail($user)) {
+                $result['msg_type']  = 'success';
+                $result['message']   = 'account_creation_check_email_sent';
+                $result['dest_page'] =  'homepage';
+            } else {
+                $result['msg_type']  = 'danger';
+                $result['message']   = 'error_sending_confirmation_email';
+                $result['dest_page'] =  'user_registration';
+            }
+        } else {
+            $result['msg_type']  = 'primary';
+            $result['message']   = 'account_already_exists';
+            $result['dest_page'] =  'user_login';
+        }
+
+        return $result;
+    }
+
     // Called when a user clicks the link in the account creation verification email.
     // Checks the email address and token consistency. Activates the user account if OK.
     // Returns true if the verification is successful.
