@@ -11,9 +11,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class TrickController extends Controller
 {
+    private $trickManager;
+
+    public function __construct(
+        TrickManager $trickManager,
+        TranslatorInterface $translator
+    ) {
+        $this->trickManager = $trickManager;
+        $this->i18n = $translator;
+    }
     /**
      * @Route("/", name="homepage")
      */
@@ -27,13 +38,14 @@ class TrickController extends Controller
     }
 
     /**
-     * @Route("/trick/{trick_name}", name="trick_view", requirements={"trick_name"="\w+"})
+     * @Route("/trick/{trick_id}", name="trick_view", requirements={"trick_id"="\d+"})
+     * @ParamConverter("trick", class="App\Entity:Trick")
      */
-    public function view($trick_name)
+    public function view(Trick $trick)
     {
         $content = $this
             ->get('templating')
-            ->render('trick/view.html.twig', array('nom' => $trick_name));
+            ->render('trick/view.html.twig', array('nom' => $trick->getName()));
         return new Response($content);
         //return new Response("test");
     }
@@ -41,7 +53,7 @@ class TrickController extends Controller
     /**
      * Trick creation form.
      *
-     * @Route("/add-trick", name="trick_add")
+     * @Route("/trick/new", name="trick_add")
      */
     public function add(Request $request)
     {
@@ -52,6 +64,8 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->trickManager->saveTrickToDB($trick);
+
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 $this->i18n->trans('trick_creation_done')
