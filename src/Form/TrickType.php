@@ -17,20 +17,6 @@ class TrickType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextareaType::class)
-            ->add(
-                'creation_date',
-                DateTimeType::class,
-                array(
-                    'data' => new \DateTime('now')
-                )
-            )
-            ->add(
-                'last_update_date',
-                DateTimeType::class,
-                array(
-                    'data' => new \DateTime('now')
-                )
-            )
         ;
     }
 
