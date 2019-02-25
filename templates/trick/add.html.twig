@@ -1,0 +1,38 @@
+{# templates/trick/add.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div
+                    class="well">
+                    {# On affiche tous les messages flash #}
+                    {% for label, messages in app.session.flashbag.all %}
+                        {% for message in messages %}
+                            <div class="flash-{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ form_start(form) }}
+                    <legend>
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        {{'create_a_trick'|trans }}
+                    </legend>
+                    <div class="my-custom-class-for-errors">
+                        {{ form_errors(form) }}
+                    </div>
+                    {# form_widget(form) #}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.description) }}
+                    {{ form_row(form._token) }}
+                    <input class="btn" type="submit" value="{{'create_trick'|trans }}"/>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
