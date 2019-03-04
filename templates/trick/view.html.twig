@@ -1,119 +1,116 @@
 {# templates/trick/view.html.twig #}
-
 {% extends 'layout.html.twig' %}
-
 {% block content %}
-
     <!-- Detail page ================================================== -->
-
-    
-    <div class="page-bg container-fluid">
-        <!--<div id="bg-img" class="row faded-bg-img">
-            <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="homepage-image">
-        </div>-->
+    <div
+        class="page-bg container-fluid"><!--<div id="bg-img" class="row faded-bg-img">
+                                    <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="homepage-image">
+                                </div>-->
     </div>
-    
     <div class="container main">
         <div class="container header-img-div">
             <div class="trick-header row">
                 <img src="{{ asset('./build/images/trick_buttering.jpg') }}">
-                <div class="col-xs-12 text-center trick-title">
-                    <h1>
-                        <span class="bold" style="opacity: 1; display: inline;">{{ nom }}
-                            TRICK DETAILS PAGE</span></h1>
+                    <div class="col-xs-12 text-center trick-title">
+                        <h1>
+                            <span class="bold" style="opacity: 1; display: inline;">
+                                {{ trick.name }}</span>
+                        </h1>
+                    </div>
+                </div>
+                <div class="admin-icons">
+                    <a href={{ url("trick_update", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
+                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
                 </div>
             </div>
-        </div>
-
-        <div class="container d-md-none see-medias-btn-div">
-            <section class="row">
-                <button type="button" class="btn btn-primary center-button see-medias-btn">See medias</button>
-            </section>
-        </div>
-        <div class="container d-none d-md-block">
-            <a class="anchor" id="tricks-anchor"></a>
-            <section class="row" id="trick-detail-list">
-                {% for i in 0..2 %}
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
-                        <article class="trick-photo-thumbnail">
-                            <a href="trick-{{ i }}.php">
-                                <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="trick-image">-->
-                                <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="bla-bla">
-                            </a>
-                        </article>
-                    </div>
-                {% endfor %}
-                {% for i in 0..2 %}
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
-                        <article class="trick-video-thumbnail">
-                            <iframe class="video-iframe" src="https://www.youtube.com/embed/XKpLbVu3mP4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
-                        </article>
-                    </div>
-                {% endfor %}
-            </section>
-        </div>
-
-        <div class="container">
-            <section class="row col-10 offset-1 trick-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </section>
-        </div>
-
-        <div class="container">
-            <section class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 offset-lg-3 trick-info-box">
-                    <div class="inner border-primary">
-                        <span class="trick-info-text">Créé le 12/08/2018</span>
-                    </div>
+            <div class="container d-md-none see-medias-btn-div">
+                <section class="row">
+                    <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
+                </section>
+            </div>
+            <div class="container d-none d-md-block">
+                <a class="anchor" id="tricks-anchor"></a>
+                <section class="row" id="trick-detail-list">
+                    {% for i in 0..2 %}
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
+                            <article class="trick-photo-thumbnail">
+                                <a
+                                    href="trick-{{ i }}.php">
+                                    <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="trick-image">-->
+                                    <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="bla-bla"></a>
+                                </article>
+                            </div>
+                        {% endfor %}
+                        {% for i in 0..2 %}
+                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
+                                <article class="trick-video-thumbnail">
+                                    <iframe allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" class="video-iframe" frameborder="0" src="https://www.youtube.com/embed/XKpLbVu3mP4"></iframe>
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </section>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
-                    <div class="inner border-primary">
-                        <span class="trick-info-text">Groupe : Figures de base</span>
-                    </div>
-                </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
-                    <div class="inner border-primary">
-                        <span class="trick-info-text">Modifié le 17/08/2018</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <hr>
-        <div class="container">
-            <section class="row">
-                <form id="leave-comment-form">
-                    <div id="form-div">
-                        <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
-                        <button type="submit">Leave a comment</button>
-                    </div>
-                </form>
-            </section>
-        </div>
-        <hr>
-        <div class="container">
-            <section class="row">
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                </div>
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
+                <div class="container">
+                    <section class="row col-10 offset-1 trick-description">
+                        {{ trick.description }}
+                    </section>
                 </div>
                 <div class="container">
                     <section class="row">
-                        <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 offset-lg-3 trick-info-box">
+                            <div class="inner border-primary">
+                                <span class="trick-info-text">Créé le
+                                    {{ trick.creationDate|date("d/m/Y") }}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
+                            <div class="inner border-primary">
+                                <span class="trick-info-text">Groupe : Figures de base</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
+                            <div class="inner border-primary">
+                                <span class="trick-info-text">Modifié le
+                                    {{ trick.lastUpdateDate|date("d/m/Y") }}</span>
+                            </div>
+                        </div>
                     </section>
                 </div>
-            </section>
-        </div>
-    </div>
-
-{% endblock %}
+                <hr>
+                    <div class="container">
+                        <section class="row">
+                            <form id="leave-comment-form">
+                                <div id="form-div">
+                                    <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
+                                    <button type="submit">Leave a comment</button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                    <hr>
+                        <div class="container">
+                            <section class="row">
+                                <div class="comment-div">
+                                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </div>
+                                <div class="comment-div">
+                                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    </p>
+                                </div>
+                                <div class="comment-div">
+                                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
+                                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    </p>
+                                </div>
+                                <div class="container">
+                                    <section class="row">
+                                        <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                {% endblock %}
+            
