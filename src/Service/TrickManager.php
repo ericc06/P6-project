@@ -23,14 +23,20 @@ class TrickManager extends Controller
     // Inserts or updates a trick into the database.
     public function saveTrickToDB(Trick $trick)
     {
-        if (null === $trick->getCreationDate()) {
+        /*if (null === $trick->getCreationDate()) {
             $trick->setCreationDate(new \DateTime());
         }
-        if (null === $trick->getLastUpdateDate()) {
-            $trick->setLastUpdateDate(new \DateTime());
-        }
+        */
         $this->em->persist($trick);
         $this->em->flush();
+    }
+
+    
+    // Returns a trick from the database from its id.
+    public function getTrickById($id)
+    {
+        return $this->em->getRepository(Trick::class)
+        ->find($id);
     }
 
     // Deletes a trick from the database.

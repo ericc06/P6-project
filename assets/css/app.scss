@@ -152,6 +152,17 @@ body {
 
 /* Trick details page */
 
+.admin-icons {
+    position: absolute;
+    top: 15px;
+    right: 0;
+}
+.admin-icons i {
+    color: red;
+    font-size: 1.5rem;
+    margin-left: 15px;
+}
+
 .faded-bg-img img {
   opacity: 0.4;
   height: calc(100vh - #{$header-height});
@@ -212,6 +223,7 @@ footer {
 }
 
 .header-img-div {
+  position: relative;    
   padding: 0;
 }
 .trick-header {

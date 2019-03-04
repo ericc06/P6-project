@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick
 {
@@ -27,14 +28,14 @@ class Trick
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="creation_date", type="datetime")
      */
-    private $creation_date;
+    private $creationDate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="last_update_date", type="datetime", nullable=true)
      */
-    private $last_update_date;
+    private $lastUpdateDate;
 
     public function getId(): ?int
     {
@@ -67,25 +68,41 @@ class Trick
 
     public function getCreationDate(): ?\DateTimeInterface
     {
-        return $this->creation_date;
+        return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creation_date): self
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
-        $this->creation_date = $creation_date;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
 
     public function getLastUpdateDate(): ?\DateTimeInterface
     {
-        return $this->last_update_date;
+        return $this->lastUpdateDate;
     }
 
-    public function setLastUpdateDate(\DateTimeInterface $last_update_date): self
+    public function setLastUpdateDate(\DateTimeInterface $lastUpdateDate): self
     {
-        $this->last_update_date = $last_update_date;
+        $this->lastUpdateDate = $lastUpdateDate;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function initCreationDate()
+    {
+        $this->setCreationDate(new \Datetime());
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateLastUpdateDate()
+    {
+        $this->setLastUpdateDate(new \Datetime());
     }
 }
