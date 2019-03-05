@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,25 @@ class Trick
      * @ORM\Column(name="last_update_date", type="datetime", nullable=true)
      */
     private $lastUpdateDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $trickGroup;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Media", mappedBy="media", cascade="all", orphanRemoval=true)
+     */
+    private $medias;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->medias = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +112,41 @@ class Trick
     }
 
     /**
+     * Add media
+     *
+     * @param Media $media
+     *
+     * @return Trick
+     */
+    public function addMedia(Media $media)
+    {
+        $this->medias[] = $media;
+        $media->setTrick($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove media
+     *
+     * @param Media $media
+     */
+    public function removeMedia(Media $media)
+    {
+        $this->medias->removeElement($media);
+    }
+
+    /**
+     * Get media
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getmedias()
+    {
+        return $this->medias;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function initCreationDate()
@@ -104,5 +160,17 @@ class Trick
     public function updateLastUpdateDate()
     {
         $this->setLastUpdateDate(new \Datetime());
+    }
+
+    public function getTrickGroup(): ?TrickGroup
+    {
+        return $this->trickGroup;
+    }
+
+    public function setTrickGroup(?TrickGroup $trickGroup): self
+    {
+        $this->trickGroup = $trickGroup;
+
+        return $this;
     }
 }
