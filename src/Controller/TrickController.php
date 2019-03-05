@@ -38,7 +38,7 @@ class TrickController extends Controller
     }
 
     /**
-     * @Route("/tricks/{id}", name="trick_view", requirements={"id"="\d+"})
+     * @Route("/tricks/{id}", name="trick_view", requirements={"id"="\d+"}, methods={"GET"})
      * @ParamConverter("trick")
      */
     public function view(Trick $trick)
@@ -53,7 +53,7 @@ class TrickController extends Controller
     /**
      * Trick creation form.
      *
-     * @Route("/tricks/new/", name="trick_add")
+     * @Route("/tricks", name="trick_add", methods={"GET","POST"})
      */
     public function add(Request $request)
     {
@@ -82,9 +82,9 @@ class TrickController extends Controller
     /**
      * Trick update form.
      *
-     * @Route("/tricks/update/{id}", name="trick_update")
+     * @Route("/tricks/{id}/edit", name="trick_update", methods={"GET","PUT"})
      */
-    public function update(Request $request)
+    public function edit(Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
         $trick = $this->trickManager->getTrickById($request->get('id'));
@@ -109,7 +109,7 @@ class TrickController extends Controller
     }
     
     /**
-     * @Route("/tricks/delete/{id}", name="trick_delete", requirements={"id"="\d+"})
+     * @Route("/tricks/{id}/delete", name="trick_delete", requirements={"id"="\d+"})
      */
     public function delete(Trick $trick)
     {

@@ -27,7 +27,9 @@
                     </div>
                     {# form_widget(form) #}
                     {{ form_row(form.name) }}
-                    {{ form_row(form.description) }}
+                    {{ form_row(form.description) }}                    
+                    {{ form_row(form.trickGroup) }}                    
+                    {{ form_row(form.medias) }}                    
                     {{ form_row(form._token) }}
                     <input class="btn" type="submit" value="{{'create_trick'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
