@@ -23,19 +23,28 @@ class TrickType extends AbstractType
             ->add('trickGroup', EntityType::class, array(
                 'class'        => 'App\Entity\TrickGroup',
                 'choice_label' => 'name',
+                'placeholder'  => ' >> Choose a group <<',
                 'multiple'     => false,
             ))
-            ->add('addTrickGroup', TrickGroupType::class)
+            /*->add('trickGroup', TrickGroupType::class)*/
             ->add('medias', CollectionType::class, array(
                 'entry_type' => MediaType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype' => true,
+                //'prototype' => true,
                 'by_reference' => false
             ));
         ;
     }
 
+            /*
+            ->add('trickGroup', EntityType::class, array(
+                'class'        => 'App\Entity\TrickGroup',
+                'choice_label' => 'name',
+                'placeholder'  => ' >> Choose a group <<',
+                'multiple'     => false,
+            ))
+            */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

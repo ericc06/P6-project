@@ -29,7 +29,11 @@
                     {{ form_row(form.name) }}
                     {{ form_row(form.description) }}                    
                     {{ form_row(form.trickGroup) }}                    
-                    {{ form_row(form.medias) }}                    
+                    {{ form_row(form.medias) }}
+                    <div class="add_media_buttons_div">
+                        <input class="btn" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
+                        <input class="btn" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+                    </div>
                     {{ form_row(form._token) }}
                     <input class="btn" type="submit" value="{{'create_trick'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
@@ -37,4 +41,87 @@
             </div>
         </div>
     </div>
+    {# On charge la bibliothèque jQuery depuis le CDN google. #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {# Voici le script en question : #}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+            var $container = $('div#trick_medias');
+            // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+            var index = $container.find(':input').length;
+            // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+            $('#add_image').click(function (e) {
+                addMedia($container, 'image', "Ajout d'une image :");
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                return false;
+            });
+            $('#add_video').click(function (e) {
+                addMedia($container, 'video', "Ajout d'une vidéo :");
+                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                return false;
+            });
+
+            // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle figure par exemple).
+            //if (index == 0) {
+            //    addMedia($container, 'image');
+            //} else { // S'il existe déjà des medias, on ajoute un lien de suppression pour chacun d'entre eux
+                $container.children('div').each(function () {
+                    addDeleteLink($(this));
+                });
+            //}
+            // La fonction qui ajoute un formulaire MediaType
+            function addMedia($container, $mediaType, $fieldsetLabel) {
+                // Dans le contenu de l'attribut « data-prototype », on remplace :
+                // - le texte "__name__label__" qu'il contient par le label du champ
+                // - le texte "__name__" qu'il contient par le numéro du champ
+                var template = $container.attr('data-prototype').replace(/__name__label__/g, $fieldsetLabel).replace(/__name__/g, index);//.replace(/value_to_be_replaced/g, 0);
+                // On crée un objet jquery qui contient ce template
+                var $prototype = $(template);
+                // On ajoute au prototype un lien pour pouvoir supprimer le media
+                addDeleteLink($prototype);
+                // On ajoute le prototype modifié à la fin de la balise <div>
+                $container.append($prototype);
+                //$('div.add_media_buttons_div').hide();
+                
+                switch ($mediaType) {
+                    case 'image':
+                        // On montre le champ d'upload de l'image et on cache celui de saisie de l'URL de la video
+                        $('input#trick_medias_' + index + '_file').parent().closest('div').show();
+                        $('div#trick_medias_' + index + '_defaultCover').parent().closest('fieldset').show();
+                        $('input#trick_medias_' + index + '_fileUrl').parent().closest('div').hide();
+                        // On initialise le champ hidden "fileType" à 0 (valeur pour une image)
+                        $('input#trick_medias_' + index + '_fileType').val(0);
+                        $('input#trick_medias_' + index + '_defaultCover_placeholder').attr('name', 'default_image');//.attr('checked', false);
+                        break;
+                    case 'video':
+                        // On cache le champ d'upload de l'image et on montre celui de saisie de l'URL de la video
+                        $('input#trick_medias_' + index + '_file').parent().closest('div').hide();
+                        $('div#trick_medias_' + index + '_defaultCover').parent().closest('fieldset').hide();
+                        $('input#trick_medias_' + index + '_fileUrl').parent().closest('div').show();
+                        // On initialise le champ hidden "fileType" à 1 (valeur pour une video)
+                        $('input#trick_medias_' + index + '_fileType').val(1);
+                        break;
+                    default:
+                        break;
+                }
+                // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+                index++;
+            }
+            // La fonction qui ajoute un lien de suppression d'un media
+            function addDeleteLink($prototype) { // Création du lien
+                var $deleteLink = $('<a href="#" class="btn btn-danger">Delete</a>');
+                // Ajout du lien
+                $prototype.append($deleteLink);
+
+                // Ajout du listener sur le clic du lien pour effectivement supprimer le media
+                $deleteLink.click(function(e) {
+                    $prototype.remove();
+            
+                    e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+                    return false;
+                });
+            }
+        });
+    </script>
 {% endblock %}

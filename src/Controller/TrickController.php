@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Entity\Media;
 use App\Form\TrickType;
 use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -64,6 +65,7 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->trickManager->saveTrickToDB($trick);
 
             $request->getSession()->getFlashBag()->add(
