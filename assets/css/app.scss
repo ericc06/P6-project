@@ -327,6 +327,31 @@ hr {
   padding: 5px;
 }
 
+/* Trick creation form page */
+
+.add_media_buttons_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.add_media_buttons_div > .btn {
+    flex: 0 45%;
+}
+
+div#trick_medias > fieldset.form-group > .col-form-label {
+    font-weight: bold;
+}
+div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-label {
+    font-style: italic;
+}
+
+.trick_new_form > fieldset > .col-form-label {
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
 /* max-width: 575px */
 @include media-breakpoint-up(xs) {
   .xs-fixed-bottom {

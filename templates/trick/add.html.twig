@@ -17,7 +17,7 @@
                             </div>
                         {% endfor %}
                     {% endfor %}
-                    {{ form_start(form) }}
+                    {{ form_start(form, {'attr': {'class': 'trick_new_form'}}) }}
                     <legend>
                         <i class="fa fa-lock" aria-hidden="true"></i>
                         {{'create_a_trick'|trans }}
@@ -52,12 +52,12 @@
             var index = $container.find(':input').length;
             // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
             $('#add_image').click(function (e) {
-                addMedia($container, 'image', "Ajout d'une image :");
+                addMedia($container, 'image', "{{'added_image'|trans }}");
                 e.preventDefault(); // évite qu'un # apparaisse dans l'URL
                 return false;
             });
             $('#add_video').click(function (e) {
-                addMedia($container, 'video', "Ajout d'une vidéo :");
+                addMedia($container, 'video', "{{'added_video'|trans }}");
                 e.preventDefault(); // évite qu'un # apparaisse dans l'URL
                 return false;
             });
@@ -92,7 +92,7 @@
                         $('input#trick_medias_' + index + '_fileUrl').parent().closest('div').hide();
                         // On initialise le champ hidden "fileType" à 0 (valeur pour une image)
                         $('input#trick_medias_' + index + '_fileType').val(0);
-                        $('input#trick_medias_' + index + '_defaultCover_placeholder').attr('name', 'default_image');//.attr('checked', false);
+                        $('input#trick_medias_' + index + '_defaultCover_0').attr('name', 'default_image');//.attr('checked', false);
                         break;
                     case 'video':
                         // On cache le champ d'upload de l'image et on montre celui de saisie de l'URL de la video
@@ -110,7 +110,7 @@
             }
             // La fonction qui ajoute un lien de suppression d'un media
             function addDeleteLink($prototype) { // Création du lien
-                var $deleteLink = $('<a href="#" class="btn btn-danger">Delete</a>');
+                var $deleteLink = $('<a href="#" class="btn btn-danger">{{"delete"|trans }}</a>');
                 // Ajout du lien
                 $prototype.append($deleteLink);
 

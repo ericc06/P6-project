@@ -54,7 +54,7 @@ class TrickController extends Controller
     /**
      * Trick creation form.
      *
-     * @Route("/tricks", name="trick_add", methods={"GET","POST"})
+     * @Route("/tricks/new", name="trick_new", methods={"GET","POST"})
      */
     public function add(Request $request)
     {
@@ -65,7 +65,6 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->trickManager->saveTrickToDB($trick);
 
             $request->getSession()->getFlashBag()->add(
