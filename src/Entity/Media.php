@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MediaRepository")
@@ -191,8 +191,10 @@ class Media
         // Pour faire propre, on devrait renommer cet attribut en « extension », plutôt que « url »
         $this->fileUrl = $this->file->guessExtension();
 
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
-        $this->alt = $this->file->getClientOriginalName();
+        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute s'il n'est pas renseigné dans le formulaire
+        if (null === $this->alt) {
+            $this->alt = $this->file->getClientOriginalName();
+        }
     }
 
     /**
