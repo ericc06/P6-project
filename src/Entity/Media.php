@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Psr\Log\LoggerInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MediaRepository")
@@ -12,6 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Media
 {
+
+    //private $logger;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -63,7 +67,7 @@ class Media
     private $tempFilename;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="medias")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="medias", cascade="all")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
@@ -82,6 +86,13 @@ class Media
     {
         return $this->id;
     }
+
+    // CA NE MARCHE PAS !!! Impossible de logger dans l'entité.
+    /*public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+    */
 
     public function getFileUrl(): ?string
     {
@@ -152,7 +163,7 @@ class Media
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
-
+/*
         // On vérifie si on avait déjà un fichier pour cette entité
         if (null !== $this->fileUrl) {
             // On sauvegarde l'extension du fichier pour le supprimer plus tard
@@ -162,6 +173,7 @@ class Media
             $this->fileUrl = null;
             $this->alt = null;
         }
+        */
     }
 
     public function getTrick(): ?Trick
@@ -216,6 +228,8 @@ class Media
             }
         }
 
+        //dump($this->getUploadRootDir());
+
         // On déplace le fichier envoyé dans le répertoire de notre choix
         $this->file->move(
             $this->getUploadRootDir(), // Le répertoire de destination
@@ -253,6 +267,6 @@ class Media
     protected function getUploadRootDir()
     {
         // On retourne le chemin relatif vers l'image pour notre code PHP
-        return __DIR__ . '/../../../../public/' . $this->getUploadDir();
+        return __DIR__ . '/../../public/' . $this->getUploadDir();
     }
 }

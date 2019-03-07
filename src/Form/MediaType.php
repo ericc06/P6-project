@@ -28,7 +28,7 @@ class MediaType extends AbstractType
                 'required'=>false,
                 'label' => $this->i18n->trans('video_url'),
             ))
-            ->add('file', TextType::class, array(
+            ->add('file', FileType::class, array(
                 'required'=>false,
                 'label' => $this->i18n->trans('image_file'),
             ))
