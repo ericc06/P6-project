@@ -42,11 +42,22 @@ class TrickController extends Controller
      * @Route("/tricks/{id}", name="trick_view", requirements={"id"="\d+"}, methods={"GET"})
      * @ParamConverter("trick")
      */
-    public function view(Trick $trick)
+    public function view(Request $request, Trick $trick)
     {
+        dump($trick);
+
+        $medias = $this->getDoctrine()
+        ->getRepository(Media::class)
+        ->findMediasByTrickIdOrderedByFileType($request->get('id'));
+        //$trick->setMedias($medias);
+        //dump($trick);
+
         $content = $this
             ->get('templating')
-            ->render('trick/view.html.twig', array('trick' => $trick));
+            ->render('trick/view.html.twig', array(
+                'trick' => $trick,
+                'medias' => $medias
+            ));
         return new Response($content);
         //return new Response("test");
     }
@@ -65,13 +76,13 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->trickManager->saveTrickToDB($trick);
+            $result = $this->trickManager->saveTrickToDB($trick);
 
             $request->getSession()->getFlashBag()->add(
-                'notice',
-                $this->i18n->trans('trick_creation_done')
+                $result['msg_type'],
+                $this->i18n->trans($result['message'])
             );
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute($result['dest_page']);
         }
 
         return $this->render('trick/add.html.twig', array(

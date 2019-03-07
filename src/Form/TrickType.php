@@ -25,13 +25,13 @@ class TrickType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('name', TextType::class, array(
-            'label' => $this->i18n->trans('name')
-        ))
-        
-        ->add('description', TextareaType::class, array(
-            'label' => $this->i18n->trans('description'),
-        ))
+            ->add('name', TextType::class, array(
+                'label' => $this->i18n->trans('name')
+            ))
+            
+            ->add('description', TextareaType::class, array(
+                'label' => $this->i18n->trans('description'),
+            ))
             ->add('trickGroup', EntityType::class, array(
                 'class'        => 'App\Entity\TrickGroup',
                 'choice_label' => 'name',

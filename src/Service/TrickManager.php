@@ -27,8 +27,22 @@ class TrickManager extends Controller
             $trick->setCreationDate(new \DateTime());
         }
         */
-        $this->em->persist($trick);
-        $this->em->flush();
+        $result = [];
+
+        try {
+            $this->em->persist($trick);
+            $this->em->flush();
+
+            $result['msg_type'] = 'success';
+            $result['message'] = 'trick_creation_done';
+            $result['dest_page'] = 'homepage';
+        } catch (Exception $e) {
+            $result['msg_type'] = 'danger';
+            $result['message'] = $e->getMessage();
+            $result['dest_page'] = 'trick_new';
+        }
+        
+        return $result;
     }
 
     

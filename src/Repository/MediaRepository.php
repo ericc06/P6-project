@@ -19,6 +19,18 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
+    public function findMediasByTrickIdOrderedByFileType($trickId)
+    {
+        return $this->createQueryBuilder('m')
+            // m.trick refers to the "trick" property on media
+            // selects all the category data to avoid the query
+            ->where('m.trick = :id')
+            ->setParameter('id', $trickId)
+            ->orderBy('m.fileType', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Media[] Returns an array of Media objects
     //  */

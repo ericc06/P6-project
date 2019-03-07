@@ -19,6 +19,18 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
+    public function findAllMediasByTrickId($trickId)
+    {
+        return $this->createQueryBuilder('t')
+            ->from('APP\Entity\Media', 'm')
+            // m.trick refers to the "trick" property on media
+            // selects all the category data to avoid the query
+            ->andWhere('trick_id = :id')
+            ->setParameter('id', $trickId)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */

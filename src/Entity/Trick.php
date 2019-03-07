@@ -46,7 +46,7 @@ class Trick
     private $trickGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="Media", mappedBy="media", cascade="all", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Media", mappedBy="trick", cascade="all", orphanRemoval=true)
      */
     private $medias;
 
@@ -118,7 +118,7 @@ class Trick
      *
      * @return Trick
      */
-    public function addMedia(Media $media)
+    public function addMedia(Media $media): self
     {
         $this->medias[] = $media;
         $media->setTrick($this);
@@ -141,9 +141,21 @@ class Trick
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getmedias()
+    public function getMedias(): ?Collection
     {
         return $this->medias;
+    }
+
+    /**
+     * Set media
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function setMedias(?Collection $medias): self
+    {
+        $this->medias = $medias;
+
+        return $this;
     }
 
     /**
