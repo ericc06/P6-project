@@ -44,12 +44,11 @@ body {
   top: 56px;
 }
 
-.page-bg::after {
-  content: "";
-  background-image: url(/P6-project-flex/public/./build/images/trick_buttering.jpg);
+.page-bg {
   background-size: 100% 100vh;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  background-position-y: 56px;
+  opacity: 0.3;
   top: 0;
   left: 0;
   bottom: 0;
@@ -67,6 +66,11 @@ body {
 .mr-zero {
   margin-left: auto;
   margin-right: 0;
+}
+
+.greetings {
+    padding-top: 8px;
+    padding-right: 55px;
 }
 
 #home {
@@ -156,11 +160,18 @@ body {
     position: absolute;
     top: 15px;
     right: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 2.5rem;
+    width: 90px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 8px;
+    border-radius: 5px;
 }
 .admin-icons i {
     color: red;
     font-size: 1.5rem;
-    margin-left: 15px;
 }
 
 .faded-bg-img img {
@@ -264,12 +275,32 @@ footer {
   margin-bottom: 30px;
 }
 
+.trick-infos-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
 .trick-info-box {
   padding: 10px;
+  flex: auto;
+  justify-content: center;
+  align-content: center;
 }
 .trick-info-text {
   display: inline-block;
   margin: auto;
+}
+
+.trick_edit_form_container {
+    margin-top: 2rem;
+}
+
+.trick_edit_form_container textarea {
+    width: 200%;
+    height: 15rem;
 }
 
 .inner {

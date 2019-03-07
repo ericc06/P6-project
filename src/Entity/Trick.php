@@ -25,7 +25,12 @@ class Trick
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=50)
+     */
+    private $slug;
+
+    /**
+     * @ORM\Column(type="string", length=5000)
      */
     private $description;
 
@@ -50,6 +55,7 @@ class Trick
      */
     private $medias;
 
+
     /**
      * Constructor
      */
@@ -71,6 +77,18 @@ class Trick
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
@@ -158,22 +176,6 @@ class Trick
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function initCreationDate()
-    {
-        $this->setCreationDate(new \Datetime());
-    }
-
-    /**
-     * @ORM\PreUpdate
-     */
-    public function updateLastUpdateDate()
-    {
-        $this->setLastUpdateDate(new \Datetime());
-    }
-
     public function getTrickGroup(): ?TrickGroup
     {
         return $this->trickGroup;
@@ -185,4 +187,34 @@ class Trick
 
         return $this;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersistTrick()
+    {
+        $this->initCreationDate();
+        $this->initSlug();
+    }
+
+    public function initCreationDate()
+    {
+        $this->setCreationDate(new \Datetime());
+    }
+
+    public function initSlug()
+    {
+        $slug = strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($this->getName(), ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
+
+        $this->setSlug($slug);
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateLastUpdateDate()
+    {
+        $this->setLastUpdateDate(new \Datetime());
+    }
+
 }

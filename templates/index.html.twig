@@ -35,15 +35,13 @@
     <div class="container">
         <a class="anchor" id="tricks-anchor"></a>
         <section class="row" id="tricks-list">
-            {% for i in 0..14 %}
+            {% for trick in tricksArray %}
                 <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
                     <article class="trick-thumbnail">
-                        <!--<a href="trick-{{ i }}.php">-->
-                            <a href="http://localhost/P6-project-flex/public/trick/test">
-                            <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="bla-bla">-->
-                            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="thumbnail">
+                            <a href="{{ asset('./tricks/' ~ trick.slug) }}">
+                            <img src="{{ asset('./uploads/images/' ~ trick.coverImage) }}" alt="{{ trick.name }}">
                         </a>
-                        <p>bla-bla</p>
+                        <p>{{ trick.name }}</p>
                     </article>
                 </div>
             {% endfor %}
