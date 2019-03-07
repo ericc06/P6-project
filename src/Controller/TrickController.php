@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Entity\Media;
+use App\Entity\TrickGroup;
 use App\Form\TrickType;
 use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,35 +34,14 @@ class TrickController extends Controller
     {
         $env = getenv('APP_ENV');
 
+        $tricksArray = $this->trickManager->getAllTricksForIndexPage();
+
         return $this->render('index.html.twig', array(
             'nom' => $env,
+            'tricksArray' => $tricksArray
         ));
     }
-
-    /**
-     * @Route("/tricks/{id}", name="trick_view", requirements={"id"="\d+"}, methods={"GET"})
-     * @ParamConverter("trick")
-     */
-    public function view(Request $request, Trick $trick)
-    {
-        dump($trick);
-
-        $medias = $this->getDoctrine()
-        ->getRepository(Media::class)
-        ->findMediasByTrickIdOrderedByFileType($request->get('id'));
-        //$trick->setMedias($medias);
-        //dump($trick);
-
-        $content = $this
-            ->get('templating')
-            ->render('trick/view.html.twig', array(
-                'trick' => $trick,
-                'medias' => $medias
-            ));
-        return new Response($content);
-        //return new Response("test");
-    }
-
+    
     /**
      * Trick creation form.
      *
@@ -92,31 +72,70 @@ class TrickController extends Controller
     }
 
     /**
+     * @Route("/tricks/{slug}", name="trick_show", requirements={"slug"="[\w-]+"}, methods={"GET"})
+     * @ParamConverter("trick")
+     */
+    public function show(Trick $trick)
+    {
+        //dump($trick);
+        $medias = $this->trickManager->getMediasByTrickId($trick->getId());
+        //$trick->setMedias($medias);
+        //dump($trick);
+
+        $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
+
+        $group_name = $this->trickManager->getGroupByTrickGroupId($trick->getTrickGroup());
+
+        $content = $this
+            ->get('templating')
+            ->render('trick/view.html.twig', array(
+                'trick' => $trick,
+                'medias' => $medias,
+                'cover_image' => $cover_image_file,
+                'group_name' => $group_name
+            ));
+        return new Response($content);
+        //return new Response("test");
+    }
+
+
+    /**
      * Trick update form.
      *
-     * @Route("/tricks/{id}/edit", name="trick_update", methods={"GET","PUT"})
+     * @Route("/tricks/{id}/edit", name="trick_edit", methods={"GET","PUT","POST"})
      */
     public function edit(Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
         $trick = $this->trickManager->getTrickById($request->get('id'));
 
+        $medias = $this->trickManager->getMediasByTrickId($trick->getId());
+
+        $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
+
+        $group_name = $this->trickManager->getGroupByTrickGroupId($trick->getTrickGroup());
+
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->trickManager->saveTrickToDB($trick);
+            $result = $this->trickManager->saveTrickToDB($trick);
 
             $request->getSession()->getFlashBag()->add(
-                'notice',
-                $this->i18n->trans('trick_creation_done')
+                $result['msg_type'],
+                $this->i18n->trans($result['message'])
             );
-            return $this->redirectToRoute('homepage');
+
+            return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('trick/update.html.twig', array(
+        return $this->render('trick/edit.html.twig', array(
             'form' => $form->createView(),
+            'trick' => $trick,
+            'medias' => $medias,
+            'cover_image' => $cover_image_file,
+            'group_name' => $group_name
         ));
     }
     

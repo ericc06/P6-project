@@ -7,6 +7,10 @@
                 <source>home</source>
                 <target>Accueil</target>
             </trans-unit>
+            <trans-unit id="hello">
+                <source>hello</source>
+                <target>Bonjour</target>
+            </trans-unit>
             <trans-unit id="register">
                 <source>register</source>
                 <target>S'enregistrer</target>
@@ -14,6 +18,10 @@
             <trans-unit id="logout">
                 <source>logout</source>
                 <target>Se déconnecter</target>
+            </trans-unit>
+            <trans-unit id="add_a_trick">
+                <source>add_a_trick</source>
+                <target>Ajouter une figure</target>
             </trans-unit>
             <trans-unit id="user_account">
                 <source>user_account</source>
@@ -166,6 +174,10 @@
             <trans-unit id="choose_a_group">
                 <source>choose_a_group</source>
                 <target> --- Sélectionnez un groupe ---</target>
+            </trans-unit>
+            <trans-unit id="update_a_trick">
+                <source>update_a_trick</source>
+                <target>Modifier une figure</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>

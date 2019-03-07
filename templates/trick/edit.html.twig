@@ -1,0 +1,87 @@
+{# templates/trick/edit.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <!-- Edition page ================================================== -->
+    <div
+        class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
+    </div>
+    <div class="container main">
+        {# On affiche tous les messages flash #}
+        {% for label, messages in app.session.flashbag.all %}
+            {% for message in messages %}
+                <div class="flash-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <div>
+            <i class="fas fa-pen" aria-hidden="true"></i>
+            {{'update_a_trick'|trans }}
+        </div>
+        <div class="container header-img-div">
+            <div class="trick-header row">
+                <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
+                    <div class="col-xs-12 text-center trick-title">
+                        <h1>
+                            <span class="bold" style="opacity: 1; display: inline;">
+                                {{ trick.name }}</span>
+                        </h1>
+                    </div>
+                </div>
+                {% if app.user %}
+                <div class="admin-icons">
+                    <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
+                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="container d-md-none see-medias-btn-div">
+                <section class="row">
+                    <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
+                </section>
+            </div>
+            <div class="container d-none d-md-block">
+                <a class="anchor" id="tricks-anchor"></a>
+                <section class="row" id="trick-detail-list">
+                    {% for media in medias %}
+                        {% if media.fileType == 0 %}
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
+                            <article class="trick-photo-thumbnail">
+                                    <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
+                                </article>
+                            </div>
+                        {% else %}
+                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
+                                <article class="trick-video-thumbnail">
+                                    {{ media.fileUrl | raw }}
+                                </article>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            </div>
+
+            <div class="container trick_edit_form_container">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="well">
+                            {{ form_start(form) }}
+                            <div class="my-custom-class-for-errors">
+                                {{ form_errors(form) }}
+                            </div>
+                            {# form_widget(form) #}
+                            {{ form_row(form.name) }}
+                            {{ form_row(form.description) }}
+                            {{ form_row(form.trickGroup) }}
+                            {{ form_row(form._token) }}
+                            <input class="btn" type="submit" value="{{'update_trick'|trans }}"/>
+                            {{ form_end(form, {'render_rest': false}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

@@ -28,7 +28,33 @@ class MediaRepository extends ServiceEntityRepository
             ->setParameter('id', $trickId)
             ->orderBy('m.fileType', 'ASC')
             ->getQuery()
+            ->execute();
+    }
+
+    public function findDefaultCoverForTrickOrTheFirstOne($trickId)
+    {
+        $result = $this->createQueryBuilder('m') // . '.' . 'm.fileUrl')
+            // m.trick refers to the "trick" property on media
+            // selects all the category data to avoid the query
+            ->where('m.trick = :id')
+            ->andWhere('m.defaultCover = true')
+            ->setParameter('id', $trickId)
+            ->getQuery()
             ->getResult();
+
+        if ((null === $result) || ([] === $result)) {
+            $result = $this->createQueryBuilder('m') // . '.' . 'm.fileUrl')
+            // m.trick refers to the "trick" property on media
+            // selects all the category data to avoid the query
+            ->where('m.trick = :id')
+            ->andWhere('m.fileType = 0')
+            ->setParameter('id', $trickId)
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        }
+        return $result;
     }
 
     // /**

@@ -4,9 +4,10 @@
 namespace App\Service;
 
 use App\Entity\Trick;
+use App\Entity\Media;
+use App\Entity\TrickGroup;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-
 
 //use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -24,33 +25,34 @@ class TrickManager extends Controller
     public function saveTrickToDB(Trick $trick)
     {
         /*if (null === $trick->getCreationDate()) {
-            $trick->setCreationDate(new \DateTime());
+        $trick->setCreationDate(new \DateTime());
         }
-        */
+         */
         $result = [];
+
+        \dump($trick);
 
         try {
             $this->em->persist($trick);
             $this->em->flush();
 
             $result['msg_type'] = 'success';
-            $result['message'] = 'trick_creation_done';
+            $result['message'] = 'trick_saved_successfully';
             $result['dest_page'] = 'homepage';
         } catch (Exception $e) {
             $result['msg_type'] = 'danger';
             $result['message'] = $e->getMessage();
             $result['dest_page'] = 'trick_new';
         }
-        
+
         return $result;
     }
 
-    
     // Returns a trick from the database from its id.
     public function getTrickById($id)
     {
         return $this->em->getRepository(Trick::class)
-        ->find($id);
+            ->find($id);
     }
 
     // Deletes a trick from the database.
@@ -58,5 +60,45 @@ class TrickManager extends Controller
     {
         $this->em->remove($trick);
         $this->em->flush();
+    }
+
+    // Returns all tricks with their cover image for the homepage (no media).
+    public function getAllTricksForIndexPage()
+    {
+        $tricks = $this->em->getRepository(Trick::class)
+        ->findAllTricks();
+
+        $tricksArray = [];
+
+        foreach ($tricks as $key => $trick) {
+            $tricksArray[$key]['id'] = $trick->getId();
+            $tricksArray[$key]['name'] = $trick->getName();
+            $tricksArray[$key]['slug'] = $trick->getSlug();
+            $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId($trick->getId());
+        }
+        
+        //\dump($tricksArray);
+
+        return $tricksArray;
+    }
+
+    // Returns the medias from a trick id.
+    public function getMediasByTrickId($id)
+    {
+        return $this->em->getRepository(Media::class)
+            ->findMediasByTrickIdOrderedByFileType($id);
+    }
+
+    // Returns the cover image file name from a trick id.
+    public function getCoverImageByTrickId($id)
+    {
+        $cover_image_details = $this->em->getRepository(Media::class)->findDefaultCoverForTrickOrTheFirstOne($id);
+
+        return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
+    }
+    // Returns the group name from a trick id.
+    public function getGroupByTrickGroupId($id)
+    {
+        return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
     }
 }
