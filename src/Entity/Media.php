@@ -269,4 +269,9 @@ class Media
         // On retourne le chemin relatif vers l'image pour notre code PHP
         return __DIR__ . '/../../public/' . $this->getUploadDir();
     }
+
+    public function getFixturesPath()
+    {
+        return __DIR__ . '/../../src/DataFixtures/images/';
+    }
 }

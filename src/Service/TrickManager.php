@@ -48,11 +48,10 @@ class TrickManager extends Controller
         return $result;
     }
 
-    // Returns a trick from the database from its id.
+    // Returns a trick from the database by its id.
     public function getTrickById($id)
     {
-        return $this->em->getRepository(Trick::class)
-            ->find($id);
+        return $this->em->getRepository(Trick::class)->find($id);
     }
 
     // Deletes a trick from the database.

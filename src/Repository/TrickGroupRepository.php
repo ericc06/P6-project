@@ -22,8 +22,6 @@ class TrickGroupRepository extends ServiceEntityRepository
     public function findGroupNameByGroupId($groupId)
     {
         return $this->createQueryBuilder('g')
-            // m.trick refers to the "trick" property on media
-            // selects all the category data to avoid the query
             ->select('g.name')
             ->where('g.id = :id')
             ->setParameter('id', $groupId)

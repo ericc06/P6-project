@@ -107,6 +107,7 @@ class TrickController extends Controller
     public function edit(Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
+        //$trick = $this->trickManager->getTrickById($request->get('id'));
         $trick = $this->trickManager->getTrickById($request->get('id'));
 
         $medias = $this->trickManager->getMediasByTrickId($trick->getId());
