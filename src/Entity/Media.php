@@ -24,7 +24,7 @@ class Media
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      */
     private $fileUrl;
 
