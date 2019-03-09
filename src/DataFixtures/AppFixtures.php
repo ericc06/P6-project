@@ -31,9 +31,10 @@ class AppFixtures extends Fixture
             'Grab',
             'Rotation',
             'Flip',
-            'Rotation désaxées',
+            'Rotation désaxée',
             'Slide',
             'One foot trick',
+            'Old School',
         ];
 
         foreach ($groupsNameArray as $groupName) {
@@ -75,6 +76,67 @@ class AppFixtures extends Fixture
                 'name' => 'Japan air',
                 'slug' => 'japan-air',
                 'description' => "Saisie de l'avant de la planche, avec la main avant, du côté de la carre frontside.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Grab'),
+            ],
+            [
+                'name' => 'Backside Triple Cork 1440',
+                'slug' => 'backside-triple-cork-1440',
+                'description' => "Un cork est une rotation horizontale plus ou moins désaxée, selon un mouvement d'épaules effectué juste au moment du saut.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Rotation désaxée'),
+            ],
+            [
+                'name' => 'Front flip',
+                'slug' => 'front-flip',
+                'description' => "Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.
+
+                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.
+                
+                Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip, ...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
+                
+                Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Flip'),
+            ],
+            [
+                'name' => 'Backflip',
+                'slug' => 'backflip',
+                'description' => "Un flip est une rotation verticale. Les backflips sont des rotations en arrière.
+
+                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Flip'),
+            ],
+            [
+                'name' => 'Nose slide',
+                'slug' => 'nose-slide',
+                'description' => "Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.
+
+                On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en nose slide, c'est-à-dire l'avant de la planche sur la barre.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Slide'),
+            ],
+            [
+                'name' => 'Tail slide',
+                'slug' => 'tail-slide',
+                'description' => "Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.
+
+                On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en tail slide, l'arrière de la planche sur la barre.",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Slide'),
+            ],
+            [
+                'name' => 'Method Air',
+                'slug' => 'method-air',
+                'description' => "Cette figure – qui consiste à attraper sa planche d'une main et le tourner perpendiculairement au sol – est un classique \"old school\". Il n'empêche qu'il est indémodable, avec de vrais ambassadeurs comme Jamie Lynn ou la star Terje Haakonsen. En 2007, ce dernier a même battu le record du monde du \"air\" le plus haut en s'élevant à 9,8 mètres au-dessus du kick (sommet d'un mur d'une rampe ou autre structure de saut).",
+                'creationDate' => new \Datetime(),
+                'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Old School'),
+            ],
+            [
+                'name' => 'Stalefish',
+                'slug' => 'stalefish',
+                'description' => "Saisie de la carre backside de la planche entre les deux pieds avec la main arrière.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Grab'),
             ],
@@ -142,7 +204,7 @@ class AppFixtures extends Fixture
                     'title' => 'Indy Grab',
                     'alt' => 'Indy Grab',
                     'file_type' => 0,
-                    'default_cover' => 1,
+                    'default_cover' => 0,
                 ],
                 [
                     'file_name' => 'indy-2-1920x1080',
@@ -179,7 +241,132 @@ class AppFixtures extends Fixture
                     'default_cover' => 0,
                 ],
             ],
-        ];
+            'backside-triple-cork-1440' => [
+                [
+                    'file_name' => 'backside-triple-cork-1440-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Backside Triple Cork 1440',
+                    'alt' => 'Backside Triple Cork 1440',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+            ],
+            'front-flip' => [
+                [
+                    'file_name' => 'front-flip-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Front flip detailed',
+                    'alt' => 'Front flip detailed',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+                [
+                    'file_name' => 'front-flip-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Front flip',
+                    'alt' => 'Front flip',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+                [
+                    'file_name' => 'front-flip-3-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Front flip detailed',
+                    'alt' => 'Front flip detailed',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+            ],
+            'backflip' => [
+                [
+                    'file_name' => 'backflip-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Backflip',
+                    'alt' => 'Backflip',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+                [
+                    'file_name' => 'backflip-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Backflip detailed',
+                    'alt' => 'Backflip detailed',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+            ],
+            'nose-slide' => [
+                [
+                    'file_name' => 'nose-slide-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Nose slide',
+                    'alt' => 'Nose slide',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+                [
+                    'file_name' => 'nose-slide-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Nose slide',
+                    'alt' => 'Nose slide',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+            ],
+            'tail-slide' => [
+                [
+                    'file_name' => 'tail-slide-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Tail slide',
+                    'alt' => 'Tail slide',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+                [
+                    'file_name' => 'tail-slide-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Tail slide',
+                    'alt' => 'Tail slide',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+            ],
+            'method-air' => [
+                [
+                    'file_name' => 'method-air-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Method Air',
+                    'alt' => 'Method Air',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+                [
+                    'file_name' => 'method-air-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Method Air',
+                    'alt' => 'Method Air',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+            ],
+            'stalefish' => [
+                [
+                    'file_name' => 'stalefish-1-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Stalefish',
+                    'alt' => 'Stalefish',
+                    'file_type' => 0,
+                    'default_cover' => 1,
+                ],
+                [
+                    'file_name' => 'stalefish-2-1920x1080',
+                    'file_url' => 'jpg',
+                    'title' => 'Stalefish',
+                    'alt' => 'Stalefish',
+                    'file_type' => 0,
+                    'default_cover' => 0,
+                ],
+            ],        ];
 
         $videosDetailsArray = [
             'mute' => [
@@ -256,11 +443,107 @@ class AppFixtures extends Fixture
                     'file_type' => 1,
                 ],
             ],
+            'backside-triple-cork-1440' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/cWWk4Vo3buU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Backside Triple Cork 1440',
+                    'alt' => 'Backside Triple Cork 1440 video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/4ekuyDYBrz4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Mark McMorris Triple Cork 1440 Deconstructed',
+                    'alt' => 'Mark McMorris Triple Cork 1440 Deconstructed video',
+                    'file_type' => 1,
+                ],
+            ],
+            'front-flip' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/gMfmjr-kuOg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Front flip',
+                    'alt' => 'Front flip video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/64flAiRA0i0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Tame Dog (Front Flip)',
+                    'alt' => 'Tame Dog (Front Flip) video',
+                    'file_type' => 1,
+                ],
+            ],
+            'backflip' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/Yz4brafqk5A" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Backflip',
+                    'alt' => 'Backflip video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/W853WVF5AqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Le Backflip en détail',
+                    'alt' => 'Le Backflip en détail video',
+                    'file_type' => 1,
+                ],
+            ],
+            'nose-slide' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/oAK9mK7wWvw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Le Nose slide en détail',
+                    'alt' => 'Le Nose slide en détail video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/7AB0FZWyrGQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Nose slide',
+                    'alt' => 'Nose slide video',
+                    'file_type' => 1,
+                ],
+            ],
+            'tail-slide' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/PxYKuE_SZec" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Tailslide 270 on snow',
+                    'alt' => 'Tailslide 270 on snow video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/KqSi94FT7EE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Nose & Tail Slide',
+                    'alt' => 'Nose & Tail Slide video',
+                    'file_type' => 1,
+                ],
+            ],
+            'method-air' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/_Cfssjuv0Zg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Method Air',
+                    'alt' => 'Method Air video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe src="http://www.zapiks.fr/index.php?action=playerIframe&media_id=99159&width=640&height=360&autoStart=false&language=fr" style="position : absolute; top : 0; left : 0; width : 100%; height : 100%;" frameborder="0" scrolling="no" allowfullscreen></iframe>',
+                    'title' => 'Method Air au ralenti',
+                    'alt' => 'Method Air au ralenti video',
+                    'file_type' => 1,
+                ],
+            ],
+            'stalefish' => [
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/rDzm-lkFAI4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Stalefish Grab on Snow',
+                    'alt' => 'Stalefish Grab on Snow video',
+                    'file_type' => 1,
+                ],
+                [
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/0Oez89EoE_c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                    'title' => 'Stalefish',
+                    'alt' => 'Stalefish video',
+                    'file_type' => 1,
+                ],
+            ],
         ];
 
         foreach ($tricksDetailsArray as $trickDetails) {
-            $this->logger->info('> > > > > > AAAA IN LOAD  < < < < < <' . $trickDetails['slug']);
-
             $trick = new Trick();
             $trick->setName($trickDetails['name']);
             $trick->setSlug($trickDetails['slug']);
@@ -284,7 +567,7 @@ class AppFixtures extends Fixture
                 $media->setTitle($video['title']);
                 $media->setAlt($video['alt']);
                 $media->setFileType($video['file_type']);
-                $media->setTrick($trick); /// CA MARCHE CA ????
+                $media->setTrick($trick);
                 $manager->persist($media);
             }
 
@@ -297,18 +580,19 @@ class AppFixtures extends Fixture
                 $media->setTitle($image['title']);
                 $media->setAlt($image['alt']);
                 $media->setFileType($image['file_type']);
-                $media->setTrick($trick); /// CA MARCHE CA ????
+                $media->setTrick($trick);
+                $media->setDefaultCover($image['default_cover']);
                 $manager->persist($media);
 
                 //$manager->flush();
 
-                // Now we make a copy of the image.
+                // Now we make a copy of the image and will upload this copy
+                // which will be automatically deleted during the process.
                 // The name of an image is the id of the media, plus the extension stored in the fileUrl attribute.
 
-                $fileName = $image['file_name'] . '.' . $media->getFileUrl(); /// CA MARCHE CA ????
-                $fileCopyName = $image['file_name'] . '-copy.' . $media->getFileUrl(); /// CA MARCHE CA ????
+                $fileName = $image['file_name'] . '.' . $media->getFileUrl();
+                $fileCopyName = $image['file_name'] . '-copy.' . $media->getFileUrl();
 
-                $this->logger->info('> > > > > > IN LOAD  < < < < < <' . $fileName);
                 copy($media->getFixturesPath() . $trick->getSlug() . '/' . $fileName, $media->getFixturesPath() . $trick->getSlug() . '/' . $fileCopyName);
 
                 $file = new UploadedFile($media->getFixturesPath() . $trick->getSlug() . '/' . $fileCopyName, 'Image1', null, null, null, true);

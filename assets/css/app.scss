@@ -358,6 +358,32 @@ hr {
   padding: 5px;
 }
 
+
+.modal-dialog {
+    max-width: 80vw;
+    max-height: 90vh;
+    max-width: unset;
+    display: inline-block;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.modal.show .modal-dialog {
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.img-responsive {
+    max-width: calc(80vw - 2 * 1rem);
+    max-height: calc(90vh - 2 * 1rem);
+}
+
 /* Trick creation form page */
 
 .add_media_buttons_div {
@@ -397,6 +423,9 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
   .trick-video-thumbnail-div {
     width: 100%;
     flex-basis: unset;
+  }
+  .trick-thumbnail {
+      text-align: center;
   }
   #leave-comment-form {
     width: 100%;
