@@ -24,13 +24,9 @@ class TrickManager extends Controller
     // Inserts or updates a trick into the database.
     public function saveTrickToDB(Trick $trick)
     {
-        /*if (null === $trick->getCreationDate()) {
-        $trick->setCreationDate(new \DateTime());
-        }
-         */
-        $result = [];
+        //\dump($trick);
 
-        \dump($trick);
+        $result = [];
 
         try {
             $this->em->persist($trick);
@@ -49,10 +45,11 @@ class TrickManager extends Controller
     }
 
     // Returns a trick from the database by its id.
-    public function getTrickById($id)
+    /*public function getTrickById($id)
     {
         return $this->em->getRepository(Trick::class)->find($id);
     }
+    */
 
     // Deletes a trick from the database.
     public function deleteTrickFromDB(Trick $trick)
@@ -96,8 +93,7 @@ class TrickManager extends Controller
         return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
     }
     // Returns the group name from a trick id.
-    public function getGroupByTrickGroupId($id)
+    public function getGroupNameByTrickGroupId($id)
     {
         return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
-    }
-}
+    }}

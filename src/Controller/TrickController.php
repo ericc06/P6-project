@@ -72,7 +72,10 @@ class TrickController extends Controller
     }
 
     /**
-     * @Route("/tricks/{slug}", name="trick_show", requirements={"slug"="[\w-]+"}, methods={"GET"})
+     * @Route("/tricks/{id}-{slug}",
+     *  name="trick_show",
+     *  requirements={"id"="\d+", "slug"="[\w-]+"},
+     *  methods={"GET"})
      * @ParamConverter("trick")
      */
     public function show(Trick $trick)
@@ -84,7 +87,7 @@ class TrickController extends Controller
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
-        $group_name = $this->trickManager->getGroupByTrickGroupId($trick->getTrickGroup());
+        $group_name = $this->trickManager->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
         $content = $this
             ->get('templating')
@@ -108,13 +111,13 @@ class TrickController extends Controller
     {
         // Récupération d'une figure déjà existante, d'id $id.
         //$trick = $this->trickManager->getTrickById($request->get('id'));
-        $trick = $this->trickManager->getTrickById($request->get('id'));
+        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
+
+        //\dump($trick);
 
         $medias = $this->trickManager->getMediasByTrickId($trick->getId());
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
-
-        $group_name = $this->trickManager->getGroupByTrickGroupId($trick->getTrickGroup());
 
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -136,7 +139,6 @@ class TrickController extends Controller
             'trick' => $trick,
             'medias' => $medias,
             'cover_image' => $cover_image_file,
-            'group_name' => $group_name
         ));
     }
     

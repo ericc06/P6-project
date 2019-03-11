@@ -5,11 +5,15 @@
 {% extends 'layout.html.twig' %}
 {% block content %}
     <!-- Edition page ================================================== -->
-    <div
+    {#<div
         class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
     </div>
+    #}
+    {% if app.user %}
+
     <div class="container main">
         {# On affiche tous les messages flash #}
+        
         {% for label, messages in app.session.flashbag.all %}
             {% for message in messages %}
                 <div class="flash-{{ label }}">
@@ -17,70 +21,155 @@
                 </div>
             {% endfor %}
         {% endfor %}
-        <div>
+        <div class="trick-update-warning-title">
             <i class="fas fa-pen" aria-hidden="true"></i>
             {{'update_a_trick'|trans }}
         </div>
-        <div class="container header-img-div">
-            <div class="trick-header row">
-                <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
-                    <div class="col-xs-12 text-center trick-title">
-                        <h1>
-                            <span class="bold" style="opacity: 1; display: inline;">
-                                {{ trick.name }}</span>
-                        </h1>
+        {{ form_start(form) }}
+            <div class="container header-img-div">
+                <div class="my-custom-class-for-errors">
+                    {{ form_errors(form) }}
+                </div>
+                <div class="trick-header row">
+                    <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
+                        <div class="col-xs-12 text-center trick-title">
+                            <h1>
+                                <span class="bold" style="opacity: 1; display: inline;">
+                                    {{ trick.name }}</span>
+                            </h1>
+                        </div>
                     </div>
+                    <div class="admin-icons">
+                        <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
+                        <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                    </div>
+
                 </div>
-                {% if app.user %}
-                <div class="admin-icons">
-                    <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
-                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                <div class="container d-md-none see-medias-btn-div">
+                    <section class="row">
+                        <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
+                    </section>
                 </div>
-                {% endif %}
-            </div>
-            <div class="container d-md-none see-medias-btn-div">
-                <section class="row">
-                    <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
-                </section>
-            </div>
-            <div class="container d-none d-md-block">
-                <a class="anchor" id="tricks-anchor"></a>
-                <section class="row" id="trick-detail-list">
-                    {% for media in medias %}
-                        {% if media.fileType == 0 %}
-                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
-                            <article class="trick-photo-thumbnail">
+                <div class="container d-none d-md-block">
+                    <a class="anchor" id="tricks-anchor"></a>
+                    <section class="row" id="trick-detail-list">
+                        {% for media in medias %}
+                            {% if media.fileType == 0 %}
+                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
+                                <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
                                     <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
                                 </article>
+                                <div class="media-admin-icons">
+                                    <i class="fas fa-pen edit-icon" aria-hidden="true"  media-id="{{ media.id }}"></i>
+                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                </div>
                             </div>
-                        {% else %}
+                            {% else %}
                             <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
-                                <article class="trick-video-thumbnail">
+                                <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
                                     {{ media.fileUrl | raw }}
                                 </article>
+                                <div class="media-admin-icons">
+                                    <i class="fas fa-pen edit-icon" aria-hidden="true"  media-id="{{ media.id }}"></i>
+                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                </div>
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                </section>
-            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </section>
+                </div>
 
-            <div class="container trick_edit_form_container">
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="well">
-                            {{ form_start(form) }}
-                            <div class="my-custom-class-for-errors">
-                                {{ form_errors(form) }}
+                <div class="container trick_edit_form_container">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="well">
+                                {{ form_row(form.medias) }}
+                                {{ form_row(form.name) }}
+                                {{ form_row(form.description) }}
+                                {{ form_row(form.trickGroup) }}
+                                {{ form_row(form._token) }}
+                                <input class="btn" type="submit" value="{{'update_trick'|trans }}"/>
                             </div>
-                            {{ form_row(form.name) }}
-                            {{ form_row(form.description) }}
-                            {{ form_row(form.trickGroup) }}
-                            {{ form_row(form._token) }}
-                            <input class="btn" type="submit" value="{{'update_trick'|trans }}"/>
-                            {{ form_end(form, {'render_rest': false}) }}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {{ form_end(form, {'render_rest': false}) }}
+
+        {# On charge la bibliothèque jQuery depuis le CDN google. #}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // On page load, we first remove from the DOM the form elements
+                // not useful for medias update
+
+                // For images we remove the fileUrl field.
+                // For videos we remove the file upload field.
+                $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');//.detach();
+
+                $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');//.detach();
+                //alert($("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").length);
+                //alert($("input[id$='_fileType'][value='0']").parents("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').html());
+                
+                $('.edit-icon').on("click", function() {
+                    //var clickedElement = event.target || event.srcElement;
+
+                    // We remove any red border around all images
+                    $('article[media-id]').children().css('border', 'none');
+                    $('article[media-id]').css('border', '1px solid black');
+
+                    // We add a red border only around the corresponding image
+                    $('article[media-id='+ $(this).attr('media-id') +']').children().css('border', '3px solid red');
+                    $('article[media-id='+ $(this).attr('media-id') +']').css('border', '1px solid red');
+
+                    $("fieldset.form-group").hide(200).children().hide(200);
+
+                    let targetFielset = $("input[id$='_id'][value='" + $(this).attr('media-id') + "']").parents("fieldset.form-group");
+                    targetFielset.show(200).children().show(200);
+                });
+
+                let modalContainer = document.querySelector('div.modal-body');
+                let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
+                let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
+
+                Array.from(photoElementsArray).forEach(function(elem) {
+                    elem.addEventListener("click", function(event) {
+                        var targetElement = event.target || event.srcElement;
+                        modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
+                    });
+                });
+                Array.from(videoElementsArray).forEach(function(elem) {
+                    elem.addEventListener("click", function(event) {
+                        var targetElement = event.target || event.srcElement;
+                        modalContainer.innerHTML = targetElement.innerHTML;
+                    });
+                });
+
+                function centerModal() {
+                    $(this).css('display', 'block');
+                    var $dialog = $(this).find(".modal-dialog");
+                    var offset = ($(window).height() - $dialog.height()) / 2;
+                    // Center modal vertically in window
+                    $dialog.css("margin-top", offset);
+                }
+                
+                $('.modal').on('show.bs.modal', centerModal);
+                $(window).on("resize", function () {
+                    $('.modal:visible').each(centerModal);
+                });
+            });
+        </script>
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="" class="img-responsive modal-image">
+                    </div>
+                </div>
+            </div>
+        </div>     
+        {% else %} 
+        You must be logged in to edit a trick.
+        {% endif %}  
 {% endblock %}

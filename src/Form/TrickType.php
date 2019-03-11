@@ -26,7 +26,7 @@ class TrickType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-                'label' => $this->i18n->trans('name')
+                'label' => $this->i18n->trans('trick_name')
             ))
             
             ->add('description', TextareaType::class, array(

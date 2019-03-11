@@ -23,6 +23,8 @@ class MediaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+            
+
         $builder
             ->add('fileUrl', TextType::class, array(
                 'required'=>false,
@@ -61,9 +63,11 @@ class MediaType extends AbstractType
                 'required' => false,
                 'data'   => false
             ))
-            ->add('fileType', HiddenType::class, array(
-                'data' => 'value_to_be_replaced',
+            ->add('fileType', HiddenType::class)
+            ->add('id', HiddenType::class, array(
+                'disabled' => true,
             ))
+            
         ;
     }
 
@@ -71,6 +75,7 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
+            'id' => null,
             'translation_domain' => 'gui'
         ]);
     }

@@ -38,7 +38,7 @@
             {% for trick in tricksArray %}
                 <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
                     <article class="trick-thumbnail">
-                            <a href="{{ asset('./tricks/' ~ trick.slug) }}">
+                            <a href="{{ asset('./tricks/' ~ trick.id ~ '-' ~ trick.slug) }}">
                             <img src="{{ asset('./uploads/images/' ~ trick.coverImage) }}" alt="{{ trick.name }}">
                         </a>
                         <p>{{ trick.name }}</p>
