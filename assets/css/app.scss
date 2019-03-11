@@ -170,8 +170,30 @@ body {
     border-radius: 5px;
 }
 .admin-icons i {
-    color: red;
     font-size: 1.5rem;
+}
+.fa-pen {
+    color: black;
+}
+.fa-trash-alt {
+    color: red;
+}
+
+.media-admin-icons {
+    position: absolute;
+    top: 120px;
+    right: 5px;
+    height: 2rem;
+    width: 80px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 6px;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+.media-admin-icons i {
+    font-size: 1.2rem;
 }
 
 .faded-bg-img img {
@@ -206,6 +228,24 @@ body {
 
 .trick-photo-thumbnail img {
   width: 100%;
+}
+
+form[name=trick] {
+    .trick-photo-thumbnail {
+        margin-bottom: 3.5rem;
+    }
+    legend {
+        display: none!important;
+    }
+    fieldset.form-group {
+        border: 3px dashed #999;
+        padding: 10px;
+    }
+}
+
+div.well > fieldset.form-group {
+    border: none;
+    padding: 0;
 }
 
 .center-button {
@@ -294,13 +334,28 @@ footer {
   margin: auto;
 }
 
+.trick-update-warning-title {
+    background-color: red;
+    color: white;
+    margin: 0;
+    padding: 5px 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+    i {
+        color: white;
+    }
+}
 .trick_edit_form_container {
-    margin-top: 2rem;
+    margin-top: 5rem;
 }
 
 .trick_edit_form_container textarea {
     width: 200%;
     height: 15rem;
+}
+
+.trick_edit_form_container fieldset.form-group {
+    display: none;
 }
 
 .inner {

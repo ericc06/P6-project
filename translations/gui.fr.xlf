@@ -117,7 +117,7 @@
             </trans-unit>
             <trans-unit id="create_trick">
                 <source>create_trick</source>
-                <target>Créer la figure</target>
+                <target>Enregistrer la figure</target>
             </trans-unit>
             <trans-unit id="added_image">
                 <source>added_image</source>
@@ -159,6 +159,10 @@
                 <source>name</source>
                 <target>Nom</target>
             </trans-unit>
+            <trans-unit id="trick_name">
+                <source>trick_name</source>
+                <target>Nom de la figure</target>
+            </trans-unit>
             <trans-unit id="description">
                 <source>description</source>
                 <target>Description</target>
@@ -179,7 +183,10 @@
                 <source>update_a_trick</source>
                 <target>Modifier une figure</target>
             </trans-unit>
-            <trans-unit id="XXXXXXXX">
+            <trans-unit id="update_trick">
+                <source>update_trick</source>
+                <target>Enregistrer les modifications</target>
+            </trans-unit>            <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>
             </trans-unit>

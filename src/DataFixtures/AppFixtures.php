@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
@@ -26,6 +27,16 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+
+        $user = new User();
+
+        $user->setUsername('eric');
+        $user->setEmail('eric.codron@gmail.com');
+        $user->setPassword('$2y$13$/W5ATAIIrJTUU9GoSPAQG.emjMEYEDQlL9T811y.KyMWsLWmhMjW2');
+
+        $manager->persist($user);
+    
+        $manager->flush();
 
         $groupsNameArray = [
             'Grab',
