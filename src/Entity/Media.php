@@ -51,7 +51,7 @@ class Media
     private $defaultCover = false;
 
     /**
-     * @Assert\NotBlank(message="media.file.not_blank")
+     * //@Assert\NotBlank(message="media.file.not_blank")
      * @Assert\File(
      *     maxSize = "1024k",
      *     mimeTypes = {

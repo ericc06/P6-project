@@ -10,7 +10,9 @@
     </div>
     #}
     {% if app.user %}
-
+    <div
+        class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
+    </div>
     <div class="container main">
         {# On affiche tous les messages flash #}
         
