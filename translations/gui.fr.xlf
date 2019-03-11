@@ -107,6 +107,10 @@
                 <source>create_a_trick</source>
                 <target>Créer une figure</target>
             </trans-unit>
+            <trans-unit id="you_must_provide_at_least_one_image">
+                <source>you_must_provide_at_least_one_image</source>
+                <target>Vous devez fournir au moins une image.</target>
+            </trans-unit>
             <trans-unit id="add_an_image">
                 <source>add_an_image</source>
                 <target>Ajouter une image</target>

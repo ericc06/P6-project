@@ -21,7 +21,7 @@
                 {% if app.user %}
                 <div class="admin-icons">
                     <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
-                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                    <a href={{ url("trick_delete", {"id": trick.id, "slug": trick.slug} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
                 </div>
                 {% endif %}
             </div>

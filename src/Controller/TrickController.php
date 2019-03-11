@@ -5,8 +5,6 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
-use App\Entity\Media;
-use App\Entity\TrickGroup;
 use App\Form\TrickType;
 use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -38,10 +36,10 @@ class TrickController extends Controller
 
         return $this->render('index.html.twig', array(
             'nom' => $env,
-            'tricksArray' => $tricksArray
+            'tricksArray' => $tricksArray,
         ));
     }
-    
+
     /**
      * Trick creation form.
      *
@@ -95,12 +93,11 @@ class TrickController extends Controller
                 'trick' => $trick,
                 'medias' => $medias,
                 'cover_image' => $cover_image_file,
-                'group_name' => $group_name
+                'group_name' => $group_name,
             ));
         return new Response($content);
         //return new Response("test");
     }
-
 
     /**
      * Trick update form.
@@ -141,16 +138,37 @@ class TrickController extends Controller
             'cover_image' => $cover_image_file,
         ));
     }
-    
+
     /**
      * @Route("/tricks/{id}/delete", name="trick_delete", requirements={"id"="\d+"})
      */
-    public function delete(Trick $trick)
+    public function delete(Request $request, $id)
     {
-        $content = $this
-            ->get('templating')
-            ->render('trick/view.html.twig', array('trick' => $trick));
-        return new Response($content);
-        //return new Response("test");
+        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($id);
+
+        if (null === $trick) {
+            throw new NotFoundHttpException("La figure d'id " . $id . " n'existe pas.");
+        }
+
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this->get('form.factory')->create();
+        //$form = $this->createForm(TrickType::class);
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $result = $this->trickManager->deleteTrickFromDB($trick);
+
+            $request->getSession()->getFlashBag()->add(
+                $result['msg_type'],
+                $this->i18n->trans($result['message'])
+            );
+
+            return $this->redirectToRoute($result['dest_page']);
+        }
+
+        return $this->render('trick/delete.html.twig', array(
+            'trick' => $trick,
+            'form' => $form->createView(),
+        ));
     }
 }

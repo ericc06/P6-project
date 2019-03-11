@@ -22,8 +22,6 @@ class MediaRepository extends ServiceEntityRepository
     public function findMediasByTrickIdOrderedByFileType($trickId)
     {
         return $this->createQueryBuilder('m')
-            // m.trick refers to the "trick" property on media
-            // selects all the category data to avoid the query
             ->where('m.trick = :id')
             ->setParameter('id', $trickId)
             ->orderBy('m.fileType', 'ASC')
@@ -34,8 +32,6 @@ class MediaRepository extends ServiceEntityRepository
     public function findDefaultCoverForTrickOrTheFirstOne($trickId)
     {
         $result = $this->createQueryBuilder('m') // . '.' . 'm.fileUrl')
-            // m.trick refers to the "trick" property on media
-            // selects all the category data to avoid the query
             ->where('m.trick = :id')
             ->andWhere('m.defaultCover = true')
             ->setParameter('id', $trickId)
@@ -44,8 +40,6 @@ class MediaRepository extends ServiceEntityRepository
 
         if ((null === $result) || ([] === $result)) {
             $result = $this->createQueryBuilder('m') // . '.' . 'm.fileUrl')
-            // m.trick refers to the "trick" property on media
-            // selects all the category data to avoid the query
             ->where('m.trick = :id')
             ->andWhere('m.fileType = 0')
             ->setParameter('id', $trickId)
