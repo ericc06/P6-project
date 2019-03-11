@@ -46,6 +46,10 @@
                 <source>trick_saved_successfully</source>
                 <target>La figure a bien été enregistrée.</target>
             </trans-unit>
+            <trans-unit id="trick_deleted_successfully">
+                <source>trick_deleted_successfully</source>
+                <target>La figure a bien été supprimée.</target>
+            </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>

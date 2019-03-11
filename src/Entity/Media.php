@@ -51,6 +51,7 @@ class Media
     private $defaultCover = false;
 
     /**
+     * @Assert\NotBlank(message="media.file.not_blank")
      * @Assert\File(
      *     maxSize = "1024k",
      *     mimeTypes = {
@@ -58,8 +59,8 @@ class Media
      *          "image/jpeg",
      *          "image/jpg"
      *          },
-     *     maxSizeMessage = "Maximum image file size: 1 Mb.",
-     *     mimeTypesMessage = "Please upload a valid image (PNG, JPG)."
+     *     maxSizeMessage = "media.file.too_large",
+     *     mimeTypesMessage = "media.file.invalid_image_file"
      * )
      */
     private $file;

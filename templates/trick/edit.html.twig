@@ -25,7 +25,7 @@
             <i class="fas fa-pen" aria-hidden="true"></i>
             {{'update_a_trick'|trans }}
         </div>
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'class': 'trick_edit_form'}}) }}
             <div class="container header-img-div">
                 <div class="my-custom-class-for-errors">
                     {{ form_errors(form) }}
@@ -125,7 +125,7 @@
                     $("fieldset.form-group").hide(200).children().hide(200);
 
                     let targetFielset = $("input[id$='_id'][value='" + $(this).attr('media-id') + "']").parents("fieldset.form-group");
-                    targetFielset.show(200).children().show(200);
+                    targetFielset.show(200).children().not('legend').show(200);
                 });
 
                 let modalContainer = document.querySelector('div.modal-body');
