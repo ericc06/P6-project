@@ -13,16 +13,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AppFixtures extends Fixture
 {
-    private $webDirectory;
-    private $imageLocation;
-
     public function __construct(
-        LoggerInterface $logger,
-        $webDirectory
+        LoggerInterface $logger
     ) {
         $this->logger = $logger;
-        $this->webDirectory = $webDirectory;
-        $this->imageLocation = $webDirectory . 'img/config/';
     }
 
     public function load(ObjectManager $manager)
