@@ -42,6 +42,7 @@
                         </div>
                     </div>
                     <div class="admin-icons">
+                        <span class='cover-image-admin-title'>{{'cover_image'|trans }}</span>
                         <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
                         <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
                     </div>
@@ -62,7 +63,7 @@
                                     <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
                                 </article>
                                 <div class="media-admin-icons">
-                                    <i class="fas fa-pen edit-icon" aria-hidden="true"  media-id="{{ media.id }}"></i>
+                                    <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
                                     <i class="fas fa-trash-alt" aria-hidden="true"></i>
                                 </div>
                             </div>
@@ -72,7 +73,7 @@
                                     {{ media.fileUrl | raw }}
                                 </article>
                                 <div class="media-admin-icons">
-                                    <i class="fas fa-pen edit-icon" aria-hidden="true"  media-id="{{ media.id }}"></i>
+                                    <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
                                     <i class="fas fa-trash-alt" aria-hidden="true"></i>
                                 </div>
                             </div>

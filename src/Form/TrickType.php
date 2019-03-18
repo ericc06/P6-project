@@ -16,6 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TrickType extends AbstractType
 {
+
     public function __construct(
         TranslatorInterface $translator
     ) {
@@ -46,7 +47,8 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
                 //'prototype' => true,
                 'by_reference' => false,
-                'label' => $this->i18n->trans('medias')
+                'label' => $this->i18n->trans('medias'),
+                'validation_groups' => $options['validation_groups']
             ));
         ;
     }
