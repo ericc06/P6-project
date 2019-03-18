@@ -46,12 +46,12 @@ class Media
     private $fileType;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $defaultCover = false;
+    private $defaultCover = 0;
 
     /**
-     * //@Assert\NotBlank(message="media.file.not_blank")
+     * @Assert\NotBlank(message="media.file.not_blank", groups={"media_creation"})
      * @Assert\File(
      *     maxSize = "1024k",
      *     mimeTypes = {
@@ -60,7 +60,8 @@ class Media
      *          "image/jpg"
      *          },
      *     maxSizeMessage = "media.file.too_large",
-     *     mimeTypesMessage = "media.file.invalid_image_file"
+     *     mimeTypesMessage = "media.file.invalid_image_file",
+     *     groups={"media_creation"}
      * )
      */
     private $file;
@@ -148,8 +149,9 @@ class Media
         return $this->defaultCover;
     }
 
-    public function setDefaultCover(?bool $defaultCover): self
+    public function setDefaultCover($defaultCover): self
     {
+        \var_dump($defaultCover);
         $this->defaultCover = $defaultCover;
 
         return $this;
@@ -236,6 +238,9 @@ class Media
             $this->getUploadRootDir(), // Le répertoire de destination
             $this->id . '.' . $this->fileUrl// Le nom du fichier à créer, ici « id.extension »
         );
+
+        // Updating the related trick update date
+        $this->getTrick()->updateLastUpdateDate();
     }
 
     /**
@@ -257,6 +262,9 @@ class Media
             // On supprime le fichier
             unlink($this->tempFilename);
         }
+
+        // Updating the related trick update date
+        $this->getTrick()->updateLastUpdateDate();
     }
 
     public function getUploadDir()

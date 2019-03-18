@@ -187,6 +187,10 @@
                 <source>update_a_trick</source>
                 <target>Modifier une figure</target>
             </trans-unit>
+            <trans-unit id="cover_image">
+                <source>cover_image</source>
+                <target>Image de couverture</target>
+            </trans-unit>
             <trans-unit id="update_trick">
                 <source>update_trick</source>
                 <target>Enregistrer les modifications</target>

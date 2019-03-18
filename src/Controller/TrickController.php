@@ -49,9 +49,16 @@ class TrickController extends Controller
     {
         $trick = new Trick();
 
-        $form = $this->createForm(TrickType::class, $trick);
+        //$form = $this->createForm(TrickType::class, $trick, ['property_path' => 'trick_new']);
+        //$form = $this->createForm(TrickType::class, $trick, ['route' => 'trick_new'])
+        $form = $this->createForm(TrickType::class, $trick, ['validation_groups' => 'media_creation']);
+        //$form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
+
+        \var_dump($request->request->all());
+
+        \var_dump($request->request->get('trick'));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $result = $this->trickManager->saveTrickToDB($trick);

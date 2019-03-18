@@ -4,9 +4,11 @@ namespace App\Form;
 
 use App\Entity\Media;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,6 +17,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class MediaType extends AbstractType
 {
+
     public function __construct(
         TranslatorInterface $translator
     ) {
@@ -23,7 +26,6 @@ class MediaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-            
 
         $builder
             ->add('fileUrl', TextType::class, array(
@@ -47,22 +49,33 @@ class MediaType extends AbstractType
                 'required' => false,
             ))
             */
-            ->add('defaultCover', ChoiceType::class, array(
+            /*->add('defaultCover', ChoiceType::class, array(
                 'expanded' => true,
-                'multiple' => false,
+                'multiple' => true, //false,
                 //'choice_name' => null, //'default_image',
                 'label' => $this->i18n->trans('default_cover_question'),
-                'placeholder' => false,
+                //'placeholder' => false,
                 'choices' => array(
                     $this->i18n->trans('Use_as_default_cover_image') => true
                 ),
-                /*'choice_attr' => function ($choiceValue, $key, $value) {
-                    // adds a class like attending_yes, attending_no, etc
-                    return ['value' => true];
-                },*/
                 'required' => false,
-                'data'   => false
+                //'data'   => false
             ))
+            */    
+            /*->add('defaultCover', TextType::class, array(
+                'required'=>false,
+                'label' => $this->i18n->trans('default cover?'),
+            ))
+            */
+            /*->add('defaultCover', CheckboxType::class, [
+                'label'    => 'Show this entry publicly?',
+                'required' => false,
+            ])*/
+            ->add('defaultCover', RadioType::class, [
+                'label' => $this->i18n->trans('Use_as_default_cover_image'),
+                'required' => false,
+            ])
+            
             ->add('fileType', HiddenType::class)
             ->add('id', HiddenType::class, array(
                 'disabled' => true,
@@ -76,6 +89,7 @@ class MediaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Media::class,
             'id' => null,
+            'route' => null,
             'translation_domain' => 'gui'
         ]);
     }
