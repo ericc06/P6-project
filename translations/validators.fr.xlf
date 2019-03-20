@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xliff version="1.2" 
     xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="fr" datatype="plaintext" original="file.ext">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="media.file.not_blank">
                 <source>media.file.not_blank</source>
@@ -14,6 +14,10 @@
             <trans-unit id="media.file.invalid_image_file">
                 <source>media.file.invalid_image_file</source>
                 <target>Merci de choisir une image valide (PNG ou JPG).</target>
+            </trans-unit>
+            <trans-unit id="media.file.required_dimensions">
+                <source>media.file.required_dimensions</source>
+                <target>L'image doit avoir pour dimensions 1920 x 1080 px.</target>
             </trans-unit>
         </body>
     </file>

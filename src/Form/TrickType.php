@@ -3,11 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Trick;
-use App\Form\TrickGroupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -29,7 +27,6 @@ class TrickType extends AbstractType
             ->add('name', TextType::class, array(
                 'label' => $this->i18n->trans('trick_name')
             ))
-            
             ->add('description', TextareaType::class, array(
                 'label' => $this->i18n->trans('description'),
             ))
@@ -40,27 +37,16 @@ class TrickType extends AbstractType
                 'multiple'     => false,
                 'label' => $this->i18n->trans('group')
             ))
-            /*->add('trickGroup', TrickGroupType::class)*/
             ->add('medias', CollectionType::class, array(
                 'entry_type' => MediaType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                //'prototype' => true,
                 'by_reference' => false,
                 'label' => $this->i18n->trans('medias'),
                 'validation_groups' => $options['validation_groups']
             ));
-        ;
     }
 
-            /*
-            ->add('trickGroup', EntityType::class, array(
-                'class'        => 'App\Entity\TrickGroup',
-                'choice_label' => 'name',
-                'placeholder'  => ' >> Choose a group <<',
-                'multiple'     => false,
-            ))
-            */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
