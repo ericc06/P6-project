@@ -167,6 +167,9 @@
             "ref": "e3868d2f4a5104f19f844fe551099a00c6562527"
         }
     },
+    "symfony/contracts": {
+        "version": "v1.0.2"
+    },
     "symfony/debug": {
         "version": "v3.4.14"
     },
@@ -181,6 +184,9 @@
     },
     "symfony/event-dispatcher": {
         "version": "v3.4.14"
+    },
+    "symfony/expression-language": {
+        "version": "v3.4.23"
     },
     "symfony/filesystem": {
         "version": "v3.4.14"

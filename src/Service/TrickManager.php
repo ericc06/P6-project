@@ -8,37 +8,40 @@ use App\Entity\Media;
 use App\Entity\TrickGroup;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-
-//use Symfony\Component\Validator\Constraints\DateTime;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TrickManager extends Controller
 {
     private $em;
+    private $session;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, SessionInterface $session)
     {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
+        $this->session = $session;
     }
 
     // Inserts or updates a trick into the database.
     public function saveTrickToDB(Trick $trick)
     {
-        //\dump($trick);
-
         $result = [];
 
         try {
             $this->em->persist($trick);
             $this->em->flush();
 
+            $result['is_successful'] = true;
             $result['msg_type'] = 'success';
             $result['message'] = 'trick_saved_successfully';
             $result['dest_page'] = 'homepage';
-        } catch (Exception $e) {
+        } catch (UniqueConstraintViolationException $e) {
+            $result['is_successful'] = false;
             $result['msg_type'] = 'danger';
             $result['message'] = $e->getMessage();
             $result['dest_page'] = 'trick_new';
+            $result['trick'] = $trick;
         }
 
         return $result;
@@ -65,11 +68,76 @@ class TrickManager extends Controller
         return $result;
     }
 
+    // Stores a trick into the session.
+    public function storeTrickToSession(Trick $trick)
+    {
+        // Uploaded files can't be stored into the session
+        // because they can't be serialized.
+        $this->session->set(
+            'trick',
+            serialize($this->dropUploadedFileForAllMedias($trick))
+        );
+        // It seems that the trick group must be stored separately
+        // and must be "merged" after being read from the session
+        // to avoid "Entity passed to the choice field must be managed.
+        // Maybe you forget to persist it in the entity manager?" error.
+        $this->session->set('trickGroup', serialize($trick->getTrickGroup()));
+    }
+
+    // Reads a trick from the session.
+    public function readTrickFromSession()
+    {
+        // Symfony remove() session method deletes a session attribute
+        // and returns its value.
+        $trick = unserialize($this->session->remove('trick'));
+        // It seems that the trick group must be stored separately
+        // and must be "merged" after being read from the session
+        // to avoid "Entity passed to the choice field must be managed.
+        // Maybe you forget to persist it in the entity manager?" error.
+        $trickGroup = $this->getDoctrine()->getEntityManager()->merge(unserialize($this->session->remove('trickGroup')));
+        $trick->setTrickGroup($trickGroup);
+
+        return $trick;
+    }
+
+    // Deletes a media from the database.
+    /**
+     * @ParamConverter("media")
+     */
+    public function deleteMediaFromDB(Media $media)
+    {
+        $result = [];
+
+        try {
+            $this->em->remove($media);
+            $this->em->flush();
+
+            $result['msg_type'] = 'success';
+            $result['message'] = 'media_deleted_successfully';
+            $result['dest_page'] = 'homepage';
+        } catch (Exception $e) {
+            $result['msg_type'] = 'danger';
+            $result['message'] = $e->getMessage();
+            $result['dest_page'] = 'homepage';
+        }
+
+        return $result;
+    }
+
+    public function dropUploadedFileForAllMedias(Trick $trick)
+    {
+        foreach ($trick->getMedias() as $media) {
+            $media->emptyFile();
+        }
+
+        return $trick;
+    }
+    
     // Returns all tricks with their cover image for the homepage (no media).
     public function getAllTricksForIndexPage()
     {
         $tricks = $this->em->getRepository(Trick::class)
-        ->findAllTricks();
+        ->findAll();
 
         $tricksArray = [];
 
@@ -80,12 +148,10 @@ class TrickManager extends Controller
             $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId($trick->getId());
         }
         
-        //\dump($tricksArray);
-
         return $tricksArray;
     }
 
-    // Returns the medias from a trick id.
+    // Returns an array with the medias from a trick id.
     public function getMediasByTrickId($id)
     {
         return $this->em->getRepository(Media::class)
@@ -103,4 +169,5 @@ class TrickManager extends Controller
     public function getGroupNameByTrickGroupId($id)
     {
         return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
-    }}
+    }
+}

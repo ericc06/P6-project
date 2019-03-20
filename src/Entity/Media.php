@@ -13,9 +13,6 @@ use Psr\Log\LoggerInterface;
  */
 class Media
 {
-
-    //private $logger;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -51,7 +48,11 @@ class Media
     private $defaultCover = 0;
 
     /**
-     * @Assert\NotBlank(message="media.file.not_blank", groups={"media_creation"})
+     * @Assert\Expression(
+     *     "not (this.getFileType() == 0 and this.getFile() == null)",
+     *     message="media.file.not_blank",
+     *     groups={"media_creation"}
+     * )
      * @Assert\File(
      *     maxSize = "1024k",
      *     mimeTypes = {
@@ -59,8 +60,19 @@ class Media
      *          "image/jpeg",
      *          "image/jpg"
      *          },
-     *     maxSizeMessage = "media.file.too_large",
      *     mimeTypesMessage = "media.file.invalid_image_file",
+     *     maxSizeMessage = "media.file.too_large",
+     *     groups={"media_creation"}
+     * )
+     * @Assert\Image(
+     *     minWidth = 1920,
+     *     maxWidth = 1920,
+     *     minHeight = 1080,
+     *     maxHeight = 1080,
+     *     minWidthMessage = "media.file.required_dimensions",
+     *     maxWidthMessage = "media.file.required_dimensions",
+     *     minHeightMessage = "media.file.required_dimensions",
+     *     maxHeightMessage = "media.file.required_dimensions",
      *     groups={"media_creation"}
      * )
      */
@@ -88,13 +100,6 @@ class Media
     {
         return $this->id;
     }
-
-    // CA NE MARCHE PAS !!! Impossible de logger dans l'entité.
-    /*public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-    */
 
     public function getFileUrl(): ?string
     {
@@ -166,18 +171,19 @@ class Media
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
-/*
+
         // On vérifie si on avait déjà un fichier pour cette entité
         if (null !== $this->fileUrl) {
             // On sauvegarde l'extension du fichier pour le supprimer plus tard
             $this->tempFilename = $this->fileUrl;
-
-            // On réinitialise les valeurs des attributs url et alt
-            $this->fileUrl = null;
-            $this->alt = null;
         }
-        */
     }
+
+    public function emptyFile()
+    {
+        $this->file = null;
+    }
+
 
     public function getTrick(): ?Trick
     {
@@ -230,8 +236,6 @@ class Media
                 unlink($oldFile);
             }
         }
-
-        //dump($this->getUploadRootDir());
 
         // On déplace le fichier envoyé dans le répertoire de notre choix
         $this->file->move(

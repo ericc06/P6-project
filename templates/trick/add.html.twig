@@ -27,9 +27,10 @@
                     </div>
                     {# form_widget(form) #}
                     {{ form_row(form.name) }}
-                    {{ form_row(form.description) }}                    
-                    {{ form_row(form.trickGroup) }}                    
+                    {{ form_row(form.description) }}
+                    {{ form_row(form.trickGroup) }}
                     {{ form_row(form.medias) }}
+                    {{ form_errors(form.medias) }}
                     <div class="add_media_buttons_div">
                         <input class="btn" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
                         <input class="btn" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
@@ -43,16 +44,16 @@
     </div>
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {# Voici le script en question : #}
+
     <script type="text/javascript">
         $(document).ready(function () {
             // On page load, we first remove from the DOM the form elements
             // not useful for medias update
             // For images we remove the fileUrl field.
             // For videos we remove the file upload field.
-            $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');//.detach();
+            $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
 
-            $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');//.detach();
+            $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0').detach();
 
             // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
             var $container = $('div#trick_medias');
