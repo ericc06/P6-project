@@ -56,13 +56,11 @@ class TrickController extends Controller
      */
     public function add(Request $request)
     {
+        \var_dump($request->request->all());
+        \var_dump($request->request->get('trick'));
+        \var_dump($request->query->all());
         if (null !== $this->session->get('trick') && null !== $this->session->get('trickGroup')) {
             $trick = $this->trickManager->readTrickFromSession();
-            /*
-            $trick = unserialize($this->session->get('trick'));
-            $trickGroup = $this->getDoctrine()->getEntityManager()->merge(unserialize($this->session->get('trickGroup')));
-            $trick->setTrickGroup($trickGroup);
-            */
         } else {
             $trick = new Trick();
         }
@@ -76,27 +74,13 @@ class TrickController extends Controller
 
             $request->getSession()->getFlashBag()->add(
                 $result['msg_type'],
-                $this->i18n->trans($result['message'])
+                $this->i18n->trans($result['message'], $result['message_params'])
             );
 
-            if (null !== $result['trick']) {
-                $this->trickManager->storeTrickToSession($result['trick']);
-                /*
-                $this->session->set(
-                    'trick',
-                    serialize($this->trickManager->dropUploadedFileForAllMedias($result['trick']))
-                );
-                $this->session->set('trickGroup', serialize($result['trick']->getTrickGroup()));
-                */
+            if (isset($result['trick'])) {
+                $this->trickManager->storeTrickInSession($result['trick']);
             }
             return $this->redirectToRoute($result['dest_page']);
-            /*return $this->redirectToRoute(
-                    $result['dest_page'],
-                    ['request' => $request->request->add(['max' => 10])],
-                //['request' => $request->request->add(['trick' => $result['trick']])],
-                307
-            );*/ // array('trick' => $result['trick']));
-            //return $this->redirectToRoute($result['dest_page'], ['max' => 10]);// array('trick' => $result['trick']));
         }
 
         return $this->render('trick/add.html.twig', array(

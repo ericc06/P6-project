@@ -156,7 +156,6 @@ class Media
 
     public function setDefaultCover($defaultCover): self
     {
-        \var_dump($defaultCover);
         $this->defaultCover = $defaultCover;
 
         return $this;

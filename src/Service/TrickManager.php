@@ -9,17 +9,23 @@ use App\Entity\TrickGroup;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TrickManager extends Controller
 {
     private $em;
+    private $router;
     private $session;
 
-    public function __construct(Container $container, SessionInterface $session)
-    {
+    public function __construct(
+        Container $container,
+        UrlGeneratorInterface $router,
+        SessionInterface $session
+    ) {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
+        $this->router = $router;
         $this->session = $session;
     }
 
@@ -35,11 +41,17 @@ class TrickManager extends Controller
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';
             $result['message'] = 'trick_saved_successfully';
+            $result['message_params'] = [];
             $result['dest_page'] = 'homepage';
         } catch (UniqueConstraintViolationException $e) {
             $result['is_successful'] = false;
             $result['msg_type'] = 'danger';
-            $result['message'] = $e->getMessage();
+            $result['message'] = 'trick_name_already_exists %link_start% %link_end%'; //$e->getMessage();
+            $result['message_params'] = [
+                '%link_start%' => '<a href="' . $this->generateUrl('trick_edit', ['id' => $this->em->getRepository(Trick::class)
+                ->findByName($trick->getName())[0]->getId()]) . '">',
+                '%link_end%' => '</a>'
+            ];
             $result['dest_page'] = 'trick_new';
             $result['trick'] = $trick;
         }
@@ -68,8 +80,8 @@ class TrickManager extends Controller
         return $result;
     }
 
-    // Stores a trick into the session.
-    public function storeTrickToSession(Trick $trick)
+    // Stores a trick in the session.
+    public function storeTrickInSession(Trick $trick)
     {
         // Uploaded files can't be stored into the session
         // because they can't be serialized.
@@ -81,6 +93,7 @@ class TrickManager extends Controller
         // and must be "merged" after being read from the session
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
+        // See https://stackoverflow.com/questions/7473872/entities-passed-to-the-choice-field-must-be-managed/7931437
         $this->session->set('trickGroup', serialize($trick->getTrickGroup()));
     }
 
