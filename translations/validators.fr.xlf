@@ -19,6 +19,18 @@
                 <source>media.file.required_dimensions</source>
                 <target>L'image doit avoir pour dimensions 1920 x 1080 px.</target>
             </trans-unit>
+            <trans-unit id="media.fileUrl.not_blank">
+                <source>media.fileUrl.not_blank</source>
+                <target>Merci de renseigner l'URL de la vidéo.</target>
+            </trans-unit>
+            <trans-unit id="media.title.not_blank">
+                <source>media.title.not_blank</source>
+                <target>Merci de renseigner le titre du média.</target>
+            </trans-unit>
+            <trans-unit id="media.alt.not_blank">
+                <source>media.alt.not_blank</source>
+                <target>Merci de renseigner le texte alternatif du média.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
