@@ -1,0 +1,35 @@
+{# templates/trick/delte.html.twig #}
+
+{% extends 'layout.html.twig' %}
+
+{% block title %}
+  Supprimer une figure - {{ trick.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="container full-height-container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="well">
+                    <h2>Supprimer une figure</h2>
+
+                    <p>
+                        Etes-vous certain de vouloir supprimer la figure "{{ trick.name }}" ?
+                    </p>
+
+                    {# On met l'id de la figure dans la route de l'action du formulaire #}
+                    <form action="{{ path('trick_delete', {'id': trick.id}) }}" method="post">
+                        <a href="{{ path('trick_show', {'id': trick.id, "slug": trick.slug}) }}" class="btn back-btn">
+                        <i class="fas fa-angle-left"></i>
+                        Retour à la figure
+                        </a>
+                        {# Ici j'ai écrit le bouton de soumission à la main #}
+                        <input type="submit" value="Supprimer" class="btn btn-danger" />
+                        {# Ceci va générer le champ CSRF #}
+                        {{ form_rest(form) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

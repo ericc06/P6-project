@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <xliff version="1.2" 
     xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="file.ext">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="home">
                 <source>home</source>
                 <target>Accueil</target>
+            </trans-unit>
+            <trans-unit id="hello">
+                <source>hello</source>
+                <target>Bonjour</target>
             </trans-unit>
             <trans-unit id="register">
                 <source>register</source>
@@ -14,6 +18,10 @@
             <trans-unit id="logout">
                 <source>logout</source>
                 <target>Se déconnecter</target>
+            </trans-unit>
+            <trans-unit id="add_a_trick">
+                <source>add_a_trick</source>
+                <target>Ajouter une figure</target>
             </trans-unit>
             <trans-unit id="user_account">
                 <source>user_account</source>
@@ -63,6 +71,14 @@
                 <source>sign_in</source>
                 <target>Se connecter</target>
             </trans-unit>
+            <trans-unit id="already_logged_in">
+                <source>already_logged_in</source>
+                <target>Vous êtes déjà connecté sur le site.</target>
+            </trans-unit>
+            <trans-unit id="go_back_to_homepage">
+                <source>go_back_to_homepage</source>
+                <target>Retourner sur la page d'accueil.</target>
+            </trans-unit>
             <trans-unit id="forgot_your_password">
                 <source>forgot_your_password</source>
                 <target>Mot de passe oublié ?</target>
@@ -95,13 +111,101 @@
                 <source>send</source>
                 <target>Envoyer</target>
             </trans-unit>
-            <trans-unit id="already_logged_in">
-                <source>already_logged_in</source>
-                <target>Vous êtes déjà connecté sur le site.</target>
+            <trans-unit id="create_a_trick">
+                <source>create_a_trick</source>
+                <target>Créer une figure</target>
             </trans-unit>
-            <trans-unit id="go_back_to_homepage">
-                <source>go_back_to_homepage</source>
-                <target>Retourner sur la page d'accueil.</target>
+            <trans-unit id="you_must_provide_at_least_one_image">
+                <source>you_must_provide_at_least_one_image</source>
+                <target>Vous devez fournir au moins une image.</target>
+            </trans-unit>
+            <trans-unit id="add_an_image">
+                <source>add_an_image</source>
+                <target>Ajouter une image</target>
+            </trans-unit>
+            <trans-unit id="add_a_video">
+                <source>add_a_video</source>
+                <target>Ajouter une vidéo</target>
+            </trans-unit>
+            <trans-unit id="create_trick">
+                <source>create_trick</source>
+                <target>Enregistrer la figure</target>
+            </trans-unit>
+            <trans-unit id="added_image">
+                <source>added_image</source>
+                <target>Image à ajouter :</target>
+            </trans-unit>
+            <trans-unit id="added_video">
+                <source>added_video</source>
+                <target>Vidéo à ajouter :</target>
+            </trans-unit>
+            <trans-unit id="video_url">
+                <source>video_url</source>
+                <target>URL de la vidéo</target>
+            </trans-unit>
+            <trans-unit id="image_file">
+                <source>image_file</source>
+                <target>Fichier image (1920 x 1080 px)</target>
+            </trans-unit>
+            <trans-unit id="default_cover_question">
+                <source>default_cover_question</source>
+                <target>Image de couverture ?</target>
+            </trans-unit>
+            <trans-unit id="Use_as_default_cover_image">
+                <source>Use_as_default_cover_image</source>
+                <target>Utiliser comme image de couverture</target>
+            </trans-unit>
+            <trans-unit id="title">
+                <source>title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="alt">
+                <source>alt</source>
+                <target>Texte alternatif</target>
+            </trans-unit>
+            <trans-unit id="remove_this_media">
+                <source>remove_this_media</source>
+                <target>Supprimer ce media</target>
+            </trans-unit>
+            <trans-unit id="name">
+                <source>name</source>
+                <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="trick_name">
+                <source>trick_name</source>
+                <target>Nom de la figure</target>
+            </trans-unit>
+            <trans-unit id="description">
+                <source>description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="group">
+                <source>group</source>
+                <target>Groupe</target>
+            </trans-unit>
+            <trans-unit id="medias">
+                <source>medias</source>
+                <target>Médias</target>
+            </trans-unit>
+            <trans-unit id="choose_a_group">
+                <source>choose_a_group</source>
+                <target> --- Sélectionnez un groupe ---</target>
+            </trans-unit>
+            <trans-unit id="update_a_trick">
+                <source>update_a_trick</source>
+                <target>Modifier une figure</target>
+            </trans-unit>
+            <trans-unit id="cover_image">
+                <source>cover_image</source>
+                <target>Image de couverture</target>
+            </trans-unit>
+            <trans-unit id="update_trick">
+                <source>update_trick</source>
+                <target>Enregistrer les modifications</target>
+            </trans-unit>
+            <trans-unit id="XXXXXXXX">
+                <source>XXXXXXXX</source>
+                <target>xxxxxxxxxxxxxxxx</target>
             </trans-unit>
         </body>
     </file>
