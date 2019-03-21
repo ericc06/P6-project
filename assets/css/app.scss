@@ -127,15 +127,21 @@ body {
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 1px solid #155724;
     height: 2rem;
     display: flex;
     flex-direction: column;
     text-align: center;
     justify-content: center;
+    border-width: 1px;
+    border-style: solid;
     border-radius: 3px;
-    color: #155724;
     padding: 0.5rem 1rem;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #155724;
 }
 
 #home-text, .trick-title {
@@ -165,7 +171,7 @@ body {
   float: right;
   /*margin-left:auto;
     margin-right:15px;*/
-  margin-top: -70px;
+  margin-top: -40px;
   z-index: 100;
 }
 
