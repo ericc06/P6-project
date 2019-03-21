@@ -1,28 +1,30 @@
 {# templates/index.html.twig #}
-
 {% trans_default_domain 'gui' %}
-
 {% extends 'layout.html.twig' %}
-
 {% block content %}
-
     <!-- Home ================================================== -->
-
     <div class="container-fluid">
-        <div id="home" class="row">
+        <div class="row" id="home">
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
-            <div id="home-text" class="col-xs-12 text-center">
-                <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - {{ 'welcome_homepage'|trans}}</span>
-                </h1>
-                    {# On affiche tous les messages flash #}
-                    {% for label, messages in app.session.flashbag.all %}
-                        {% for message in messages %}
-                            <div class="flash-{{ label }}">
-                                    {{ message }}
-                            </div>
-                        {% endfor %}
+                <div class="col-xs-12 text-center" id="home-text">
+                    <h1>
+                        <p class="bold">[{{ env_name }}] -
+                            {{ 'welcome_homepage'|trans}}</p>
+                    </h1>
+                </div>
+                {# On affiche tous les messages flash #}
+                {% for label, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                        <div class="flash flash-{{ label }} alert-{{ label }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
+                {% endfor %}
+            </div>
+            <div id="arrow-down">
+                <a href="#tricks-anchor">
+                    <i class="fa fa-arrow-down" style="font-size:30px"></i>
+                </a>
             </div>
         </div>
         <div id="arrow-down">

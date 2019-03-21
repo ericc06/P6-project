@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 //use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -79,34 +80,33 @@ class UserManager extends Controller
 
         // Recherche d'un compte utilisateur à partir de l'adresse e-mail
         // pour éviter de créer le compte une seconde fois.
+        // On vérifie aussi l'unicité du nom d'utilisateur (username).
         // S'il existe un compte encore inactif, on le supprime et on le recrée.
         // S'il existe un compte actif, on invite l'utilisateur à se connecter.
 
-        $existingUser = $userRepository->findOneByEmail($user->getEmail());
+        $userAccountAlreadyExists = false;
+        $usernameAlreadyUsed = false;
 
-        if ($existingUser) {
-            if (!$existingUser->getIsActiveAccount()) {
-                $this->deleteUserFromDB($existingUser);
-                $userAccountAlreadyExists = false;
+        $existingUserAccount = $userRepository->findOneByEmail($user->getEmail());
+
+        if ($existingUserAccount) {
+            if (!$existingUserAccount->getIsActiveAccount()) {
+                $this->deleteUserFromDB($existingUserAccount);
             } else {
-                $userAccountAlreadyExists = true;
+                throw new Exception('account_already_exists', 1);
             }
-        } else {
-            $userAccountAlreadyExists = false;
+        } elseif ($userRepository->findOneByUsername($user->getUsername())) {
+            throw new Exception('username_already_exists', 2);
         }
 
-        if (false === $userAccountAlreadyExists) {
-            $user->setPassword($this->generateEncodedPwd($user, $user->getPassword()));
-            $user->setIsActiveAccount(false);
-            $user->setActivationToken($this->generateToken());
-            $user->setRoles(["ROLE_USER"]);
+        $user->setPassword($this->generateEncodedPwd($user, $user->getPassword()));
+        $user->setIsActiveAccount(false);
+        $user->setActivationToken($this->generateToken());
+        $user->setRoles(["ROLE_USER"]);
 
-            $this->saveUserToDB($user);
+        $this->saveUserToDB($user);
 
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
 
     // Sends the user account creation verification email to the user.
@@ -151,8 +151,50 @@ class UserManager extends Controller
             if ($userToDelete) {
                 $this->deleteUserFromDB($user);
             }
-            return false;
+            throw new Exception('error_sending_confirmation_email');
         }
+    }
+
+    // Performs the actions required after a user add form submission.
+    // Returns an array with the relevant pieces of information.
+    public function checkAddUser(User $user)
+    {
+        $result = [];
+
+        try {
+            self::persistUserRegistration($user);
+        } catch (Exception $e) {
+            switch ($e->getCode()) {
+                // account_already_exists
+                case 1:
+                    $result['msg_type'] = 'primary';
+                    $result['message'] = $e->getMessage();
+                    $result['dest_page'] = 'user_login';
+                    break;
+                // username_already_exists
+                case 2:
+                    $result['msg_type'] = 'danger';
+                    $result['message'] = $e->getMessage();
+                    $result['dest_page'] = 'user_registration';
+                    break;
+                default:
+                    break;
+            }
+            return $result;
+        }
+
+        try {
+            self::sendValidationEmail($user);
+            $result['msg_type'] = 'success';
+            $result['message'] = 'account_creation_check_email_sent';
+            $result['dest_page'] = 'homepage';
+        } catch (Exception $e) {
+            $result['msg_type'] = 'danger';
+            $result['message'] = $e->getMessage();
+            $result['dest_page'] = 'user_registration';
+        }
+
+        return $result;
     }
 
     // Called when a user clicks the link in the account creation verification email.
@@ -267,10 +309,10 @@ class UserManager extends Controller
 
         if ($token === $user->getPwdResetToken() &&
             $request->get('pwd1') === $request->get('pwd2')) {
-                $user->setPassword($this->generateEncodedPwd($user, $request->get('pwd1')));
-                $user->setPwdResetToken(null);
-                $user->setPwdTokenCreationDate(null);
-                $this->saveUserToDB($user);
+            $user->setPassword($this->generateEncodedPwd($user, $request->get('pwd1')));
+            $user->setPwdResetToken(null);
+            $user->setPwdTokenCreationDate(null);
+            $this->saveUserToDB($user);
             return true;
         } else {
             return false;

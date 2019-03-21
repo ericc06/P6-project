@@ -71,6 +71,14 @@
                 <source>sign_in</source>
                 <target>Se connecter</target>
             </trans-unit>
+            <trans-unit id="already_logged_in">
+                <source>already_logged_in</source>
+                <target>Vous êtes déjà connecté sur le site.</target>
+            </trans-unit>
+            <trans-unit id="go_back_to_homepage">
+                <source>go_back_to_homepage</source>
+                <target>Retourner sur la page d'accueil.</target>
+            </trans-unit>
             <trans-unit id="forgot_your_password">
                 <source>forgot_your_password</source>
                 <target>Mot de passe oublié ?</target>

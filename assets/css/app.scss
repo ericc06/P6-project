@@ -34,6 +34,15 @@ body {
   font-family: Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+.full-height-container {
+    flex: 1 100%;
+    .row {
+        justify-content: center;
+        margin-top: 50px;
+    }
 }
 
 .page-bg {
@@ -100,20 +109,55 @@ body {
   box-sizing: border-box;
 }
 
-.text-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /*  position: absolute !important;
-  top: 35.8% !important;*/
-  width: 100%;
-  color: black;
-  text-shadow: stroke(2, white);
-  /*text-shadow: 0 0 2px #fff; /* horizontal-offset vertical-offset 'blur' colour 
-    -moz-text-shadow: 0 0 2px #fff;
-    -webkit-text-shadow: 0 0 2px #fff;
-    */
+.well .flash {
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    border-radius: 3px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 2rem;
+}
+
+#home .flash {
+    @extend .col-md-6;
+    @extend .col-sm-12;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #155724;
+    height: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    border-radius: 3px;
+    color: #155724;
+    padding: 0.5rem 1rem;
+}
+
+#home-text, .trick-title {
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        transform: translate(-50%, -50%);
+        color: black;
+        text-shadow: stroke(2, white);
+    }
+}
+
+.forgotten-pwd-div {
+    margin-top: -30px;
+    text-align: right;
+}
+
+.go-back-to-homepage {
+    margin-top: 30px;
+    text-align: center;
 }
 
 #arrow-down {
