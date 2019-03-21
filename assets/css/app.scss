@@ -488,6 +488,42 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
     font-weight: 100;
 }
 
+.btn.outline {
+	background: none;
+	padding: 6px 16px;
+}
+
+.btn-primary.outline {
+	border: 2px solid #245682;
+	color: #245682;
+}
+
+.btn-primary.outline {
+	border: 2px solid #245682;
+	color: #245682;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+	color: #1C4364;
+    border-color: #1C4364;
+    background-color: rgba(28, 67, 100, 0.15);
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+	border-color: #1C4364;
+	color: #1C4364;
+	box-shadow: none;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+	color: #1C4364;
+	border-color: #1C4364;
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+	border-color: #1C4364;
+	color: #1C4364;
+	box-shadow: none;
+}
+
 /* max-width: 575px */
 @include media-breakpoint-up(xs) {
   .xs-fixed-bottom {

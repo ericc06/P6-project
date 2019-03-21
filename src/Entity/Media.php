@@ -21,17 +21,24 @@ class Media
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=false)
+     * @Assert\Expression(
+     *     "not (this.getFileType() == 1 and this.getFileUrl() === null)",
+     *     message="media.fileUrl.not_blank",
+     *     groups={"media_creation"}
+     * )
      */
     private $fileUrl;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank(message="media.title.not_blank", groups={"media_creation"} )
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank(message="media.alt.not_blank", groups={"media_creation"} )
      */
     private $alt;
 
@@ -49,7 +56,7 @@ class Media
 
     /**
      * @Assert\Expression(
-     *     "not (this.getFileType() == 0 and this.getFile() == null)",
+     *     "not (this.getFileType() == 0 and this.getFile() === null)",
      *     message="media.file.not_blank",
      *     groups={"media_creation"}
      * )

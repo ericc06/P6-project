@@ -56,9 +56,6 @@ class TrickController extends Controller
      */
     public function add(Request $request)
     {
-        \var_dump($request->request->all());
-        \var_dump($request->request->get('trick'));
-        \var_dump($request->query->all());
         if (null !== $this->session->get('trick') && null !== $this->session->get('trickGroup')) {
             $trick = $this->trickManager->readTrickFromSession();
         } else {

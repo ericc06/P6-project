@@ -32,11 +32,11 @@
                     {{ form_row(form.medias) }}
                     {{ form_errors(form.medias) }}
                     <div class="add_media_buttons_div">
-                        <input class="btn" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
-                        <input class="btn" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+                        <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
+                        <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
                     </div>
                     {{ form_row(form._token) }}
-                    <input class="btn" type="submit" value="{{'create_trick'|trans }}"/>
+                    <input class="btn btn-primary" type="submit" value="{{'create_trick'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>

@@ -44,7 +44,6 @@ class MediaType extends AbstractType
             ))
             ->add('defaultCover', RadioType::class, [
                 'label' => $this->i18n->trans('Use_as_default_cover_image'),
-                //'attr' => ['name' => 'test'],
                 'required' => false,
             ])
             ->add('fileType', HiddenType::class)
