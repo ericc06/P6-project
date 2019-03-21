@@ -5,7 +5,7 @@
 {% extends 'layout.html.twig' %}
 {% block content %}
     <div
-        class="container">
+        class="container full-height-container">
         {# if error %}
                     <div class="alert alert-danger">
                         {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -18,7 +18,7 @@
                     {# On affiche tous les messages flash #}
                     {% for label, messages in app.session.flashbag.all %}
                         {% for message in messages %}
-                            <div class="flash-{{ label }}">
+                            <div class="flash flash-{{ label }} alert-{{ label }}">
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -26,7 +26,7 @@
                     <form action="{{ path('user_forgotten_pwd') }}" method="post">
                         <fieldset>
                             <legend>
-                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <i class="fa fa-envelope-square" aria-hidden="true"></i>
                                 {{ 'password_reset_request'|trans }}</legend>
                             <div class="form-group">
                                 <label for="email">

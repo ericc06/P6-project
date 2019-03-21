@@ -22,8 +22,8 @@ class UserController extends Controller
 
     public function __construct(
         UserManager $userManager,
-        LoggerInterface $logger,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LoggerInterface $logger
     ) {
         $this->userManager = $userManager;
         $this->i18n = $translator;
@@ -44,30 +44,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (true === $this->userManager->persistUserRegistration($user)) {
-                if (true === $this->userManager->sendValidationEmail($user)) {
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        $this->i18n->trans('account_creation_check_email_sent')
-                    );
+            $result = $this->userManager->checkAddUser($user);
 
-                    return $this->redirectToRoute('homepage');
-                } else {
-                    $request->getSession()->getFlashBag()->add(
-                        'error',
-                        $this->i18n->trans('error_sending_confirmation_email')
-                    );
+            $request->getSession()->getFlashBag()->add(
+                $result['msg_type'],
+                $this->i18n->trans($result['message'])
+            );
 
-                    return $this->redirectToRoute('user_registration');
-                }
-            } else {
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    $this->i18n->trans('account_already_exists')
-                );
-
-                return $this->redirectToRoute('user_login');
-            }
+            return $this->redirectToRoute($result['dest_page']);
         }
 
         return $this->render('user/add.html.twig', array(
@@ -84,14 +68,14 @@ class UserController extends Controller
     {
         if (true === $this->userManager->confirmUserRegistration($request)) {
             $request->getSession()->getFlashBag()->add(
-                'notice',
+                'success',
                 $this->i18n->trans('account_validated')
             );
 
             return $this->redirectToRoute('homepage');
         } else {
             $request->getSession()->getFlashBag()->add(
-                'warning',
+                'danger',
                 $this->i18n->trans('account_validation_failed')
             );
             return $this->redirectToRoute('user_registration');

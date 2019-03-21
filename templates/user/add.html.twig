@@ -4,7 +4,7 @@
 
 {% extends 'layout.html.twig' %}
 {% block content %}
-    <div class="container">
+    <div class="container full-height-container">
         <div class="row">
             <div class="col-sm-5">
                 <div
@@ -12,14 +12,14 @@
                     {# On affiche tous les messages flash #}
                     {% for label, messages in app.session.flashbag.all %}
                         {% for message in messages %}
-                            <div class="flash-{{ label }}">
+                            <div class="flash flash-{{ label }} alert-{{ label }}">
                                 {{ message }}
                             </div>
                         {% endfor %}
                     {% endfor %}
                     {{ form_start(form) }}
                     <legend>
-                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>
                         {{'create_an_account'|trans }}
                     </legend>
                     <div class="my-custom-class-for-errors">
@@ -30,7 +30,7 @@
                     {{ form_row(form.email) }}
                     {{ form_row(form.password) }}
                     {{ form_row(form._token) }}
-                    <input class="btn" type="submit" value="{{'create_account'|trans }}"/>
+                    <input class="btn btn-primary" type="submit" value="{{'create_account'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>

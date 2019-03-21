@@ -44,7 +44,7 @@ class TrickController extends Controller
         $tricksArray = $this->trickManager->getAllTricksForIndexPage();
 
         return $this->render('index.html.twig', array(
-            'nom' => $env,
+            'env_name' => $env,
             'tricksArray' => $tricksArray,
         ));
     }
