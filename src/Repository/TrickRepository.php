@@ -18,7 +18,7 @@ class TrickRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Trick::class);
     }
-
+    
     // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */
@@ -45,6 +45,31 @@ class TrickRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+    */
+
+    // Returns all tricks with their cover image.
+    /*public function findAllTricksForIndexPage()
+    {
+        $tricks = $this->findAll();
+
+        foreach ($tricks as $trick) {
+            $image = $this->createQueryBuilder('t')
+                ->getQuery()
+                ->getResult();
+        }
+
+        return $tricks;
+    }
+
+    public function findAllMediasByTrickId($trickId)
+    {
+        return $this->createQueryBuilder('t')
+            ->from('APP\Entity\Media', 'm')
+            ->andWhere('trick_id = :id')
+            ->setParameter('id', $trickId)
+            ->getQuery()
+            ->getResult();
     }
     */
 }

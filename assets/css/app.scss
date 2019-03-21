@@ -53,12 +53,11 @@ body {
   top: 56px;
 }
 
-.page-bg::after {
-  content: "";
-  background-image: url(/P6-project-flex/public/./build/images/trick_buttering.jpg);
+.page-bg {
   background-size: 100% 100vh;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  background-position-y: 56px;
+  opacity: 0.3;
   top: 0;
   left: 0;
   bottom: 0;
@@ -76,6 +75,11 @@ body {
 .mr-zero {
   margin-left: auto;
   margin-right: 0;
+}
+
+.greetings {
+    padding-top: 8px;
+    padding-right: 55px;
 }
 
 #home {
@@ -134,7 +138,7 @@ body {
     padding: 0.5rem 1rem;
 }
 
-#home-text {
+#home-text, .trick-title {
     h1 {
         position: absolute;
         top: 50%;
@@ -196,6 +200,50 @@ body {
 
 /* Trick details page */
 
+.admin-icons {
+    position: absolute;
+    top: 15px;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 2.5rem;
+    /*width: 90px;*/
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 8px;
+    padding-left: 15px;
+    border-radius: 5px;
+    > * {
+        margin-right: 15px;
+    }
+}
+.admin-icons i {
+    font-size: 1.5rem;
+}
+.fa-pen {
+    color: black;
+}
+.fa-trash-alt {
+    color: red;
+}
+
+.media-admin-icons {
+    position: absolute;
+    top: 120px;
+    right: 5px;
+    height: 2rem;
+    width: 80px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 6px;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+.media-admin-icons i {
+    font-size: 1.2rem;
+}
+
 .faded-bg-img img {
   opacity: 0.4;
   height: calc(100vh - #{$header-height});
@@ -230,6 +278,44 @@ body {
   width: 100%;
 }
 
+/*form[name=trick] {*/
+form.trick_edit_form {
+    legend {
+        display: none;
+    }
+}
+
+form.trick_edit_form {
+    .trick-photo-thumbnail, .trick-video-thumbnail {
+        margin-bottom: 3.5rem;
+    }
+    > fieldset.form-group > legend {
+        display: block;
+    }
+    > fieldset.form-group > fieldset.form-group > legend {
+        display: none;
+    }
+    fieldset.form-group {
+        border: 3px dashed #999;
+        padding: 10px;
+    }
+}
+
+div.well > fieldset.form-group {
+    border: none;
+    padding: 0;
+}
+
+form.trick_new_form {
+    fieldset.form-group {
+        border: none;
+        padding: 0;
+    }
+}
+
+.back-btn {
+    background-color: buttonface;
+}
 .center-button {
   margin-left: auto;
   margin-right: auto;
@@ -256,6 +342,7 @@ footer {
 }
 
 .header-img-div {
+  position: relative;    
   padding: 0;
 }
 .trick-header {
@@ -296,12 +383,47 @@ footer {
   margin-bottom: 30px;
 }
 
+.trick-infos-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
 .trick-info-box {
   padding: 10px;
+  flex: auto;
+  justify-content: center;
+  align-content: center;
 }
 .trick-info-text {
   display: inline-block;
   margin: auto;
+}
+
+.trick-update-warning-title {
+    background-color: red;
+    color: white;
+    margin: 0;
+    padding: 5px 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+    i {
+        color: white;
+    }
+}
+.trick_edit_form_container {
+    margin-top: 1.5rem;
+}
+
+.trick_edit_form_container textarea {
+    width: 200%;
+    height: 15rem;
+}
+
+.trick_edit_form_container fieldset.form-group {
+    display: none;
 }
 
 .inner {
@@ -359,6 +481,93 @@ hr {
   padding: 5px;
 }
 
+
+.modal-dialog {
+    max-width: 80vw;
+    max-height: 90vh;
+    max-width: unset;
+    display: inline-block;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.modal.show .modal-dialog {
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.img-responsive {
+    max-width: calc(80vw - 2 * 1rem);
+    max-height: calc(90vh - 2 * 1rem);
+}
+
+/* Trick creation form page */
+
+.add_media_buttons_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.add_media_buttons_div > .btn {
+    flex: 0 45%;
+}
+
+div#trick_medias > fieldset.form-group > .col-form-label {
+    font-weight: bold;
+}
+div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-label {
+    font-style: italic;
+}
+
+.trick_new_form > fieldset > .col-form-label {
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
+.btn.outline {
+	background: none;
+	padding: 6px 16px;
+}
+
+.btn-primary.outline {
+	border: 2px solid #245682;
+	color: #245682;
+}
+
+.btn-primary.outline {
+	border: 2px solid #245682;
+	color: #245682;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+	color: #1C4364;
+    border-color: #1C4364;
+    background-color: rgba(28, 67, 100, 0.15);
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+	border-color: #1C4364;
+	color: #1C4364;
+	box-shadow: none;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+	color: #1C4364;
+	border-color: #1C4364;
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+	border-color: #1C4364;
+	color: #1C4364;
+	box-shadow: none;
+}
+
 /* max-width: 575px */
 @include media-breakpoint-up(xs) {
   .xs-fixed-bottom {
@@ -373,6 +582,9 @@ hr {
   .trick-video-thumbnail-div {
     width: 100%;
     flex-basis: unset;
+  }
+  .trick-thumbnail {
+      text-align: center;
   }
   #leave-comment-form {
     width: 100%;

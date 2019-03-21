@@ -1,6 +1,6 @@
 <?xml version="1.0"?> <!-- translations/messages.fr_FR.xlf -->
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="file.ext">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="account_creation_check_email_sent">
                 <source>account_creation_check_email_sent</source>
@@ -42,10 +42,6 @@
                 <source>new_pwd_confirmation_failed</source>
                 <target>Vous avez saisi deux mots de passe différents. Merci d'essayer de nouveau.</target>
             </trans-unit>
-            <trans-unit id="pwd_reset_check_failed">
-                <source>pwd_reset_check_failed</source>
-                <target>La vérification des informations de réinitialisation de votre mot de passe a échoué (causes possibles : jeton invalide ou ayant expiré). Merci d'essayer de nouveau.</target>
-            </trans-unit>
             <trans-unit id="account_not_activated_yet">
                 <source>account_not_activated_yet</source>
                 <target>Votre compte n'a pas encore été activé. Merci de consulter votre e-mail d'activation.</target>
@@ -53,6 +49,22 @@
             <trans-unit id="pwd_reset_email_sent">
                 <source>pwd_reset_email_sent</source>
                 <target>Un e-mail de réinitialisation de votre mot de passe vous a été envoyé. Merci de l'ouvrir et de cliquer sur le lien qu'il contient.</target>
+            </trans-unit>
+            <trans-unit id="pwd_reset_check_failed">
+                <source>pwd_reset_check_failed</source>
+                <target>La vérification des informations de réinitialisation de votre mot de passe a échoué (causes possibles : jeton invalide ou ayant expiré). Merci d'essayer de nouveau.</target>
+            </trans-unit>
+            <trans-unit id="trick_saved_successfully">
+                <source>trick_saved_successfully</source>
+                <target>La figure a bien été enregistrée.</target>
+            </trans-unit>
+            <trans-unit id="trick_deleted_successfully">
+                <source>trick_deleted_successfully</source>
+                <target>La figure a bien été supprimée.</target>
+            </trans-unit>
+            <trans-unit id="trick_name_already_exists %link_start% %link_end%">
+                <source>trick_name_already_exists %link_start% %link_end%</source>
+                <target>Une figure du même nom existe déjà. Modifiez le nom ou %link_start%éditez la figure existante%link_end%.</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>

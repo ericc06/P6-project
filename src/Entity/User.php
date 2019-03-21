@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(name="oc_user")
+ * @ORM\Table(name="user")
  *
  */
 class User implements UserInterface
@@ -21,16 +21,21 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $fullName = "";
-
-    /**
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
     private $username = "";
+
+    /**
+     * @ORM\Column(name="first_name", type="string", nullable=true)
+     */
+    private $firstName = "";
+
+    /**
+     * @ORM\Column(name="last_name", type="string", nullable=true)
+     */
+    private $lastName = "";
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -81,16 +86,6 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getFullName(): string
-    {
-        return $this->fullName;
-    }
-
-    public function setFullName(string $fullName): void
-    {
-        $this->fullName = $fullName;
-    }
-
     public function getUsername(): string
     {
         return $this->username;
@@ -99,6 +94,26 @@ class User implements UserInterface
     public function setUsername(string $username): void
     {
         $this->username = $username;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 
     public function getEmail(): string
