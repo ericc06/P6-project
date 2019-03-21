@@ -12,7 +12,7 @@
                     {# On affiche tous les messages flash #}
                     {% for label, messages in app.session.flashbag.all %}
                         {% for message in messages %}
-                            <div class="flash-{{ label }}">
+                            <div class="flash flash-{{ label }} alert-{{ label }}">
                                 {{ message|raw }}
                             </div>
                         {% endfor %}
