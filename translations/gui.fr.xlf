@@ -171,6 +171,26 @@
                 <source>remove_this_media</source>
                 <target>Supprimer ce media</target>
             </trans-unit>
+            <trans-unit id="edit_this_image">
+                <source>edit_this_image</source>
+                <target>Modifier cette image.</target>
+            </trans-unit>
+            <trans-unit id="edit_this_video">
+                <source>edit_this_video</source>
+                <target>Modifier cette vidéo.</target>
+            </trans-unit>
+            <trans-unit id="delete_this_image">
+                <source>delete_this_image</source>
+                <target>Supprimer cette image.</target>
+            </trans-unit>
+            <trans-unit id="delete_this_video">
+                <source>delete_this_video</source>
+                <target>Supprimer cette vidéo.</target>
+            </trans-unit>
+            <trans-unit id="Image_deletion_impossible_need_one_for_cover">
+                <source>Image_deletion_impossible_need_one_for_cover</source>
+                <target>Suppression impossible car au moins une image est requise comme image de couverture.</target>
+            </trans-unit>
             <trans-unit id="name">
                 <source>name</source>
                 <target>Nom</target>

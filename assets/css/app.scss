@@ -171,7 +171,7 @@ body {
   float: right;
   /*margin-left:auto;
     margin-right:15px;*/
-  margin-top: -40px;
+  margin-top: -70px;
   z-index: 100;
 }
 
@@ -572,6 +572,10 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
 	border-color: #1C4364;
 	color: #1C4364;
 	box-shadow: none;
+}
+
+.edit-icon {
+    cursor: pointer;
 }
 
 /* max-width: 575px */

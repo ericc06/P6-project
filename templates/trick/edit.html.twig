@@ -61,7 +61,7 @@
                             <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
                         </article>
                         <div class="media-admin-icons">
-                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
+                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_image'|trans }}"></i>
                             <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
                                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
                             </a>
@@ -73,9 +73,9 @@
                             {{ media.fileUrl | raw }}
                         </article>
                         <div class="media-admin-icons">
-                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
+                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
                             <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
-                                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                <i class="fas fa-trash-alt" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
                             </a>
                         </div>
                     </div>
@@ -88,6 +88,11 @@
                 <div class="col-sm-5">
                     <div class="well">
                         {{ form_row(form.medias) }}
+                        {{ form_errors(form.medias) }}
+                        <div class="add_media_buttons_div">
+                            <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
+                            <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+                        </div>
                         {{ form_row(form.name) }}
                         {{ form_row(form.description) }}
                         {{ form_row(form.trickGroup) }}
@@ -100,6 +105,21 @@
         {{ form_end(form, {'render_rest': false}) }}
     </div>
 
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" class="img-responsive modal-image">
+                </div>
+            </div>
+        </div>
+    </div>     
+    {% else %} 
+    You must be logged in to edit a trick.
+    {% endif %}  
+{% endblock %}
+
+{% block javascripts %}
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -152,6 +172,21 @@
                 // Center modal vertically in window
                 $dialog.css("margin-top", offset);
             }
+
+            // On page load and after an image removal we check the number of
+            // remaining images. When it remains only one we blur the "delete"
+            // icon because at least one image must remain as trick cover image.
+            function checkImageNumber() {
+                //alert($('.trick-photo-thumbnail-div').length);
+                if($('.trick-photo-thumbnail-div').length == 1) {
+                    let el = $('.trick-photo-thumbnail-div').find('.fa-trash-alt');
+                    el.css('opacity', 0.4).css('cursor', 'default').attr('title', "{{'Image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr('class', 'do-nothing');
+                } else {
+                    $('.trick-photo-thumbnail-div').each(function(){
+                        $(this).css('opacity', 1).css('cursor', 'pointer').attr('title', "{{'delete_this_image'|trans }}").parent().attr('class', 'js-delete-media');
+                    })
+                }
+            }
             
             $('.modal').on('show.bs.modal', centerModal);
             $(window).on("resize", function () {
@@ -171,25 +206,21 @@
                         }).done(function (data) {
                             var id = JSON.parse(data).id;
                             $( "article[media-id=" + id + "]" ).parent().remove();
+                            checkImageNumber();
                         }).fail(function () {
                             alert('Could not be deleted.');
                         });
                     }
                 }
             });
+
+            $('.do-nothing').on('click', function (e) {
+                e.preventDefault();
+            });
+
+            checkImageNumber();
         });
     </script>
 
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="" class="img-responsive modal-image">
-                </div>
-            </div>
-        </div>
-    </div>     
-    {% else %} 
-    You must be logged in to edit a trick.
-    {% endif %}  
+    <script src="{{ asset('./build/trick.js') }}"></script>
 {% endblock %}
