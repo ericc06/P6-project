@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class TrickManager extends Controller
 {
@@ -165,10 +166,24 @@ class TrickManager extends Controller
     }
 
     // Returns an array with the medias from a trick id.
-    public function getMediasByTrickId($id)
+    public function getMediasArrayByTrickId($id)
     {
         return $this->em->getRepository(Media::class)
             ->findMediasByTrickIdOrderedByFileType($id);
+    }
+
+    // Returns a collection with the medias from a trick id.
+    public function getMediasCollectionByTrickId($id)
+    {
+        $mediasArray = $this->getMediasArrayByTrickId($id);
+
+        $mediasCollection = new ArrayCollection();
+
+        foreach ($mediasArray as $media) {
+            $mediasCollection->add($media);
+        }
+
+        return $mediasCollection;
     }
 
     // Returns the cover image file name from a trick id.
@@ -178,6 +193,7 @@ class TrickManager extends Controller
 
         return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
     }
+    
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($id)
     {

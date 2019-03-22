@@ -163,6 +163,10 @@
                 <source>alt</source>
                 <target>Texte alternatif</target>
             </trans-unit>
+            <trans-unit id="confirm_delete_media">
+                <source>confirm_delete_media</source>
+                <target>Voulez-vous vraiment supprimer ce media ?</target>
+            </trans-unit>
             <trans-unit id="remove_this_media">
                 <source>remove_this_media</source>
                 <target>Supprimer ce media</target>

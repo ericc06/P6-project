@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrickController extends Controller
 {
@@ -95,7 +96,7 @@ class TrickController extends Controller
      */
     public function show(Trick $trick)
     {
-        $medias = $this->trickManager->getMediasByTrickId($trick->getId());
+        $medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
@@ -116,13 +117,19 @@ class TrickController extends Controller
      * Trick update form.
      *
      * @Route("/tricks/{id}/edit", name="trick_edit", methods={"GET","PUT","POST"})
+     * @ParamConverter("trick")   // Using custom TrickParamConverter
      */
-    public function edit(Request $request)
+    public function edit(Trick $trick, Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
-        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
+        //$trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
 
-        $medias = $this->trickManager->getMediasByTrickId($trick->getId());
+        /*\var_dump($trick);
+        \var_dump($trick->getMedias());
+        \var_dump($trick->getMedias()[0]->getTrick()->getMedias());
+        */
+
+        $medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
@@ -181,25 +188,51 @@ class TrickController extends Controller
         ));
     }
 
+//          * @ParamConverter("trick", class="App\Entity\Trick", options={"mapping": {"trickId": "id"}})
+//      * @ParamConverter("trick")
+
     /**
-     * @Route("/tricks/{trickId}/medias/{mediaId}/delete", name="media_delete", requirements={"trickId":"\d+","mediaId":"\d+"}, methods={"GET","POST","DELETE"})
-     * @ParamConverter("trick", class="App\Entity\Trick", options={"mapping": {"trickId": "id"}})
+     * @Route(
+     *      "/tricks/{id}/medias/{mediaId}/delete",
+     *      name="media_delete",
+     *      requirements={"id":"\d+","mediaId":"\d+"},
+     *      methods={"GET","POST","DELETE"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
      * @ParamConverter("media", class="App\Entity\Media", options={"mapping": {"mediaId": "id"}})
      */
-    public function deleteMedia(Trick $trick, Media $media, Request $request)
+    public function deleteMedia(Media $media, Request $request)
     {
-        //$trick->setMedias($this->trickManager->getMediasByTrickId($trick->getId()));
-        $this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($trick));
-        $trick->removeMedia($media);
-        $this->logger->info('> > > > > > APRES removeMedia  < < < < < <'. \serialize($trick));
-        $result = $this->trickManager->saveTrickToDB($trick);
+        //$trick->setMedias($this->trickManager->getMediasArrayByTrickId($trick->getId()));
+        $this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($media));
 
-        $this->logger->info('> > > > > > APRES saveTrickToDB  < < < < < <'. \serialize($trick));
+        $mediaId = $media->getId();
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this->get('form.factory')->create();
 
-        if ($result['is_successful'] === true) {
-            return true;
-        } else {
-            throw $this->createNotFoundException('The media couldn\'t be deleted');
+        //if ($request->isMethod('POST') && $form->handleRequest($request)->isSubmitted() && $form->handleRequest($request)->isValid()) {
+        if ($request->isMethod('POST')) {
+            $this->logger->info('> > > > > > Before deleteMediaFromDB  < < < < < <'. \serialize($media));
+            $result = $this->trickManager->deleteMediaFromDB($media);
+            $this->logger->info('> > > > > > After deleteMediaFromDB  < < < < < <'. \serialize($media));
+
+            return new Response('{"id":' . $mediaId . '}');
+            /*
+            return new JsonResponse(array(
+                'message' => 'Success!',
+                'id' => $mediaId
+            ), 200);
+            */
+        }
+
+        $response = new JsonResponse(array('message' => 'Error'), 400);
+        return $response;
+
+//        if ($result['is_successful'] === true) {
+//            return new Response('{"id":'.$media->getId().'}');
+//        } else {
+//            throw $this->createNotFoundException('The media couldn\'t be deleted');
         //$this->trickManager->deleteMediaFromDB($media);
         //$this->trickManager->flush();
 
@@ -209,6 +242,6 @@ class TrickController extends Controller
             ]);
         }
         */
-        }
+//        }
     }
 }

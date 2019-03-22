@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
-use Psr\Log\LoggerInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MediaRepository")
@@ -88,7 +87,7 @@ class Media
     private $tempFilename;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="medias", cascade="all")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="medias")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
@@ -190,7 +189,6 @@ class Media
         $this->file = null;
     }
 
-
     public function getTrick(): ?Trick
     {
         return $this->trick;
@@ -260,6 +258,9 @@ class Media
     {
         // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
         $this->tempFilename = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->fileUrl;
+
+        // Updating the related trick update date
+        $this->getTrick()->updateLastUpdateDate();
     }
 
     /**

@@ -62,7 +62,7 @@
                         </article>
                         <div class="media-admin-icons">
                             <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
-                            <a href="{{ path('media_delete', {'trickId': trick.id, 'mediaId': media.id}) }}" class="btn btn-danger btn-sm js-delete-media" id="{{ media.id }}">
+                            <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
                                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -74,7 +74,7 @@
                         </article>
                         <div class="media-admin-icons">
                             <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"></i>
-                            <a href="{{ path('media_delete', {'trickId': trick.id, 'mediaId': media.id}) }}" class="btn btn-danger btn-sm js-delete-media" id="{{ media.id }}">
+                            <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
                                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -160,20 +160,21 @@
 
             $('.js-delete-media').on('click', function (e) {
                 e.preventDefault();
-            
-                var url = $(this).attr('href');
-                delMedia(url);
-            
-                function delMedia(url) {
-                    $.ajax({
-                        type: "POST",
-                        url: url
-                    }).done(function (data) {
-                        var id = JSON.parse(data).id;
-                        $('#media-' + id).remove();
-                    }).fail(function () {
-                        alert('Could not be deleted.');
-                    });
+                if(confirm("{{'confirm_delete_media'|trans }}")) {
+                    var url = $(this).attr('href');
+                    delMedia(url);
+                
+                    function delMedia(url) {
+                        $.ajax({
+                            type: "POST",
+                            url: url
+                        }).done(function (data) {
+                            var id = JSON.parse(data).id;
+                            $( "article[media-id=" + id + "]" ).parent().remove();
+                        }).fail(function () {
+                            alert('Could not be deleted.');
+                        });
+                    }
                 }
             });
         });
