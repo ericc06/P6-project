@@ -46,7 +46,7 @@ class TrickManager extends Controller
         } catch (UniqueConstraintViolationException $e) {
             $result['is_successful'] = false;
             $result['msg_type'] = 'danger';
-            $result['message'] = 'trick_name_already_exists %link_start% %link_end%'; //$e->getMessage();
+            $result['message'] = 'trick_name_already_exists';
             $result['message_params'] = [
                 '%link_start%' => '<a href="' . $this->generateUrl('trick_edit', ['id' => $this->em->getRepository(Trick::class)
                 ->findByName($trick->getName())[0]->getId()]) . '">',
@@ -147,10 +147,10 @@ class TrickManager extends Controller
     }
     
     // Returns all tricks with their cover image for the homepage (no media).
-    public function getAllTricksForIndexPage()
+    public function getTricksForIndexPage($limit, $offset)
     {
         $tricks = $this->em->getRepository(Trick::class)
-        ->findAll();
+        ->findAllForPagination($limit, $offset);
 
         $tricksArray = [];
 

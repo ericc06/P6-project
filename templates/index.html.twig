@@ -27,33 +27,71 @@
                 </a>
             </div>
         </div>
-        <div id="arrow-down">
-            <a href="#tricks-anchor">
-                <i class="fa fa-arrow-down" style="font-size:30px"></i>
-            </a>
-        </div>
     </div>
 
     <div class="container">
         <a class="anchor" id="tricks-anchor"></a>
         <section class="row" id="tricks-list">
-            {% for trick in tricksArray %}
-                <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
-                    <article class="trick-thumbnail">
-                            <a href="{{ asset('./tricks/' ~ trick.id ~ '-' ~ trick.slug) }}">
-                            <img src="{{ asset('./uploads/images/' ~ trick.coverImage) }}" alt="{{ trick.name }}">
-                        </a>
-                        <p>{{ trick.name }}</p>
-                    </article>
-                </div>
-            {% endfor %}
+            {% include 'trick/tricksBlock.html.twig' with tricksArray %}
         </section>
     </div>
 
-    <!--<div class="container">
+    <div class="container">
         <section class="row">
-            <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+            <button type="button" class="btn btn-primary center-button load-more-button" action-href="{{ path('load_tricks') }}">{{ 'load_more'|trans}}</button>
         </section>
-    </div>-->
+    </div>
 
+    <input type="hidden" class="tricksTotalNumber" value="{{ totalNumberOfTricks }}">
+    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfLoadedTricks }}">
+{% endblock %}
+
+{% block javascripts %}
+    {# On charge la bibliothèque jQuery depuis le CDN google. #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let tricksLoadingLimit = Number($('.numberOfInitialLoadedTricks').val());
+            let loadedTricks = tricksLoadingLimit;
+
+            $('.load-more-button').on("click", function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                var loadingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'loading_more'|trans}}";
+                if ($(this).html() !== loadingText) {
+                  $this.data('original-text', $(this).html());
+                  $this.html(loadingText).delay( 2000 );
+                }
+                // We add the limit and the offset at the end of the "load_tricks" route
+                var url = $(this).attr('action-href') + "/" + tricksLoadingLimit + "/" + loadedTricks;
+                loadTricks(url);
+            
+                function loadTricks(url) {
+                    $.ajax({
+                        type: "GET",
+                        url: url
+                    }).done(function (data) {
+                        let container = $('#tricks-list');
+                        container.append(data);
+
+                        let newTricksNumber = (data.match(/<article /g) || []).length;
+                        loadedTricks += newTricksNumber;
+                        let totalNumberOfTricks = Number($('.tricksTotalNumber').val());
+
+                        if ($('.load-more-button').length == 1 && loadedTricks == totalNumberOfTricks) {
+                            $('.load-more-button').parent().parent().hide();
+                        }
+                        $this.html($this.data('original-text'));
+                    }).fail(function () {
+                        alert('Could not load tricks.');
+                        $this.html($this.data('original-text'));
+                    });
+                }
+            });
+        });
+    </script>
+
+    {#<script src="{{ asset('./build/trick.js') }}"></script>#}
 {% endblock %}
