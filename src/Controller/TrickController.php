@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Entity\Media;
+use App\Entity\Message;
 use App\Form\TrickType;
 use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -136,6 +137,8 @@ class TrickController extends Controller
 
         $group_name = $this->trickManager->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
+        $messages = $this->getDoctrine()->getRepository(message::class)->findAll();
+
         $content = $this
             ->get('templating')
             ->render('trick/view.html.twig', array(
@@ -143,6 +146,7 @@ class TrickController extends Controller
                 'medias' => $medias,
                 'cover_image' => $cover_image_file,
                 'group_name' => $group_name,
+                'messages' => $messages,
             ));
         return new Response($content);
     }
