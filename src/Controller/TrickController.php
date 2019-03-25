@@ -117,19 +117,22 @@ class TrickController extends Controller
      * Trick update form.
      *
      * @Route("/tricks/{id}/edit", name="trick_edit", methods={"GET","PUT","POST"})
-     * @ParamConverter("trick")   // Using custom TrickParamConverter
+     * // @ParamConverter("trick")   // Using custom TrickParamConverter
      */
     public function edit(Trick $trick, Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
-        //$trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
+        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
 
-        /*\var_dump($trick);
         \var_dump($trick->getMedias());
-        \var_dump($trick->getMedias()[0]->getTrick()->getMedias());
-        */
+        //\var_dump($trick->getMedias());
+        //\var_dump($trick->getMedias()[0]);
+        
 
-        $medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
+        //$medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
+        $medias = $trick->getMedias();
+
+        //$trick->setMedias($medias);
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
@@ -151,7 +154,7 @@ class TrickController extends Controller
         return $this->render('trick/edit.html.twig', array(
             'form' => $form->createView(),
             'trick' => $trick,
-            'medias' => $medias,
+            //'medias' => $medias,
             'cover_image' => $cover_image_file,
         ));
     }

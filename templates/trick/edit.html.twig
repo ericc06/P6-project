@@ -51,10 +51,10 @@
                 <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
             </section>
         </div>
-        <div class="container d-none d-md-block">
+        <div class="container trick-detail-container-div">
             <a class="anchor" id="tricks-anchor"></a>
             <section class="row" id="trick-detail-list">
-                {% for media in medias %}
+                {% for media in trick.medias %}
                     {% if media.fileType == 0 %}
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
                         <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
