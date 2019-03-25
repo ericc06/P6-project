@@ -12,26 +12,40 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class TrickController extends Controller
 {
     private $trickManager;
+    private $i18n;
+    private $logger;
     private $session;
+
+    /**
+     * @var int
+     */
+    private $homepageTricksLoadLimit;
 
     public function __construct(
         TrickManager $trickManager,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        SessionInterface $session
+        SessionInterface $session,
+        Int $homepageTricksLoadLimit
     ) {
         $this->trickManager = $trickManager;
         $this->i18n = $translator;
         $this->logger = $logger;
         $this->session = $session;
+        $this->homepageTricksLoadLimit = $homepageTricksLoadLimit;
     }
 
     /**
@@ -40,12 +54,33 @@ class TrickController extends Controller
     public function index(Request $request)
     {
         $env = getenv('APP_ENV');
+        $this->logger->info('> > > > > > IN index  < < < < < <'. $this->homepageTricksLoadLimit);
 
-        $tricksArray = $this->trickManager->getAllTricksForIndexPage();
+        $tricksArray = $this->trickManager->getTricksForIndexPage($this->homepageTricksLoadLimit, 0);
+        //$tricksArray = $this->getDoctrine()->getRepository(Trick::class)->findForPagination(0);
+
+        $totalNumberOfTricks = $this->getDoctrine()->getRepository(Trick::class)->getTricksNumber();
 
         return $this->render('index.html.twig', array(
             'env_name' => $env,
             'tricksArray' => $tricksArray,
+            'totalNumberOfTricks' => $totalNumberOfTricks,
+            'numberOfLoadedTricks' => $this->homepageTricksLoadLimit
+        ));
+    }
+
+    /**
+     * @Route("/load-tricks/{limit}/{offset}", name="load_tricks", requirements={"limit":"\d+","offset":"\d+"}, methods={"GET"})
+     */
+    public function getTricksHtmlBlock($limit = null, $offset = 0)
+    {
+        $this->logger->info('> > > > > > IN loadTricks  < < < < < <'. $limit);
+        $this->logger->info('> > > > > > IN loadTricks  < < < < < <'. $offset);
+
+        $tricksArray = $this->trickManager->getTricksForIndexPage($limit, $offset);
+
+        return $this->render('trick/tricksBlock.html.twig', array(
+            'tricksArray' => $tricksArray
         ));
     }
 
