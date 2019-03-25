@@ -143,20 +143,12 @@
             {% endif %}
             <div class="container">
                 <section class="row">
+                    {% for message in messages %}
                     <div class="comment-div">
                         <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                        <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="comment-text">{{ message.content }}</p>
                     </div>
-                    <div class="comment-div">
-                        <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                        <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                    </div>
-                    <div class="comment-div">
-                        <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                        <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                    </div>
+                    {% endfor %}
                     <div class="container">
                         <section class="row">
                             <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
