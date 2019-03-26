@@ -14,6 +14,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TrickType extends AbstractType
 {
+    private $i18n;
 
     public function __construct(
         TranslatorInterface $translator

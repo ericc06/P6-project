@@ -38,11 +38,11 @@ body {
 }
 
 .full-height-container {
-    flex: 1 100%;
-    .row {
-        justify-content: center;
-        margin-top: 50px;
-    }
+  flex: 1 100%;
+  .row {
+    justify-content: center;
+    margin-top: 50px;
+  }
 }
 
 .page-bg {
@@ -78,8 +78,8 @@ body {
 }
 
 .greetings {
-    padding-top: 8px;
-    padding-right: 55px;
+  padding-top: 8px;
+  padding-right: 55px;
 }
 
 #home {
@@ -110,60 +110,61 @@ body {
 }
 
 .well .flash {
-    border: 1px solid;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    border-radius: 3px;
-    padding: 0.5rem 1rem;
-    margin-bottom: 2rem;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
 }
 
 #home .flash {
-    @extend .col-md-6;
-    @extend .col-sm-12;
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2rem;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 3px;
-    padding: 0.5rem 1rem;
+  @extend .col-md-6;
+  @extend .col-sm-12;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
 }
 
 .alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #155724;
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #155724;
 }
 
-#home-text, .trick-title {
-    h1 {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        transform: translate(-50%, -50%);
-        color: black;
-        text-shadow: stroke(2, white);
-    }
+#home-text,
+.trick-title {
+  h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    color: black;
+    text-shadow: stroke(2, white);
+  }
 }
 
 .forgotten-pwd-div {
-    margin-top: -30px;
-    text-align: right;
+  margin-top: -30px;
+  text-align: right;
 }
 
 .go-back-to-homepage {
-    margin-top: 30px;
-    text-align: center;
+  margin-top: 30px;
+  text-align: center;
 }
 
 #arrow-down {
@@ -192,6 +193,7 @@ body {
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .trick-thumbnail p {
@@ -207,71 +209,71 @@ body {
 /* Trick details page */
 
 .admin-icons {
-    position: absolute;
-    top: 15px;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.6);
-    height: 2.5rem;
-    /*width: 90px;*/
-    display: flex;
-    justify-content: space-evenly;
-    align-content: center;
-    padding-top: 8px;
-    padding-left: 15px;
-    border-radius: 5px;
-    > * {
-        margin-right: 15px;
-    }
+  position: absolute;
+  top: 15px;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  height: 2.5rem;
+  /*width: 90px;*/
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  padding-top: 8px;
+  padding-left: 15px;
+  border-radius: 5px;
+  > * {
+    margin-right: 15px;
+  }
 }
 .admin-icons i {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 .fa-pen {
-    color: black;
+  color: black;
 }
 .fa-trash-alt {
-    color: red;
+  color: red;
 }
 
 .media-admin-icons {
-    position: absolute;
-    top: 120px;
-    right: 5px;
-    height: 2rem;
-    width: 80px;
-    display: flex;
-    justify-content: space-evenly;
-    align-content: center;
-    padding-top: 6px;
-    border-radius: 5px;
-    background-color: #ddd;
+  position: absolute;
+  top: 120px;
+  right: 5px;
+  height: 2rem;
+  width: 80px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  padding-top: 6px;
+  border-radius: 5px;
+  background-color: #ddd;
 }
 .media-admin-icons i {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .tricks-list-admin-icons {
-    position: absolute;
-    top: 80px;
-    right: 0;
-    height: 1.7rem;
-    width: 60px;
-    display: flex;
-    justify-content: space-evenly;
-    align-content: center;
-    padding-top: 6px;
-    border-radius: 5px;
-    background-color: rgba(221,221,221,0.7);
+  position: absolute;
+  top: 80px;
+  right: 0;
+  height: 1.7rem;
+  width: 60px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  padding-top: 6px;
+  border-radius: 5px;
+  background-color: rgba(221, 221, 221, 0.7);
 }
 
 .tricks-list-admin-icons > * {
-    display: flex;
-    opacity: 0.7;
+  display: flex;
+  opacity: 0.7;
 }
 
 .tricks-list-admin-icons > *:hover {
-    opacity: 1;
-    text-decoration: none;
+  opacity: 1;
+  text-decoration: none;
 }
 
 .faded-bg-img img {
@@ -310,41 +312,42 @@ body {
 
 /*form[name=trick] {*/
 form.trick_edit_form {
-    legend {
-        display: none;
-    }
+  legend {
+    display: none;
+  }
 }
 
 form.trick_edit_form {
-    .trick-photo-thumbnail, .trick-video-thumbnail {
-        margin-bottom: 3.5rem;
-    }
-    > fieldset.form-group > legend {
-        display: block;
-    }
-    > fieldset.form-group > fieldset.form-group > legend {
-        display: none;
-    }
-    fieldset.form-group {
-        border: 3px dashed #999;
-        padding: 10px;
-    }
+  .trick-photo-thumbnail,
+  .trick-video-thumbnail {
+    margin-bottom: 3.5rem;
+  }
+  > fieldset.form-group > legend {
+    display: block;
+  }
+  > fieldset.form-group > fieldset.form-group > legend {
+    display: none;
+  }
+  fieldset.form-group {
+    border: 3px dashed #999;
+    padding: 10px;
+  }
 }
 
 div.well > fieldset.form-group {
-    border: none;
-    padding: 0;
+  border: none;
+  padding: 0;
 }
 
 form.trick_new_form {
-    fieldset.form-group {
-        border: none;
-        padding: 0;
-    }
+  fieldset.form-group {
+    border: none;
+    padding: 0;
+  }
 }
 
 .back-btn {
-    background-color: buttonface;
+  background-color: buttonface;
 }
 .center-button {
   margin-left: auto;
@@ -372,7 +375,7 @@ footer {
 }
 
 .header-img-div {
-  position: relative;    
+  position: relative;
   padding: 0;
 }
 .trick-header {
@@ -414,12 +417,12 @@ footer {
 }
 
 .trick-infos-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .trick-info-box {
   padding: 10px;
@@ -433,27 +436,27 @@ footer {
 }
 
 .trick-update-warning-title {
-    background-color: red;
+  background-color: red;
+  color: white;
+  margin: 0;
+  padding: 5px 10px;
+  margin-left: -15px;
+  margin-right: -15px;
+  i {
     color: white;
-    margin: 0;
-    padding: 5px 10px;
-    margin-left: -15px;
-    margin-right: -15px;
-    i {
-        color: white;
-    }
+  }
 }
 .trick_edit_form_container {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .trick_edit_form_container textarea {
-    width: 200%;
-    height: 15rem;
+  width: 200%;
+  height: 15rem;
 }
 
 .trick_edit_form_container fieldset.form-group {
-    display: none;
+  display: none;
 }
 
 .inner {
@@ -469,18 +472,28 @@ hr {
   width: 55%;
   border-color: #444;
 }
-#leave-comment-form {
+.leave-comment-form {
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 #form-div {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
 }
 
-#leave-comment-text {
-  width: 300px;
-  margin-bottom: -10px;
+#message_content {
+  width: 80%;
+  height: 4rem;
+  margin: 0 auto;
+}
+#form-div .btn {
+    width: 50%;
+    margin: 15px auto 0 auto;
 }
 
 .comment-div {
@@ -494,7 +507,7 @@ hr {
   white-space: normal;
   vertical-align: top;
   text-align: center;
-  margin-left: 25%;
+  margin-left: 5%;
   margin-top: 15px;
   width: 40px;
   border-radius: 50%;
@@ -506,99 +519,128 @@ hr {
   vertical-align: top;
   text-align: left;
   margin: 10px auto 10px 20px;
-  width: 40%;
+  width: 75%;
   border: 1px solid black;
   padding: 5px;
 }
 
-
 .modal-dialog {
-    max-width: 80vw;
-    max-height: 90vh;
-    max-width: unset;
-    display: inline-block;
-    left: 50%;
-    transform: translate(-50%, 0%);
+  max-width: 80vw;
+  max-height: 90vh;
+  max-width: unset;
+  display: inline-block;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 .modal.show .modal-dialog {
-    left: 50%;
-    transform: translate(-50%, 0%);
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 .modal.fade .modal-dialog {
-    transition: transform 0.3s ease-out;
-    left: 50%;
-    transform: translate(-50%, 0%);
+  transition: transform 0.3s ease-out;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 .img-responsive {
-    max-width: calc(80vw - 2 * 1rem);
-    max-height: calc(90vh - 2 * 1rem);
+  max-width: calc(80vw - 2 * 1rem);
+  max-height: calc(90vh - 2 * 1rem);
 }
 
 /* Trick creation form page */
 
 .add_media_buttons_div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .add_media_buttons_div > .btn {
-    flex: 0 45%;
+  flex: 0 45%;
 }
 
 div#trick_medias > fieldset.form-group > .col-form-label {
-    font-weight: bold;
+  font-weight: bold;
 }
-div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-label {
-    font-style: italic;
+div#trick_medias
+  > fieldset.form-group
+  > div
+  > fieldset.form-group
+  > .col-form-label {
+  font-style: italic;
 }
 
 .trick_new_form > fieldset > .col-form-label {
-    font-size: 1.5rem;
-    font-weight: 100;
+  font-size: 1.5rem;
+  font-weight: 100;
 }
 
 .btn.outline {
-	background: none;
-	padding: 6px 16px;
+  background: none;
+  padding: 6px 16px;
 }
 
 .btn-primary.outline {
-	border: 2px solid #245682;
-	color: #245682;
+  border: 2px solid #245682;
+  color: #245682;
 }
 
 .btn-primary.outline {
-	border: 2px solid #245682;
-	color: #245682;
+  border: 2px solid #245682;
+  color: #245682;
 }
 
-.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
-	color: #1C4364;
-    border-color: #1C4364;
-    background-color: rgba(28, 67, 100, 0.15);
+.btn-primary.outline:hover,
+.btn-primary.outline:focus,
+.btn-primary.outline:active,
+.btn-primary.outline.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #1c4364;
+  border-color: #1c4364;
+  background-color: rgba(28, 67, 100, 0.15);
 }
-.btn-primary.outline:active, .btn-primary.outline.active {
-	border-color: #1C4364;
-	color: #1C4364;
-	box-shadow: none;
+.btn-primary.outline:active,
+.btn-primary.outline.active {
+  border-color: #1c4364;
+  color: #1c4364;
+  box-shadow: none;
 }
 
-.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
-	color: #1C4364;
-	border-color: #1C4364;
+.btn-primary.outline:hover,
+.btn-primary.outline:focus,
+.btn-primary.outline:active,
+.btn-primary.outline.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #1c4364;
+  border-color: #1c4364;
 }
-.btn-primary.outline:active, .btn-primary.outline.active {
-	border-color: #1C4364;
-	color: #1C4364;
-	box-shadow: none;
+.btn-primary.outline:active,
+.btn-primary.outline.active {
+  border-color: #1c4364;
+  color: #1c4364;
+  box-shadow: none;
 }
+
+.xs-fixed-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+}
+.trick-thumbnails-div,
+.trick-photo-thumbnail-div,
+.trick-video-thumbnail-div {
+  width: 100%;
+  flex-basis: unset;
+}
+
 
 /* max-width: 575px */
+/*
 @include media-breakpoint-up(xs) {
   .xs-fixed-bottom {
     position: fixed;
@@ -614,24 +656,26 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
     flex-basis: unset;
   }
   .trick-thumbnail {
-      text-align: center;
+    text-align: center;
   }
-  #leave-comment-form {
+  .leave-comment-form {
     width: 100%;
   }
   #form-div {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-content: center;
     width: 100%;
   }
-  #leave-comment-text {
-    width: unset;
-    margin: 10px;
+  #message_content {
+    width: 80%;
+    height: 4rem;
+    margin: 0 auto;
   }
-  #form-div button {
+  #form-div .btn {
     width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 15px auto 0 auto;
   }
   .comment-avatar {
     margin-left: 5%;
@@ -640,6 +684,7 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
     width: 75%;
   }
 }
+*/
 
 /* min-width: 576px */
 @include media-breakpoint-up(sm) {
@@ -651,27 +696,26 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
     z-index: unset;
   }
 
-  #leave-comment-form {
-    width: unset;
+  .leave-comment-form {
+    margin-left: auto;
+    margin-right: auto;
   }
+
   #form-div {
-    display: block;
-    flex-direction: unset;
-    width: unset;
+    display: flex;
+    flex-direction: row;
   }
-  #leave-comment-text {
+
+  #message_content {
     width: 300px;
-    height: 30px;
-    margin: unset;
-    top: 5px;
-    position: relative;
+    height: 2.3rem;
+    margin: 0 0 -10px 0;
   }
-  #form-div button {
+
+  #form-div .btn {
     width: unset;
-    margin-left: unset;
-    margin-right: unset;
-    top: -5px;
-    position: relative;
+    height: 2.3rem;
+    margin: 0 0 0 15px;
   }
 
   .comment-avatar {
