@@ -199,12 +199,6 @@ class TrickController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $result = $this->trickManager->saveMessageToDB($message);
 
-            $request->getSession()->getFlashBag()->add(
-                $result['msg_type'],
-                $this->i18n->trans($result['message'])
-            );
-
-            $messagesArray = [$message];
             // In case of error, we store the message content to the session
             // to be able to initialize the form with it.
             if (isset($result['forum_message'])) {
@@ -212,15 +206,15 @@ class TrickController extends Controller
                 \var_dump($result['forum_message']);
                 $this->trickManager->storeMessageInSession($result['forum_message']);
             }
+            $messagesArray = [$message];
+
             return $this->render('trick/messagesBlock.html.twig', array(
                 'messagesArray' => $messagesArray
             ));
         }
 
-        $messagesArray = [$message];
-
         return $this->render('trick/messagesBlock.html.twig', array(
-            'messagesArray' => $messagesArray
+            'messagesArray' => []
         ));
     }
 
