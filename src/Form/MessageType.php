@@ -24,7 +24,6 @@ class MessageType extends AbstractType
         $builder
             ->add('content', TextareaType::class, array(
                 'required'=>true,
-                'label' => $this->i18n->trans('Message'),
                 'attr' => ['placeholder' => $this->i18n->trans('your_comment_here')]
             ))
         ;

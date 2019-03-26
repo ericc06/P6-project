@@ -81,6 +81,31 @@ class TrickManager extends Controller
         return $result;
     }
 
+    // Inserts or updates a forum message into the database.
+    public function saveMessageToDB(Message $message)
+    {
+        $result = [];
+
+        try {
+            $this->em->persist($message);
+            $this->em->flush();
+
+            $result['is_successful'] = true;
+            $result['msg_type'] = 'success';
+            $result['message'] = 'message_saved_successfully';
+            $result['message_params'] = [];
+            //$result['dest_page'] = 'homepage';
+        } catch (Exception $e) {
+            $result['is_successful'] = false;
+            $result['msg_type'] = 'danger';
+            $result['message'] = $e->getMessage();
+            //$result['dest_page'] = 'trick_new';
+            $result['forum_message'] = $message;
+        }
+
+        return $result;
+    }
+
     // Stores a trick in the session.
     public function storeTrickInSession(Trick $trick)
     {
@@ -112,6 +137,22 @@ class TrickManager extends Controller
         $trick->setTrickGroup($trickGroup);
 
         return $trick;
+    }
+
+    // Stores a forum message in the session.
+    public function storeMessageInSession(Message $message)
+    {
+        $this->session->set('message', serialize($message));
+    }
+
+    // Reads a forum message from the session.
+    public function readMessageFromSession()
+    {
+        // Symfony remove() session method deletes a session attribute
+        // and returns its value.
+        $message = unserialize($this->session->remove('message'));
+
+        return $message;
     }
 
     // Deletes a media from the database.

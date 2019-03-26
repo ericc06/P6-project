@@ -141,10 +141,13 @@
                             {{ form_widget(message_form.content) }}
                             {{ form_errors(message_form.content) }}
                             {{ form_row(message_form._token) }}
-                            <input class="btn btn-primary" type="submit" value="{{'leave_a_comment'|trans }}"/>
+                            <!--<input class="btn btn-primary" type="submit" value="{{'leave_a_comment'|trans }}"/>-->
+                            <button type="submit" class="btn btn-primary center-button submit-button">{{ 'leave_a_comment'|trans}}</button>
                             {{ form_end(message_form, {'render_rest': false}) }}
                         </div>
-
+                        <div id="result-message-div">
+                            <span class="result-message"></span>
+                        </div>
                     <!--<div id="form-div">
                         <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
                         <button type="submit">Leave a comment</button>
@@ -177,6 +180,57 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            $form = $('.leave-comment-form');
+
+            $form.find('.submit-button').on("click", function(e) {
+                e.preventDefault();
+
+                if ($('#message_content').val() == "") {
+                    displayMessage("error", "{{ 'message_cant_be_empty'|trans}}");
+                } else if ($('#message_content').val().length >= 2500) {
+                    displayMessage("error", "{{ 'message_too_long'|trans}}");
+                } else {
+                    var $this = $(this);
+                    var waitingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'action_running'|trans}}";
+                    if ($(this).html() !== waitingText) {
+                        $this.data('original-text', $(this).html());
+                        $this.html(waitingText);
+                    }
+                    var url = "{{ path('message_new') }}";
+
+                    saveMessage(url);
+                
+                    function saveMessage(url) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $form.serialize()
+                        }).done(function (data) {
+                            let container = $('#messages-list');
+                            container.prepend(data);
+                            displayMessage("success", "{{ 'message_saved'|trans}}");
+                            $('#message_content').val('').prop('placeholder', "{{ 'your_comment_here'|trans}}");
+                            $this.html($this.data('original-text'));
+                        }).fail(function () {
+                            displayMessage("error", "{{ 'message_creation_failure'|trans}}");
+                            $this.html($this.data('original-text'));
+                        });
+                    }  
+                }
+                function displayMessage(msgType, message) {
+                    $('.result-message').html(message).css('margin-top', '10px');
+                    switch (msgType) {
+                        case "success":
+                            $('.result-message').removeClass('error').addClass('success').slideDown("slow").delay(2000).slideUp("slow");
+                            break;
+                        case "error":
+                            $('.result-message').removeClass('success').addClass('error').slideDown("slow").delay(2000).slideUp("slow");
+                            break;
+                        default:
+                    }
+                }
+            });
+
             let messagesLoadingLimit = Number($('.numberOfInitialLoadedMessages').val());
             let loadedMessages = messagesLoadingLimit;
 
@@ -186,7 +240,7 @@
                 var loadingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'loading_more'|trans}}";
                 if ($(this).html() !== loadingText) {
                     $this.data('original-text', $(this).html());
-                    $this.html(loadingText).delay( 2000 );
+                    $this.html(loadingText);
                 }
                 // We add the limit and the offset at the end of the "load_tricks" route
                 var url = "{{ path('load_messages') }}/" + messagesLoadingLimit + "/" + loadedMessages;
@@ -210,7 +264,7 @@
                         }
                         $this.html($this.data('original-text'));
                     }).fail(function () {
-                        alert('Could not load tricks.');
+                        alert('Could not load messages.');
                         $this.html($this.data('original-text'));
                     });
                 }

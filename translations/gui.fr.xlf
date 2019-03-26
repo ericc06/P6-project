@@ -235,6 +235,26 @@
                 <source>leave_a_comment</source>
                 <target>Publier</target>
             </trans-unit>
+            <trans-unit id="action_running">
+                <source>action_running</source>
+                <target>En cours...</target>
+            </trans-unit>
+            <trans-unit id="message_saved">
+                <source>message_saved</source>
+                <target>Votre message a bien été ajouté.</target>
+            </trans-unit>
+            <trans-unit id="message_creation_failure">
+                <source>message_creation_failure</source>
+                <target>Echec d'ajout du message. Merci d'essayer de nouveau.</target>
+            </trans-unit>
+            <trans-unit id="message_cant_be_empty">
+                <source>message_cant_be_empty</source>
+                <target>Le message ne peut pas être vide.</target>
+            </trans-unit>
+            <trans-unit id="message_too_long">
+                <source>message_too_long</source>
+                <target>La longeur du message ne peut excéder 2500 caractères.</target>
+            </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>

@@ -1,6 +1,6 @@
 {% for message in messagesArray %}
     <div class="comment-div">
         <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-        <p class="comment-text">{{ message.content }}</p>
+        <div class="comment-text">{{ message.content|nl2br }}</div>
     </div>
 {% endfor %}
