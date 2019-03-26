@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
@@ -18,6 +19,7 @@ class Message
 
     /**
      * @ORM\Column(type="string", length=2500, nullable=false)
+     * @Assert\NotBlank(message="forum.message.not_blank")
      */
     private $content;
 
@@ -90,4 +92,21 @@ class Message
 
         return $this;
     }
+
+    // CA NE MARCHE PAS !!!
+    
+    /**
+     * @ORM\PrePersist
+     */
+    /*
+    public function prePersistMessage()
+    {
+        $this->initDate();
+    }
+
+    public function initDate()
+    {
+        $this->setDate(new \Datetime());
+    }
+    */
 }

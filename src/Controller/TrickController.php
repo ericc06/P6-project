@@ -175,6 +175,55 @@ class TrickController extends Controller
         ));
     }
 
+    
+    /**
+     * Message creation form.
+     *
+     * @Route("/messages/new", name="message_new", methods={"GET","POST"})
+     */
+    public function addMessage(Request $request)
+    {
+        if (null !== $this->session->get('message')) {
+            $message = $this->trickManager->readMessageFromSession();
+        } else {
+            $message = new Message();
+            $message->setDate(new \Datetime());
+            $message->setUser($this->get('security.token_storage')->getToken()->getUser());
+            $message->setTrick(null);
+        }
+
+        $form = $this->createForm(MessageType::class, $message);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result = $this->trickManager->saveMessageToDB($message);
+
+            $request->getSession()->getFlashBag()->add(
+                $result['msg_type'],
+                $this->i18n->trans($result['message'])
+            );
+
+            $messagesArray = [$message];
+            // In case of error, we store the message content to the session
+            // to be able to initialize the form with it.
+            if (isset($result['forum_message'])) {
+                $this->logger->info('> > > > > > IN index  < < < < < <'. $result['forum_message']);
+                \var_dump($result['forum_message']);
+                $this->trickManager->storeMessageInSession($result['forum_message']);
+            }
+            return $this->render('trick/messagesBlock.html.twig', array(
+                'messagesArray' => $messagesArray
+            ));
+        }
+
+        $messagesArray = [$message];
+
+        return $this->render('trick/messagesBlock.html.twig', array(
+            'messagesArray' => $messagesArray
+        ));
+    }
+
     /**
      * Trick update form.
      *
