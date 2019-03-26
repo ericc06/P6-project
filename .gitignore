@@ -1,5 +1,6 @@
 ###> Custom ###
 /public/uploads/
+/config/parameters_dev.yaml
 ###< Custom ###
 
 ###> symfony/framework-bundle ###
