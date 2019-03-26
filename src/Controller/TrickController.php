@@ -41,13 +41,15 @@ class TrickController extends Controller
         LoggerInterface $logger,
         TranslatorInterface $translator,
         SessionInterface $session,
-        Int $homepageTricksLoadLimit
+        Int $homepageTricksLoadLimit,
+        Int $trickPageMessagesLoadLimit
     ) {
         $this->trickManager = $trickManager;
         $this->i18n = $translator;
         $this->logger = $logger;
         $this->session = $session;
         $this->homepageTricksLoadLimit = $homepageTricksLoadLimit;
+        $this->trickPageMessagesLoadLimit = $trickPageMessagesLoadLimit;
     }
 
     /**
@@ -59,7 +61,6 @@ class TrickController extends Controller
         $this->logger->info('> > > > > > IN index  < < < < < <'. $this->homepageTricksLoadLimit);
 
         $tricksArray = $this->trickManager->getTricksForIndexPage($this->homepageTricksLoadLimit, 0);
-        //$tricksArray = $this->getDoctrine()->getRepository(Trick::class)->findForPagination(0);
 
         $totalNumberOfTricks = $this->getDoctrine()->getRepository(Trick::class)->getTricksNumber();
 
@@ -76,9 +77,6 @@ class TrickController extends Controller
      */
     public function getTricksHtmlBlock($limit = null, $offset = 0)
     {
-        $this->logger->info('> > > > > > IN loadTricks  < < < < < <'. $limit);
-        $this->logger->info('> > > > > > IN loadTricks  < < < < < <'. $offset);
-
         $tricksArray = $this->trickManager->getTricksForIndexPage($limit, $offset);
 
         return $this->render('trick/tricksBlock.html.twig', array(
@@ -138,9 +136,15 @@ class TrickController extends Controller
 
         $group_name = $this->trickManager->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
-        $messages = $this->getDoctrine()->getRepository(message::class)->findAll();
+        //$messages = $this->getDoctrine()->getRepository(message::class)->findAll();
+
+        //$messagesArray = $this->trickManager->getMessagesForTrickPage($this->trickPageMessagesLoadLimit, 0);
+        $messagesArray = $this->getDoctrine()->getRepository(Message::class)
+            ->findAllMessagesForPagination($this->trickPageMessagesLoadLimit, 0);
 
         $message_form = $this->createForm(MessageType::class);
+
+        $totalNumberOfMessages = $this->getDoctrine()->getRepository(Message::class)->getMessagesNumber();
 
         $content = $this
             ->get('templating')
@@ -149,11 +153,26 @@ class TrickController extends Controller
                 'medias' => $medias,
                 'cover_image' => $cover_image_file,
                 'group_name' => $group_name,
-                'messages' => $messages,
-                'message_form' => $message_form,
+                'messagesArray' => $messagesArray,
                 'message_form' => $message_form->createView(),
+                'totalNumberOfMessages' => $totalNumberOfMessages,
+                'numberOfLoadedMessages' => $this->trickPageMessagesLoadLimit
             ));
         return new Response($content);
+    }
+
+    /**
+     * @Route("/load-messages/{limit}/{offset}", name="load_messages", requirements={"limit":"\d+","offset":"\d+"}, methods={"GET"})
+     */
+    public function getMessagesHtmlBlock($limit = null, $offset = 0)
+    {
+        //$messagesArray = $this->trickManager->getMessagesForTrickPage($limit, $offset);
+        $messagesArray = $this->getDoctrine()->getRepository(Message::class)
+            ->findAllMessagesForPagination($limit, $offset);
+
+        return $this->render('trick/messagesBlock.html.twig', array(
+            'messagesArray' => $messagesArray
+        ));
     }
 
     /**

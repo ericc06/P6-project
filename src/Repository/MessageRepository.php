@@ -19,6 +19,30 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
+    /**
+     * @return int Returns the number of existing Message objects
+     */
+    public function getMessagesNumber()
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->select('count(m.id)');
+        
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return Message[] Returns an array of Message objects
+     */
+    public function findAllMessagesForPagination($limit, $offset)
+    {
+        return $this->findBy(
+            array(), // No criteria
+            array('date' => 'desc'),
+            $limit,
+            $offset
+        );
+    }
+
     // /**
     //  * @return Message[] Returns an array of Message objects
     //  */
