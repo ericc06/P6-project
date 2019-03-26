@@ -19,9 +19,8 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
     
-        
     /**
-     * @return Trick[] Returns an array of Trick objects
+     * @return int Returns the number of existing Trick objects
      */
     public function getTricksNumber()
     {
@@ -34,7 +33,7 @@ class TrickRepository extends ServiceEntityRepository
     /**
      * @return Trick[] Returns an array of Trick objects
      */
-    public function findAllForPagination($limit, $offset)
+    public function findAllTricksForPagination($limit, $offset)
     {
         return $this->findBy(
             array(), // No criteria

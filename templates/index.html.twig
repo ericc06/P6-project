@@ -38,7 +38,7 @@
 
     <div class="container">
         <section class="row">
-            <button type="button" class="btn btn-primary center-button load-more-button" action-href="{{ path('load_tricks') }}">{{ 'load_more'|trans}}</button>
+            <button type="button" class="btn btn-primary center-button load-more-button">{{ 'load_more'|trans}}</button>
         </section>
     </div>
 
@@ -65,7 +65,7 @@
                   $this.html(loadingText).delay( 2000 );
                 }
                 // We add the limit and the offset at the end of the "load_tricks" route
-                var url = $(this).attr('action-href') + "/" + tricksLoadingLimit + "/" + loadedTricks;
+                var url = "{{ path('load_tricks') }}/" + tricksLoadingLimit + "/" + loadedTricks;
                 loadTricks(url);
             
                 function loadTricks(url) {
@@ -92,6 +92,4 @@
             });
         });
     </script>
-
-    {#<script src="{{ asset('./build/trick.js') }}"></script>#}
 {% endblock %}

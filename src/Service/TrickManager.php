@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\Trick;
 use App\Entity\Media;
+use App\Entity\Message;
 use App\Entity\TrickGroup;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
@@ -146,11 +147,11 @@ class TrickManager extends Controller
         return $trick;
     }
     
-    // Returns all tricks with their cover image for the homepage (no media).
+    // Returns a subset of tricks with their cover image for the homepage (no media).
     public function getTricksForIndexPage($limit, $offset)
     {
         $tricks = $this->em->getRepository(Trick::class)
-        ->findAllForPagination($limit, $offset);
+        ->findAllTricksForPagination($limit, $offset);
 
         $tricksArray = [];
 
@@ -163,6 +164,16 @@ class TrickManager extends Controller
         
         return $tricksArray;
     }
+
+    // Returns a subset of messages.
+    /*public function getMessagesForTrickPage($limit, $offset)
+    {
+        $messagesArray = $this->em->getRepository(Message::class)
+        ->findAllMessagesForPagination($limit, $offset);
+        
+        return $tricksArray;
+    }
+    */
 
     // Returns an array with the medias from a trick id.
     public function getMediasByTrickId($id)
