@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\Media;
+use App\Entity\Message;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -29,7 +30,19 @@ class AppFixtures extends Fixture
         $user->setPassword('$2y$13$/W5ATAIIrJTUU9GoSPAQG.emjMEYEDQlL9T811y.KyMWsLWmhMjW2');
 
         $manager->persist($user);
-    
+        $manager->flush();
+
+        for ($i=0; $i<10; $i++) {
+            $message = new Message();
+
+            $message->setContent("Ceci est le " . strval($i+1) . "° message du forum.");
+            $message->setDate(new \Datetime());
+            $message->setUser($user);
+            //$message->setTrick();
+
+            $manager->persist($message);
+        }
+
         $manager->flush();
 
         $groupsNameArray = [
