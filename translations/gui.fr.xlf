@@ -227,6 +227,14 @@
                 <source>update_trick</source>
                 <target>Enregistrer les modifications</target>
             </trans-unit>
+            <trans-unit id="your_comment_here">
+                <source>your_comment_here</source>
+                <target>Votre commentaire ici...</target>
+            </trans-unit>
+            <trans-unit id="leave_a_comment">
+                <source>leave_a_comment</source>
+                <target>Publier</target>
+            </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>

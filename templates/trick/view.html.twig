@@ -1,5 +1,7 @@
 {# templates/trick/view.html.twig #}
 
+{% trans_default_domain 'gui' %}
+
 {% extends 'layout.html.twig' %}
 
 {% block content %}
@@ -131,11 +133,22 @@
             {% if app.user %}
             <div class="container">
                 <section class="row">
-                    <form id="leave-comment-form">
-                        <div id="form-div">
+                        {{ form_start(message_form, {'attr': {'class': 'leave-comment-form'}}) }}
+                            <div class="my-custom-class-for-errors">
+                                {{ form_errors(message_form) }}
+                            </div>
+                            <div id="form-div">
+                                {{ form_widget(message_form.content) }}
+                                {{ form_errors(message_form.content) }}
+                                {{ form_row(message_form._token) }}
+                                <input class="btn btn-primary" type="submit" value="{{'leave_a_comment'|trans }}"/>
+                                {{ form_end(message_form, {'render_rest': false}) }}
+                            </div>
+
+                        <!--<div id="form-div">
                             <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
                             <button type="submit">Leave a comment</button>
-                        </div>
+                        </div>-->
                     </form>
                 </section>
             </div>
