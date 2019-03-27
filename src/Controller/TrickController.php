@@ -136,9 +136,6 @@ class TrickController extends Controller
 
         $group_name = $this->trickManager->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
-        //$messages = $this->getDoctrine()->getRepository(message::class)->findAll();
-
-        //$messagesArray = $this->trickManager->getMessagesForTrickPage($this->trickPageMessagesLoadLimit, 0);
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findAllMessagesForPagination($this->trickPageMessagesLoadLimit, 0);
 
@@ -166,7 +163,6 @@ class TrickController extends Controller
      */
     public function getMessagesHtmlBlock($limit = null, $offset = 0)
     {
-        //$messagesArray = $this->trickManager->getMessagesForTrickPage($limit, $offset);
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findAllMessagesForPagination($limit, $offset);
 
