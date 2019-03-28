@@ -25,8 +25,8 @@ class AppFixtures extends Fixture
         $this->loadUsersAndMessages($manager);
         $this->loadGroups($manager);
         $tricksDetailsArray = $this->initTricksDetails($manager);
-        $imagesDetailsArray = $this->initImagesDetails($manager);
-        $videosDetailsArray = $this->initVideosDetails($manager);
+        $imagesDetailsArray = $this->initImagesDetails();
+        $videosDetailsArray = $this->initVideosDetails();
         $this->loadTricks(
             $tricksDetailsArray,
             $imagesDetailsArray,
@@ -43,7 +43,7 @@ class AppFixtures extends Fixture
         $user->setEmail('eric.codron@gmail.com');
         $user->setPassword('$2y$13$/W5ATAIIrJTUU9GoSPAQG.emjMEYEDQlL9T811y.KyMWsLWmhMjW2');
         $user->setIsActiveAccount(true);
-        
+
         $manager->persist($user);
         $manager->flush();
 
@@ -180,7 +180,7 @@ class AppFixtures extends Fixture
         return $tricksDetailsArray;
     }
 
-    public function initImagesDetails(ObjectManager $manager)
+    public function initImagesDetails()
     {
         $imagesDetailsArray = [
             'mute' => [
@@ -410,7 +410,7 @@ class AppFixtures extends Fixture
         return $imagesDetailsArray;
     }
 
-    public function initVideosDetails(ObjectManager $manager)
+    public function initVideosDetails()
     {
         $videosDetailsArray = [
             'mute' => [
