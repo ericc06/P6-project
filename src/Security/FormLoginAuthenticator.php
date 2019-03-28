@@ -19,7 +19,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
 
 class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -35,15 +34,13 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         RouterInterface $router,
         CsrfTokenManagerInterface $csrfTokenManager,
         UserPasswordEncoderInterface $passwordEncoder,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
+        TranslatorInterface $translator
     ) {
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->i18n = $translator;
-        $this->logger = $logger;
     }
 
     public function supports(Request $request)

@@ -55,7 +55,7 @@ class TrickController extends Controller
     /**
      * @Route("/", name="homepage")
      */
-    public function index(Request $request)
+    public function index()
     {
         $env = getenv('APP_ENV');
         $this->logger->info('> > > > > > IN index  < < < < < <'. $this->homepageTricksLoadLimit);

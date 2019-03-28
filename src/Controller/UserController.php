@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\UserManager;
+use App\Service\UserRegistrationManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -22,9 +23,12 @@ class UserController extends Controller
 
     public function __construct(
         UserManager $userManager,
+        UserRegistrationManager $userRegistrationManager,
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
+        $this->userManager = $userManager;
+        $this->userRegistrationManager =  $userRegistrationManager;
         $this->userManager = $userManager;
         $this->i18n = $translator;
         $this->logger = $logger;
@@ -35,7 +39,7 @@ class UserController extends Controller
      *
      * @Route("/registration", name="user_registration")
      */
-    public function add(Request $request, LoggerInterface $logger)
+    public function add(Request $request)
     {
         $user = new User();
 
@@ -44,7 +48,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->userManager->checkAddUser($user);
+            $result = $this->userRegistrationManager->checkAddUser($user);
 
             $request->getSession()->getFlashBag()->add(
                 $result['msg_type'],
@@ -66,7 +70,7 @@ class UserController extends Controller
      */
     public function confirmAccount(Request $request)
     {
-        if (true === $this->userManager->confirmUserRegistration($request)) {
+        if (true === $this->userRegistrationManager->confirmUserRegistration($request)) {
             $request->getSession()->getFlashBag()->add(
                 'success',
                 $this->i18n->trans('account_validated')
@@ -87,7 +91,7 @@ class UserController extends Controller
      *
      * @Route("/edit-profile", name="user_profile_edition")
      */
-    public function edit(Request $request/*,UserPasswordEncoderInterface $encoder*/)
+    public function edit(/*Request $request,UserPasswordEncoderInterface $encoder*/)
     {
         // TODO
     }
