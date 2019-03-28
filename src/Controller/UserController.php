@@ -7,7 +7,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\UserManager;
-use App\Service\UserRegistrationManager;
+use App\Service\PasswordManager;
+use App\Service\RegistrationManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -19,16 +20,16 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
-    private $userManager;
-
     public function __construct(
         UserManager $userManager,
-        UserRegistrationManager $userRegistrationManager,
+        PasswordManager $passwordManager,
+        RegistrationManager $registrationManager,
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
         $this->userManager = $userManager;
-        $this->userRegistrationManager =  $userRegistrationManager;
+        $this->pwdManager =  $passwordManager;
+        $this->regManager =  $registrationManager;
         $this->userManager = $userManager;
         $this->i18n = $translator;
         $this->logger = $logger;
@@ -48,7 +49,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->userRegistrationManager->checkAddUser($user);
+            $result = $this->regManager->checkAddUser($user);
 
             $request->getSession()->getFlashBag()->add(
                 $result['msg_type'],
@@ -70,7 +71,7 @@ class UserController extends Controller
      */
     public function confirmAccount(Request $request)
     {
-        if (true === $this->userRegistrationManager->confirmUserRegistration($request)) {
+        if (true === $this->regManager->confirmUserRegistration($request)) {
             $request->getSession()->getFlashBag()->add(
                 'success',
                 $this->i18n->trans('account_validated')
@@ -91,7 +92,7 @@ class UserController extends Controller
      *
      * @Route("/edit-profile", name="user_profile_edition")
      */
-    public function edit(/*Request $request,UserPasswordEncoderInterface $encoder*/)
+    public function edit()
     {
         // TODO
     }
@@ -127,7 +128,7 @@ class UserController extends Controller
             $email = $request->request->get('email');
 
             if (null !== $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email)) {
-                if (true === $this->userManager->sendPwdResetEmail($user)) {
+                if (true === $this->pwdManager->sendPwdResetEmail($user)) {
                     return $this->render('user/pwd-reset-email-sent.html.twig', array());
                 } else {
                     $request->getSession()->getFlashBag()->add(
@@ -161,7 +162,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (true === $this->userManager->checkAndSaveNewPwd(
+            if (true === $this->pwdManager->checkAndSaveNewPwd(
                 $request->request->get('m'),
                 $request->request->get('t'),
                 $request
@@ -190,7 +191,7 @@ class UserController extends Controller
             }
         }
 
-        if (true === $this->userManager->confirmPwdResetEmail($request)) {
+        if (true === $this->pwdManager->confirmPwdResetEmail($request)) {
             return $this->render(
                 'user/forgotten-pwd-step2.twig',
                 array(

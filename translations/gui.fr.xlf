@@ -115,6 +115,10 @@
                 <source>confirm_new_password</source>
                 <target>Confirmer le mot de passe</target>
             </trans-unit>
+            <trans-unit id="pwd_reinitialization">
+                <source>pwd_reinitialization</source>
+                <target>Réinitialisation de votre mot de passe</target>
+            </trans-unit>
             <trans-unit id="send">
                 <source>send</source>
                 <target>Envoyer</target>

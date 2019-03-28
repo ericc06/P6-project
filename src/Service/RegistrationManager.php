@@ -1,9 +1,10 @@
 <?php
-// src/Service/UserRegistrationManager.php
+// src/Service/RegistrationManager.php
 
 namespace App\Service;
 
 use App\Entity\User;
+use App\Utils\Tools;
 use App\Service\PasswordManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 //use Symfony\Component\Validator\Constraints\DateTime;
 
-class UserRegistrationManager extends Controller
+class RegistrationManager extends Controller
 {
     private $userManager;
     private $encoder;
@@ -31,20 +32,16 @@ class UserRegistrationManager extends Controller
         $this->encoder = $encoder;
     }
 
-    // Generates and returns a token.
-    public function generateToken()
-    {
-        return random_int(1000000000, 9999999999);
-    }
-
     // Returns an encoded user password.
-    public function generateEncodedPwd(User $user, String $pwd)
+    public function encodePwd(User $user, String $pwd)
     {
         return $this->encoder->encodePassword($user, $pwd);
     }
 
-    // Inserts a non existing (or still inactive) user account into the database.
-    // If an inactive account exists for the given email, it is deleted end recreated.
+    // Inserts a non existing (or still inactive) user account
+    // into the database.
+    // If an inactive account exists for the given email,
+    // it is deleted end recreated.
     // Returns true if an account has been (re)created.
     // Returns false if an active account alresady exists.
     public function persistUserRegistration(User $user)
@@ -57,14 +54,11 @@ class UserRegistrationManager extends Controller
         // S'il existe un compte encore inactif, on le supprime et on le recrée.
         // S'il existe un compte actif, on invite l'utilisateur à se connecter.
 
-        $userAccountAlreadyExists = false;
-        $usernameAlreadyUsed = false;
+        $existingAccount = $userRepository->findOneByEmail($user->getEmail());
 
-        $existingUserAccount = $userRepository->findOneByEmail($user->getEmail());
-
-        if ($existingUserAccount) {
-            if (!$existingUserAccount->getIsActiveAccount()) {
-                $this->userManager->deleteUserFromDB($existingUserAccount);
+        if ($existingAccount) {
+            if (!$existingAccount->getIsActiveAccount()) {
+                $this->userManager->deleteUserFromDB($existingAccount);
             } else {
                 throw new Exception('account_already_exists', 1);
             }
@@ -72,10 +66,14 @@ class UserRegistrationManager extends Controller
             throw new Exception('username_already_exists', 2);
         }
 
-        //$user->setPassword(PasswordManager::generateEncodedPwd($user, $user->getPassword()));
-        $user->setPassword($this->generateEncodedPwd($user, $user->getPassword()));
+        /*$user->setPassword(PasswordManager::encodePwd(
+            $user,
+            $user->getPassword())
+        );
+        */
+        $user->setPassword($this->encodePwd($user, $user->getPassword()));
         $user->setIsActiveAccount(false);
-        $user->setActivationToken($this->generateToken());
+        $user->setActivationToken(Tools::generateToken());
         $user->setRoles(["ROLE_USER"]);
 
         $this->userManager->saveUserToDB($user);
@@ -118,9 +116,13 @@ class UserRegistrationManager extends Controller
         if (0 !== $result) {
             return true;
         } else {
-            // En cas d'échec d'envoi du mail de vérification, on supprime le compte
-            // pour permettre à l'utilisateur de le recréer pour renvoyer le mail.
-            $userToDelete = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($user->getEmail());
+            // En cas d'échec d'envoi du mail de vérification,
+            // on supprime le compte pour permettre à l'utilisateur
+            // de le recréer pour renvoyer le mail.
+            $userToDelete = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneByEmail($user->getEmail())
+            ;
 
             if ($userToDelete) {
                 $this->userManager->deleteUserFromDB($user);
@@ -171,15 +173,20 @@ class UserRegistrationManager extends Controller
         return $result;
     }
 
-    // Called when a user clicks the link in the account creation verification email.
-    // Checks the email address and token consistency. Activates the user account if OK.
+    // Called when a user clicks the link in the account creation
+    // verification email.
+    // Checks the email address and token consistency. Activates
+    // the user account if OK.
     // Returns true if the verification is successful.
     // Returns false if the verification fails.
     public function confirmUserRegistration(Request $request)
     {
         // First we need to check the email address and token consistency.
 
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($request->query->get('m'));
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findOneByEmail($request->query->get('m'))
+        ;
 
         $urlToken = $request->query->get('t');
 
@@ -190,8 +197,8 @@ class UserRegistrationManager extends Controller
 
         if (true === $user->getIsActiveAccount()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

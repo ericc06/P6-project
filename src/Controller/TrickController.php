@@ -288,15 +288,11 @@ class TrickController extends Controller
      * @ParamConverter("trick", class="App\Entity\Trick", options={"mapping": {"trickId": "id"}})
      * @ParamConverter("media", class="App\Entity\Media", options={"mapping": {"mediaId": "id"}})
      */
-    public function deleteMedia(Trick $trick, Media $media, Request $request)
+    public function deleteMedia(Trick $trick, Media $media)
     {
-        //$trick->setMedias($this->trickManager->getMediasByTrickId($trick->getId()));
-        $this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($trick));
         $trick->removeMedia($media);
-        $this->logger->info('> > > > > > APRES removeMedia  < < < < < <'. \serialize($trick));
-        $result = $this->trickManager->saveTrickToDB($trick);
 
-        $this->logger->info('> > > > > > APRES saveTrickToDB  < < < < < <'. \serialize($trick));
+        $result = $this->trickManager->saveTrickToDB($trick);
 
         if ($result['is_successful'] === true) {
             return true;
