@@ -64,10 +64,6 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
-        $groupsArray = $manager->getRepository(TrickGroup::class)->findAll();
-
-        //$this->logger->info('> > > > > > IN LOAD  < < < < < <'.array_rand($groupsArray, 1));
-
         $tricksDetailsArray = [
             [
                 'name' => 'Mute',
