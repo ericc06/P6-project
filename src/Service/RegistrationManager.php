@@ -1,6 +1,5 @@
 <?php
 // src/Service/RegistrationManager.php
-
 namespace App\Service;
 
 use App\Entity\User;

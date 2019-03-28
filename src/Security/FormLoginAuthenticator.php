@@ -71,7 +71,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        
+
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
@@ -93,9 +93,15 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+    public function onAuthenticationSuccess(
+        Request $request,
+        TokenInterface $token,
+        $providerKey
+    ) {
+        if ($targetPath = $this->getTargetPath(
+            $request->getSession(),
+            $providerKey
+        )) {
             return new RedirectResponse($targetPath);
         }
 

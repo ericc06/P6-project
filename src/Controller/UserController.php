@@ -1,7 +1,5 @@
 <?php
-
 // src/Controller/UserController.php
-
 namespace App\Controller;
 
 use App\Entity\User;
@@ -59,9 +57,9 @@ class UserController extends Controller
             return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('user/add.html.twig', array(
+        return $this->render('user/add.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -129,14 +127,14 @@ class UserController extends Controller
 
             if (null !== $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email)) {
                 if (true === $this->pwdManager->sendPwdResetEmail($user)) {
-                    return $this->render('user/pwd-reset-email-sent.html.twig', array());
+                    return $this->render('user/pwd-reset-email-sent.html.twig', []);
                 } else {
                     $request->getSession()->getFlashBag()->add(
                         'error',
                         $this->i18n->trans('error_sending_pwd_reset_email')
                     );
 
-                    return $this->render('user/forgotten-pwd-step1.twig', array('form' => $form->createView()));
+                    return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
                 }
             } else {
                 $request->getSession()->getFlashBag()->add(
@@ -145,7 +143,7 @@ class UserController extends Controller
                 );
             }
         }
-        return $this->render('user/forgotten-pwd-step1.twig', array('form' => $form->createView()));
+        return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -182,11 +180,11 @@ class UserController extends Controller
 
                 return $this->render(
                     'user/forgotten-pwd-step2.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
                         'email' => $request->request->get('m'),
                         'token' => $request->request->get('t')
-                    )
+                    ]
                 );
             }
         }
@@ -194,11 +192,11 @@ class UserController extends Controller
         if (true === $this->pwdManager->confirmPwdResetEmail($request)) {
             return $this->render(
                 'user/forgotten-pwd-step2.twig',
-                array(
+                [
                     'form' => $form->createView(),
                     'email' => $request->query->get('m'),
                     'token' => $request->query->get('t')
-                )
+                ]
             );
         } else {
             $request->getSession()->getFlashBag()->add(

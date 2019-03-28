@@ -25,27 +25,27 @@ class TrickType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, array(
+            ->add('name', TextType::class, [
                 'label' => $this->i18n->trans('trick_name')
-            ))
-            ->add('description', TextareaType::class, array(
+            ])
+            ->add('description', TextareaType::class, [
                 'label' => $this->i18n->trans('description'),
-            ))
-            ->add('trickGroup', EntityType::class, array(
+            ])
+            ->add('trickGroup', EntityType::class, [
                 'class'        => 'App\Entity\TrickGroup',
                 'choice_label' => 'name',
                 'placeholder'  => $this->i18n->trans('choose_a_group'),
                 'multiple'     => false,
                 'label' => $this->i18n->trans('group')
-            ))
-            ->add('medias', CollectionType::class, array(
+            ])
+            ->add('medias', CollectionType::class, [
                 'entry_type' => MediaType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => $this->i18n->trans('medias'),
                 'validation_groups' => $options['validation_groups']
-            ));
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

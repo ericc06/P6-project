@@ -18,14 +18,16 @@ class MessageType extends AbstractType
     ) {
         $this->i18n = $translator;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content', TextareaType::class, array(
+            ->add('content', TextareaType::class, [
                 'required'=>true,
-                'attr' => ['placeholder' => $this->i18n->trans('your_comment_here')]
-            ))
+                'attr' => [
+                    'placeholder' => $this->i18n->trans('your_comment_here')
+                ]
+            ])
         ;
     }
 

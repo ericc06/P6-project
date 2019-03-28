@@ -49,8 +49,11 @@ class TrickManager extends Controller
             $result['msg_type'] = 'danger';
             $result['message'] = 'trick_name_already_exists';
             $result['message_params'] = [
-                '%link_start%' => '<a href="' . $this->generateUrl('trick_edit', ['id' => $this->em->getRepository(Trick::class)
-                ->findByName($trick->getName())[0]->getId()]) . '">',
+                '%link_start%' => '<a href="'
+                    . $this->generateUrl('trick_edit', [
+                        'id' => $this->em->getRepository(Trick::class)
+                            ->findByName($trick->getName())[0]->getId()
+                    ]) . '">',
                 '%link_end%' => '</a>'
             ];
             $result['dest_page'] = 'trick_new';
@@ -119,7 +122,7 @@ class TrickManager extends Controller
         // and must be "merged" after being read from the session
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
-        // See https://stackoverflow.com/questions/7473872/entities-passed-to-the-choice-field-must-be-managed/7931437
+        // See https://stackoverflow.com/q/7473872/10980984
         $this->session->set('trickGroup', serialize($trick->getTrickGroup()));
     }
 
@@ -133,7 +136,9 @@ class TrickManager extends Controller
         // and must be "merged" after being read from the session
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
-        $trickGroup = $this->getDoctrine()->getEntityManager()->merge(unserialize($this->session->remove('trickGroup')));
+        $trickGroup = $this->getDoctrine()
+            ->getEntityManager()
+            ->merge(unserialize($this->session->remove('trickGroup')));
         $trick->setTrickGroup($trickGroup);
 
         return $trick;
@@ -200,7 +205,9 @@ class TrickManager extends Controller
             $tricksArray[$key]['id'] = $trick->getId();
             $tricksArray[$key]['name'] = $trick->getName();
             $tricksArray[$key]['slug'] = $trick->getSlug();
-            $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId($trick->getId());
+            $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId(
+                $trick->getId()
+            );
         }
         
         return $tricksArray;
@@ -211,7 +218,7 @@ class TrickManager extends Controller
     {
         $messagesArray = $this->em->getRepository(Message::class)
         ->findAllMessagesForPagination($limit, $offset);
-        
+
         return $tricksArray;
     }
     */
@@ -226,13 +233,16 @@ class TrickManager extends Controller
     // Returns the cover image file name from a trick id.
     public function getCoverImageByTrickId($id)
     {
-        $cover_image_details = $this->em->getRepository(Media::class)->findDefaultCoverForTrickOrTheFirstOne($id);
+        $cover_image_details = $this->em->getRepository(Media::class)
+            ->findDefaultCoverForTrickOrTheFirstOne($id);
 
-        return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
+        return $cover_image_details[0]->getId() . '.'
+            . $cover_image_details[0]->getFileUrl();
     }
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($id)
     {
-        return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
+        return $this->em->getRepository(TrickGroup::class)
+            ->findGroupNameByGroupId($id);
     }
 }

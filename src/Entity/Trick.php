@@ -52,7 +52,12 @@ class Trick
     private $trickGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Media", mappedBy="trick", cascade="all", orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Media",
+     *     mappedBy="trick",
+     *     cascade="all",
+     *     orphanRemoval=true
+     * )
      * @Assert\Valid()
      */
     private $medias;
@@ -206,7 +211,24 @@ class Trick
 
     public function initSlug()
     {
-        $slug = strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($this->getName(), ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
+        $slug = strtolower(
+            trim(
+                preg_replace(
+                    '~[^0-9a-z]+~i',
+                    '-',
+                    html_entity_decode(
+                        preg_replace(
+                            '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i',
+                            '$1',
+                            htmlentities($this->getName(), ENT_QUOTES, 'UTF-8')
+                        ),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    )
+                ),
+                '-'
+            )
+        );
 
         $this->setSlug($slug);
     }
@@ -218,5 +240,4 @@ class Trick
     {
         $this->setLastUpdateDate(new \Datetime());
     }
-
 }

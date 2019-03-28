@@ -1,7 +1,5 @@
 <?php
-
 // src/Controller/TrickController.php
-
 namespace App\Controller;
 
 use App\Entity\Trick;
@@ -13,16 +11,10 @@ use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class TrickController extends Controller
 {
@@ -64,12 +56,12 @@ class TrickController extends Controller
 
         $totalNumberOfTricks = $this->getDoctrine()->getRepository(Trick::class)->getTricksNumber();
 
-        return $this->render('index.html.twig', array(
+        return $this->render('index.html.twig', [
             'env_name' => $env,
             'tricksArray' => $tricksArray,
             'totalNumberOfTricks' => $totalNumberOfTricks,
             'numberOfLoadedTricks' => $this->homepageTricksLoadLimit
-        ));
+        ]);
     }
 
     /**
@@ -79,9 +71,9 @@ class TrickController extends Controller
     {
         $tricksArray = $this->trickManager->getTricksForIndexPage($limit, $offset);
 
-        return $this->render('trick/tricksBlock.html.twig', array(
+        return $this->render('trick/tricksBlock.html.twig', [
             'tricksArray' => $tricksArray
-        ));
+        ]);
     }
 
     /**
@@ -115,10 +107,10 @@ class TrickController extends Controller
             return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('trick/add.html.twig', array(
+        return $this->render('trick/add.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
-        ));
+        ]);
     }
 
     /**
@@ -143,19 +135,16 @@ class TrickController extends Controller
 
         $totalNumberOfMessages = $this->getDoctrine()->getRepository(Message::class)->getMessagesNumber();
 
-        $content = $this
-            ->get('templating')
-            ->render('trick/view.html.twig', array(
-                'trick' => $trick,
-                'medias' => $medias,
-                'cover_image' => $cover_image_file,
-                'group_name' => $group_name,
-                'messagesArray' => $messagesArray,
-                'message_form' => $message_form->createView(),
-                'totalNumberOfMessages' => $totalNumberOfMessages,
-                'numberOfLoadedMessages' => $this->trickPageMessagesLoadLimit
-            ));
-        return new Response($content);
+        return $this->render('trick/view.html.twig', [
+            'trick' => $trick,
+            'medias' => $medias,
+            'cover_image' => $cover_image_file,
+            'group_name' => $group_name,
+            'messagesArray' => $messagesArray,
+            'message_form' => $message_form->createView(),
+            'totalNumberOfMessages' => $totalNumberOfMessages,
+            'numberOfLoadedMessages' => $this->trickPageMessagesLoadLimit
+        ]);
     }
 
     /**
@@ -166,9 +155,9 @@ class TrickController extends Controller
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findAllMessagesForPagination($limit, $offset);
 
-        return $this->render('trick/messagesBlock.html.twig', array(
+        return $this->render('trick/messagesBlock.html.twig', [
             'messagesArray' => $messagesArray
-        ));
+        ]);
     }
 
     
@@ -198,20 +187,18 @@ class TrickController extends Controller
             // In case of error, we store the message content to the session
             // to be able to initialize the form with it.
             if (isset($result['forum_message'])) {
-                $this->logger->info('> > > > > > IN index  < < < < < <'. $result['forum_message']);
-                \var_dump($result['forum_message']);
                 $this->trickManager->storeMessageInSession($result['forum_message']);
             }
             $messagesArray = [$message];
 
-            return $this->render('trick/messagesBlock.html.twig', array(
+            return $this->render('trick/messagesBlock.html.twig', [
                 'messagesArray' => $messagesArray
-            ));
+            ]);
         }
 
-        return $this->render('trick/messagesBlock.html.twig', array(
+        return $this->render('trick/messagesBlock.html.twig', [
             'messagesArray' => []
-        ));
+        ]);
     }
 
     /**
@@ -243,12 +230,12 @@ class TrickController extends Controller
             return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('trick/edit.html.twig', array(
+        return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
             'medias' => $medias,
             'cover_image' => $cover_image_file,
-        ));
+        ]);
     }
 
     /**
@@ -277,10 +264,10 @@ class TrickController extends Controller
             return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('trick/delete.html.twig', array(
+        return $this->render('trick/delete.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**

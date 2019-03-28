@@ -1,12 +1,10 @@
 <?php
 // src/Service/PasswordManager.php
-
 namespace App\Service;
 
 use App\Entity\User;
 use App\Utils\Tools;
 use App\Service\UserManager;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,20 +18,17 @@ class PasswordManager extends Controller
 {
     private $encoder;
     private $i18n;
-    private $logger;
 
     public function __construct(
-        LoggerInterface $logger,
+        Container $container,
         UserManager $userManager,
         UserPasswordEncoderInterface $encoder,
-        Container $container,
         TranslatorInterface $translator,
         \Swift_Mailer $mailer
     ) {
-        $this->logger = $logger;
+        $this->container = $container;
         $this->userManager = $userManager;
         $this->encoder = $encoder;
-        $this->container = $container;
         $this->mailer = $mailer;
         $this->i18n = $translator;
         $this->em = $this->getDoctrine()->getManager();
@@ -50,8 +45,6 @@ class PasswordManager extends Controller
     // Returns false if the email could not be sent.
     public function sendPwdResetEmail(User $user)
     {
-        $this->logger->info('> > > > > > IN sendPwdResetEmail  < < < < < <');
-
         // Generating the password reset verification token.
         $user->setPwdResetToken(Tools::generateToken());
         // Setting the token creation date to now (default for Datetime()).

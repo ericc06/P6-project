@@ -36,8 +36,8 @@ class MessageRepository extends ServiceEntityRepository
     public function findAllMessagesForPagination($limit, $offset)
     {
         return $this->findBy(
-            array(), // No criteria
-            array('date' => 'desc'),
+            [], // No criteria
+            ['date' => 'desc'],
             $limit,
             $offset
         );

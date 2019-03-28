@@ -29,4 +29,4 @@ $(document).ready(function() {
         $this.html($this.data('Load more'));
       }, 2000);
     });
-  })
+  });

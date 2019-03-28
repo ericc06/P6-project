@@ -87,6 +87,17 @@ class User implements UserInterface
      */
     private $pwdTokenCreationDate;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Message",
+     *     mappedBy="user",
+     *     cascade="all",
+     *     orphanRemoval=true
+     * )
+     * @Assert\Valid()
+     */
+    private $messages;
+
     public function getId(): int
     {
         return $this->id;
@@ -223,8 +234,9 @@ class User implements UserInterface
         return $this->pwdTokenCreationDate;
     }
 
-    public function setPwdTokenCreationDate(?\DateTimeInterface $pwdTokenCreationDate): self
-    {
+    public function setPwdTokenCreationDate(
+        ?\DateTimeInterface $pwdTokenCreationDate
+    ): self {
         $this->pwdTokenCreationDate = $pwdTokenCreationDate;
 
         return $this;
@@ -253,11 +265,15 @@ class User implements UserInterface
             return;
         }
 
-        // Le nom du fichier est son id, on doit juste stocker également son extension
-        // Pour faire propre, on devrait renommer cet attribut en « extension », plutôt que « url »
+        // Le nom du fichier est son id, on doit juste stocker également
+        // son extension.
+        // Pour faire propre, on devrait renommer cet attribut en « extension »,
+        // plutôt que « url ».
         $this->fileExtension = $this->avatar->guessExtension();
 
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute s'il n'est pas renseigné dans le formulaire
+        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom
+        // du fichier sur le PC de l'internaute s'il n'est pas renseigné
+        // dans le formulaire.
         /*if (null === $this->alt) {
             $this->alt = $this->avatar->getClientOriginalName();
         }
@@ -277,7 +293,8 @@ class User implements UserInterface
 
         // Si on avait un ancien fichier, on le supprime
         if (null !== $this->tempFilename) {
-            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->tempFilename;
+            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.'
+                . $this->tempFilename;
             if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
@@ -286,7 +303,8 @@ class User implements UserInterface
         // On déplace le fichier envoyé dans le répertoire de notre choix
         $this->avatar->move(
             $this->getUploadRootDir(), // Le répertoire de destination
-            $this->id . '.' . $this->fileExtension// Le nom du fichier à créer, ici « id.extension »
+            $this->id . '.' . $this->fileExtension // Le nom du fichier à créer,
+            // ici « id.extension »
         );
     }
 
@@ -296,7 +314,8 @@ class User implements UserInterface
     public function preRemoveUpload()
     {
         // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
-        $this->tempFilename = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->fileExtension;
+        $this->tempFilename = $this->getUploadRootDir() . '/' . $this->id . '.'
+            . $this->fileExtension;
     }
 
     /**
@@ -304,7 +323,8 @@ class User implements UserInterface
      */
     public function removeUpload()
     {
-        // En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
+        // En PostRemove, on n'a pas accès à l'id,
+        // on utilise notre nom sauvegardé
         if (file_exists($this->tempFilename)) {
             // On supprime le fichier
             unlink($this->tempFilename);
@@ -326,5 +346,5 @@ class User implements UserInterface
     public function getFixturesPath()
     {
         return __DIR__ . '/../../src/DataFixtures/images/users';
-    }    
+    }
 }

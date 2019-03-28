@@ -36,8 +36,8 @@ class TrickRepository extends ServiceEntityRepository
     public function findAllTricksForPagination($limit, $offset)
     {
         return $this->findBy(
-            array(), // No criteria
-            array('name' => 'asc'),
+            [], // No criteria
+            ['name' => 'asc'],
             $limit,
             $offset
         );
