@@ -94,7 +94,7 @@ class Message
     }
 
     // CA NE MARCHE PAS !!!
-    
+
     /**
      * @ORM\PrePersist
      */

@@ -76,13 +76,14 @@ class UserController extends Controller
             );
 
             return $this->redirectToRoute('homepage');
-        } else {
-            $request->getSession()->getFlashBag()->add(
-                'danger',
-                $this->i18n->trans('account_validation_failed')
-            );
-            return $this->redirectToRoute('user_registration');
         }
+
+        $request->getSession()->getFlashBag()->add(
+            'danger',
+            $this->i18n->trans('account_validation_failed')
+        );
+
+        return $this->redirectToRoute('user_registration');
     }
 
     /**
@@ -127,23 +128,33 @@ class UserController extends Controller
 
             if (null !== $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email)) {
                 if (true === $this->pwdManager->sendPwdResetEmail($user)) {
-                    return $this->render('user/pwd-reset-email-sent.html.twig', []);
-                } else {
-                    $request->getSession()->getFlashBag()->add(
-                        'error',
-                        $this->i18n->trans('error_sending_pwd_reset_email')
+                    return $this->render(
+                        'user/pwd-reset-email-sent.html.twig',
+                        []
                     );
-
-                    return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
                 }
-            } else {
+
                 $request->getSession()->getFlashBag()->add(
                     'error',
-                    $this->i18n->trans('no_account_found_with_this_email')
+                    $this->i18n->trans('error_sending_pwd_reset_email')
+                );
+
+                return $this->render(
+                    'user/forgotten-pwd-step1.twig',
+                    ['form' => $form->createView()]
                 );
             }
+
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $this->i18n->trans('no_account_found_with_this_email')
+            );
         }
-        return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
+
+        return $this->render(
+            'user/forgotten-pwd-step1.twig',
+            ['form' => $form->createView()]
+        );
     }
 
     /**
@@ -172,21 +183,21 @@ class UserController extends Controller
                 );
 
                 return $this->redirectToRoute('user_login');
-            } else {
-                $request->getSession()->getFlashBag()->add(
-                    'warning',
-                    $this->i18n->trans('new_pwd_confirmation_failed')
-                );
-
-                return $this->render(
-                    'user/forgotten-pwd-step2.twig',
-                    [
-                        'form' => $form->createView(),
-                        'email' => $request->request->get('m'),
-                        'token' => $request->request->get('t')
-                    ]
-                );
             }
+
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                $this->i18n->trans('new_pwd_confirmation_failed')
+            );
+
+            return $this->render(
+                'user/forgotten-pwd-step2.twig',
+                [
+                    'form' => $form->createView(),
+                    'email' => $request->request->get('m'),
+                    'token' => $request->request->get('t')
+                ]
+            );
         }
 
         if (true === $this->pwdManager->confirmPwdResetEmail($request)) {
@@ -198,13 +209,13 @@ class UserController extends Controller
                     'token' => $request->query->get('t')
                 ]
             );
-        } else {
-            $request->getSession()->getFlashBag()->add(
-                'warning',
-                $this->i18n->trans('pwd_reset_check_failed')
-            );
-
-            return $this->redirectToRoute('user_forgotten_pwd');
         }
+
+        $request->getSession()->getFlashBag()->add(
+            'warning',
+            $this->i18n->trans('pwd_reset_check_failed')
+        );
+
+        return $this->redirectToRoute('user_forgotten_pwd');
     }
 }

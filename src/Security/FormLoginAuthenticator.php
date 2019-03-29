@@ -72,13 +72,16 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+        $user = $this->entityManager
+            ->getRepository(User::class)
+                ->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
             // Original message too explicit (security concerns).
-            //throw new CustomUserMessageAuthenticationException('Username could not be found.');
-            throw new CustomUserMessageAuthenticationException('Invalid credentials.');
+            throw new CustomUserMessageAuthenticationException(
+                'Invalid credentials.'
+            );
         }
 
         return $user;
@@ -87,10 +90,13 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         if (!$user->getIsActiveAccount()) {
-            throw new CustomUserMessageAuthenticationException($this->i18n->trans('account_not_activated_yet'));
+            throw new CustomUserMessageAuthenticationException(
+                $this->i18n->trans('account_not_activated_yet')
+            );
             return false;
         }
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        return $this->passwordEncoder
+            ->isPasswordValid($user, $credentials['password']);
     }
 
     public function onAuthenticationSuccess(

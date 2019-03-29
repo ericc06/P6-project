@@ -61,14 +61,19 @@ class PasswordManager extends Controller
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $message_subject = $this->i18n->trans('pwd_reinitialization', [], 'emails');
+        $message_subject = $this->i18n->trans(
+            'pwd_reinitialization',
+            [],
+            'emails'
+        );
 
         $message = (new \Swift_Message($message_subject))
             ->setFrom('contact@monsite.loc')
             ->setTo('eric.codron@gmail.com')
         ;
 
-        $img_path = realpath(__DIR__ . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg";
+        $img_path = realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\emails\\homepage-500.jpg";
 
         $data = [
             'userName' => $user->getUsername(),
@@ -85,9 +90,9 @@ class PasswordManager extends Controller
 
         if (0 !== $result) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     // Called when a user clicks the link in the password reset
@@ -100,21 +105,22 @@ class PasswordManager extends Controller
         // We need to check the email address and reset token consistency.
         $email = $request->query->get('m');
 
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email);
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+                ->findOneByEmail($email);
 
         $urlToken = $request->query->get('t');
 
         $dateNow = new \DateTime('now');
         $tokenDate = $user->getPwdTokenCreationDate();
-        $dateDiffInSeconds = $dateNow->getTimestamp() - $tokenDate->getTimestamp();
+        $dateDiffSecs = $dateNow->getTimestamp() - $tokenDate->getTimestamp();
 
         // The token validity duration in 10 minutes (600 seconds).
         if ($urlToken === $user->getPwdResetToken() &&
-            $dateDiffInSeconds < 600) {
+            $dateDiffSecs < 600) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     // Checks that the new password and the confirmation password are the same.

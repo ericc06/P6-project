@@ -26,7 +26,7 @@ class TrickRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('count(t.id)');
-        
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 

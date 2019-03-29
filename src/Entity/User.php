@@ -202,7 +202,8 @@ class User implements UserInterface
     {
         $roles = $this->roles;
 
-        // il est obligatoire d'avoir au moins un rôle si on est authentifié, par convention c'est ROLE_USER
+        // il est obligatoire d'avoir au moins un rôle si on est authentifié,
+        // par convention c'est ROLE_USER
         if (empty($roles)) {
             $roles[] = 'ROLE_USER';
         }
@@ -274,8 +275,8 @@ class User implements UserInterface
 
         // Le nom du fichier est son id, on doit juste stocker également
         // son extension.
-        // Pour faire propre, on devrait renommer cet attribut en « extension »,
-        // plutôt que « url ».
+        // Pour faire propre, on devrait renommer cet attribut en "extension"
+        // plutôt que "url".
         $this->fileExtension = $this->avatar->guessExtension();
 
         // Et on génère l'attribut alt de la balise <img>, à la valeur du nom

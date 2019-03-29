@@ -183,8 +183,8 @@ class Media
         return $this->file;
     }
 
-    // On modifie le setter de File, pour prendre en compte l'upload d'un fichier
-    // lorsqu'il en existe déjà un autre
+    // On modifie le setter de File, pour prendre en compte
+    // l'upload d'un fichier lorsqu'il en existe déjà un autre.
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
@@ -220,7 +220,8 @@ class Media
      */
     public function preUpload()
     {
-        // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien.
+        // Si jamais il n'y a pas de fichier (champ facultatif),
+        // on ne fait rien.
         if (null === $this->file) {
             return;
         }
@@ -231,8 +232,9 @@ class Media
         // plutôt que "url".
         $this->fileUrl = $this->file->guessExtension();
 
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier
-        // sur le PC de l'internaute s'il n'est pas renseigné dans le formulaire.
+        // Et on génère l'attribut alt de la balise <img>, à la valeur
+        // du nom du fichier sur le PC de l'internaute s'il n'est pas
+        // renseigné dans le formulaire.
         if (null === $this->alt) {
             $this->alt = $this->file->getClientOriginalName();
         }

@@ -102,7 +102,8 @@ class RegistrationManager extends Controller
         $data = [
             'userName' => $user->getUsername(),
             'validationUrl' => $validation_url,
-            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg")),
+            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__
+                . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg")),
         ];
 
         $message->setBody(
@@ -114,20 +115,20 @@ class RegistrationManager extends Controller
 
         if (0 !== $result) {
             return true;
-        } else {
-            // En cas d'échec d'envoi du mail de vérification,
-            // on supprime le compte pour permettre à l'utilisateur
-            // de le recréer pour renvoyer le mail.
-            $userToDelete = $this->getDoctrine()
-                ->getRepository(User::class)
-                ->findOneByEmail($user->getEmail())
-            ;
-
-            if ($userToDelete) {
-                $this->userManager->deleteUserFromDB($user);
-            }
-            throw new Exception('error_sending_confirmation_email');
         }
+
+        // En cas d'échec d'envoi du mail de vérification,
+        // on supprime le compte pour permettre à l'utilisateur
+        // de le recréer pour renvoyer le mail.
+        $userToDelete = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findOneByEmail($user->getEmail())
+        ;
+
+        if ($userToDelete) {
+            $this->userManager->deleteUserFromDB($user);
+        }
+        throw new Exception('error_sending_confirmation_email');
     }
 
     // Performs the actions required after a user add form submission.
