@@ -102,8 +102,9 @@ class RegistrationManager extends Controller
         $data = [
             'userName' => $user->getUsername(),
             'validationUrl' => $validation_url,
-            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__
-                . "\\..\\..\\") . "\\public\\build\\images\\emails\\homepage-500.jpg")),
+            'image_src' => $message
+                ->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
+                . "\\public\\build\\images\\emails\\homepage-500.jpg")),
         ];
 
         $message->setBody(

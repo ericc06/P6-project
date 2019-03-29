@@ -49,7 +49,7 @@ class PasswordManager extends Controller
         $user->setPwdResetToken(Tools::generateToken());
         // Setting the token creation date to now (default for Datetime()).
         $user->setPwdTokenCreationDate(new \DateTime('now'));
-        
+
         $this->userManager->saveUserToDB($user);
 
         $pwd_reset_url = $this->generateUrl(

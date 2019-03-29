@@ -192,7 +192,7 @@ class TrickManager extends Controller
 
         return $trick;
     }
-    
+
     // Returns a subset of tricks with their cover image
     // for the homepage (no media).
     public function getTricksForIndexPage($limit, $offset)

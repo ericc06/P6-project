@@ -18,7 +18,7 @@ class TrickRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Trick::class);
     }
-    
+
     /**
      * @return int Returns the number of existing Trick objects
      */

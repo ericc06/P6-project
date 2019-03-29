@@ -26,7 +26,7 @@ class MessageRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb->select('count(m.id)');
-        
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 

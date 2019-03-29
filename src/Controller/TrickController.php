@@ -78,7 +78,8 @@ class TrickController extends Controller
      */
     public function getTricksHtmlBlock($limit = null, $offset = 0)
     {
-        $tricksArray = $this->trickManager->getTricksForIndexPage($limit, $offset);
+        $tricksArray = $this->trickManager
+            ->getTricksForIndexPage($limit, $offset);
 
         return $this->render('trick/tricksBlock.html.twig', [
             'tricksArray' => $tricksArray
@@ -152,7 +153,7 @@ class TrickController extends Controller
 
         $message_form = $this->createForm(MessageType::class);
 
-        $totalNumberOfMessages = $this->getDoctrine()
+        $totalNumberOfMsg = $this->getDoctrine()
             ->getRepository(Message::class)
             ->getMessagesNumber();
 
@@ -163,8 +164,8 @@ class TrickController extends Controller
             'group_name' => $group_name,
             'messagesArray' => $messagesArray,
             'message_form' => $message_form->createView(),
-            'totalNumberOfMessages' => $totalNumberOfMessages,
-            'numberOfLoadedMessages' => $this->trickPageMsgLimit
+            'totalNumberOfMsg' => $totalNumberOfMsg,
+            'numberOfLoadedMsg' => $this->trickPageMsgLimit
         ]);
     }
 

@@ -126,7 +126,10 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('email');
 
-            if (null !== $user = $this->getDoctrine()->getRepository(User::class)->findOneByEmail($email)) {
+            if (null !== $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneByEmail($email)
+            ) {
                 if (true === $this->pwdManager->sendPwdResetEmail($user)) {
                     return $this->render(
                         'user/pwd-reset-email-sent.html.twig',

@@ -169,8 +169,8 @@
         </div>
     </div>
 
-    <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMessages }}">
-    <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMessages }}">
+    <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMsg }}">
+    <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -257,9 +257,9 @@
 
                         let newMessagesNumber = (data.match(/class="comment-div"/g) || []).length;
                         loadedMessages += newMessagesNumber;
-                        let totalNumberOfMessages = Number($('.messagesTotalNumber').val());
+                        let totalNumberOfMsg = Number($('.messagesTotalNumber').val());
 
-                        if ($('.load-more-button').length == 1 && loadedMessages == totalNumberOfMessages) {
+                        if ($('.load-more-button').length == 1 && loadedMessages == totalNumberOfMsg) {
                             $('.load-more-button').parent().parent().hide();
                         }
                         $this.html($this.data('original-text'));
