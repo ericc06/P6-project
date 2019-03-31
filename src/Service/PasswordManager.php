@@ -18,12 +18,14 @@ class PasswordManager extends Controller
 {
     private $encoder;
     private $i18n;
+    private $tools;
 
     public function __construct(
         Container $container,
         UserManager $userManager,
         UserPasswordEncoderInterface $encoder,
         TranslatorInterface $translator,
+        Tools $tools,
         \Swift_Mailer $mailer
     ) {
         $this->container = $container;
@@ -31,6 +33,7 @@ class PasswordManager extends Controller
         $this->encoder = $encoder;
         $this->mailer = $mailer;
         $this->i18n = $translator;
+        $this->tools = $tools;
         $this->em = $this->getDoctrine()->getManager();
     }
 
@@ -46,7 +49,7 @@ class PasswordManager extends Controller
     public function sendPwdResetEmail(User $user)
     {
         // Generating the password reset verification token.
-        $user->setPwdResetToken(Tools::generateToken());
+        $user->setPwdResetToken($this->tools->generateToken());
         // Setting the token creation date to now (default for Datetime()).
         $user->setPwdTokenCreationDate(new \DateTime('now'));
 

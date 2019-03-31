@@ -51,5 +51,18 @@ services:
     #    arguments:
     #        - '@logger'
 
+    tools:
+        class: App\Utils\Tools
+
+    password_manager:
+        class: App\Service\PasswordManager
+        arguments:
+          - "@tools"
+
+    registration_manager:
+        class: App\Service\RegistrationManager
+        arguments:
+          - "@tools"
+
 imports:
     - { resource: './parameters_dev.yaml', ignore_errors: true }

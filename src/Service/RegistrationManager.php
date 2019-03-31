@@ -18,15 +18,18 @@ class RegistrationManager extends Controller
 {
     private $userManager;
     private $encoder;
+    private $tools;
 
     public function __construct(
         UserManager $userManager,
         Container $container,
+        Tools $tools,
         \Swift_Mailer $mailer,
         UserPasswordEncoderInterface $encoder
     ) {
         $this->userManager = $userManager;
         $this->container = $container;
+        $this->tools = $tools;
         $this->mailer = $mailer;
         $this->encoder = $encoder;
     }
@@ -70,9 +73,11 @@ class RegistrationManager extends Controller
             $user->getPassword())
         );
         */
+        //$tools = $this->container->get('tools');
+
         $user->setPassword($this->encodePwd($user, $user->getPassword()));
         $user->setIsActiveAccount(false);
-        $user->setActivationToken(Tools::generateToken());
+        $user->setActivationToken($this->tools->generateToken());
         $user->setRoles(["ROLE_USER"]);
 
         $this->userManager->saveUserToDB($user);
