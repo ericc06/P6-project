@@ -52,7 +52,10 @@ class Trick
     private $trickGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Media", mappedBy="trick", cascade="all", orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Media",
+     *     mappedBy="trick",
+     *     cascade={"persist", "remove"})
      * @Assert\Valid()
      */
     private $medias;

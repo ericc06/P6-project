@@ -124,7 +124,7 @@ class TrickController extends Controller
         // Récupération d'une figure déjà existante, d'id $id.
         $trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
 
-        \var_dump($trick->getMedias());
+        //\var_dump($trick->getMedias());
         //\var_dump($trick->getMedias());
         //\var_dump($trick->getMedias()[0]);
         
@@ -132,7 +132,8 @@ class TrickController extends Controller
         //$medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
         $medias = $trick->getMedias();
 
-        //$trick->setMedias($medias);
+        $trick->setMedias($medias);
+        //\var_dump($trick->getMedias());
 
         $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 

@@ -12,31 +12,31 @@ $(document).ready(function () {
     var index = $container.find(':input').length;
     // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
     $('#add_image').click(function (e) {
-        addMedia($container, 'image', "{{'added_image'|trans }}");
+        addMedia($container, 'image', translations['added_image_trans']);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
     });
     $('#add_video').click(function (e) {
-        addMedia($container, 'video', "{{'added_video'|trans }}");
+        addMedia($container, 'video', translations['added_video_trans']);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
     });
 
     // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle figure par exemple).
     if (index == 0) {
-        addMedia($container, 'image', "{{'you_must_provide_at_least_one_image'|trans }}", false);
+        addMedia($container, 'image', translations['at_least_one_image_trans'], false);
     } else { // S'il existe déjà des medias, on ajoute un lien de suppression pour chacun d'entre eux
         $container.children('fieldset').each(function () {
             let fieldsetNumber = $(this).children('legend').html();
             if (fieldsetNumber != '0') {
                 addDeleteLink($(this));
                 if ($(this).children('div#trick_medias_' + fieldsetNumber).children('input#trick_medias_'+fieldsetNumber+'_fileType').val() == 0) {
-                    $(this).children('legend').html("{{'added_image'|trans }}");
+                    $(this).children('legend').html(translations['added_image_trans']);
                 } else {
-                    $(this).children('legend').html("{{'added_video'|trans }}");
+                    $(this).children('legend').html(translations['added_video_trans']);
                 }
             } else {
-                $(this).children('legend').html("{{'you_must_provide_at_least_one_image'|trans }}");
+                $(this).children('legend').html(translations['at_least_one_image_trans']);
             }
             // For all images we give the radio button the same name so that
             // they all work together to uncheck all others when one is checked.
@@ -95,7 +95,7 @@ $(document).ready(function () {
     }
     // La fonction qui ajoute un lien de suppression d'un media
     function addDeleteLink($prototype) { // Création du lien
-        var $deleteLink = $('<a href="#" class="btn btn-danger">{{"remove_this_media"|trans }}</a>');
+        var $deleteLink = $('<a href="#" class="btn btn-danger">' + translations['remove_media_trans'] + '</a>');
         // Ajout du lien
         $prototype.append($deleteLink);
 

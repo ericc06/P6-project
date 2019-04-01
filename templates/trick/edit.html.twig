@@ -182,7 +182,7 @@
                     let el = $('.trick-photo-thumbnail-div').find('.fa-trash-alt');
                     el.css('opacity', 0.4).css('cursor', 'default').attr('title', "{{'Image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr('class', 'do-nothing');
                 } else {
-                    $('.trick-photo-thumbnail-div').each(function(){
+                    $('.fa-trash-alt').each(function(){
                         $(this).css('opacity', 1).css('cursor', 'pointer').attr('title', "{{'delete_this_image'|trans }}").parent().attr('class', 'js-delete-media');
                     })
                 }
@@ -220,7 +220,11 @@
 
             checkImageNumber();
         });
+
+
     </script>
+
+    {{ include('trick/tricksJsTranslations.js.twig') }}
 
     <script src="{{ asset('./build/trick.js') }}"></script>
 {% endblock %}
