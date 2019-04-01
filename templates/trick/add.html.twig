@@ -17,14 +17,14 @@
                             </div>
                         {% endfor %}
                     {% endfor %}
-                    {{ form_start(form, {'attr': {'class': 'trick_new_form'}}) }}
+                    {{ form_start(form, {'attr': {'class': 'trick_form trick_new_form'}}) }}
                     <legend>
                         <i class="fab fa-diaspora" aria-hidden="true"></i>
                         {{'create_a_trick'|trans }}
                     </legend>
-                    <div class="my-custom-class-for-errors">
+                    {#<div class="my-custom-class-for-errors">
                         {{ form_errors(form) }}
-                    </div>
+                    </div>#}
                     {# form_widget(form) #}
                     {{ form_row(form.name) }}
                     {{ form_row(form.description) }}
@@ -47,6 +47,8 @@
 {% block javascripts %}
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {{ include('trick/tricksJsTranslations.js.twig') }}
 
     <script src="{{ asset('./build/trick.js') }}"></script>
 {% endblock %}

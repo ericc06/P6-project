@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     // On page load, we first hide the form elements not useful for medias update:
     // For images we hide the fileUrl field.
     // For videos we hide the file upload field.
@@ -10,41 +11,7 @@ $(document).ready(function () {
     var $container = $('div#trick_medias');
     // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
     var index = $container.find(':input').length;
-    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
-    $('#add_image').click(function (e) {
-        addMedia($container, 'image', translations['added_image_trans']);
-        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-        return false;
-    });
-    $('#add_video').click(function (e) {
-        addMedia($container, 'video', translations['added_video_trans']);
-        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-        return false;
-    });
 
-    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle figure par exemple).
-    if (index == 0) {
-        addMedia($container, 'image', translations['at_least_one_image_trans'], false);
-    } else { // S'il existe déjà des medias, on ajoute un lien de suppression pour chacun d'entre eux
-        $container.children('fieldset').each(function () {
-            let fieldsetNumber = $(this).children('legend').html();
-            if (fieldsetNumber != '0') {
-                addDeleteLink($(this));
-                if ($(this).children('div#trick_medias_' + fieldsetNumber).children('input#trick_medias_'+fieldsetNumber+'_fileType').val() == 0) {
-                    $(this).children('legend').html(translations['added_image_trans']);
-                } else {
-                    $(this).children('legend').html(translations['added_video_trans']);
-                }
-            } else {
-                $(this).children('legend').html(translations['at_least_one_image_trans']);
-            }
-            // For all images we give the radio button the same name so that
-            // they all work together to uncheck all others when one is checked.
-            /*if ($(this).children('div#trick_medias_' + fieldsetNumber).children('input#trick_medias_'+fieldsetNumber+'_fileType').val() == 0) {
-                $(this).find('input#trick_medias_' + fieldsetNumber + '_defaultCover').attr('name', 'defaultCover');
-            }*/
-        });
-    }
     // La fonction qui ajoute un formulaire MediaType
     function addMedia($container, $mediaType, $fieldsetLabel, $showRemoveButton = true) {
         $('.trick_edit_form_container').find('.well').children().css('display', 'block');
@@ -102,9 +69,45 @@ $(document).ready(function () {
         // Ajout du listener sur le clic du lien pour effectivement supprimer le media
         $deleteLink.click(function(e) {
             $prototype.remove();
-    
+
             e.preventDefault(); // évite qu'un # apparaisse dans l'URL
             return false;
+        });
+    }
+
+    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+    $('#add_image').click(function (e) {
+        addMedia($container, 'image', translations['added_image_trans']);
+        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+        return false;
+    });
+    $('#add_video').click(function (e) {
+        addMedia($container, 'video', translations['added_video_trans']);
+        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+        return false;
+    });
+
+    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle figure par exemple).
+    if (index === 0) {
+        addMedia($container, 'image', translations['at_least_one_image_trans'], false);
+    } else { // S'il existe déjà des medias, on ajoute un lien de suppression pour chacun d'entre eux
+        $container.children('fieldset').each(function () {
+            let fieldsetNumber = $(this).children('legend').html();
+            if (fieldsetNumber !== '0') {
+                addDeleteLink($(this));
+                if ($(this).children('div#trick_medias_' + fieldsetNumber).children('input#trick_medias_'+fieldsetNumber+'_fileType').val() === 0) {
+                    $(this).children('legend').html(translations['added_image_trans']);
+                } else {
+                    $(this).children('legend').html(translations['added_video_trans']);
+                }
+            } else {
+                $(this).children('legend').html(translations['at_least_one_image_trans']);
+            }
+            // For all images we give the radio button the same name so that
+            // they all work together to uncheck all others when one is checked.
+            /*if ($(this).children('div#trick_medias_' + fieldsetNumber).children('input#trick_medias_'+fieldsetNumber+'_fileType').val() === 0) {
+                $(this).find('input#trick_medias_' + fieldsetNumber + '_defaultCover').attr('name', 'defaultCover');
+            }*/
         });
     }
 
@@ -123,5 +126,13 @@ $(document).ready(function () {
         let radioName = $(this).attr('original-name')
         //$(this).attr('name', $radioName);
         $('form input:radio').attr('name', radioName);
+    });
+
+    // When the form submit button is clicked, we disable it
+    // to avoid double submission.
+    $('input[type=submit]').on('click', function (e) {
+        e.preventDefault();
+        $(this).attr('disabled', true);
+        $('.trick_form').submit();
     });
 });

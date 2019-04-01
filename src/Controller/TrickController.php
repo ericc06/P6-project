@@ -38,7 +38,7 @@ class TrickController extends Controller
     /**
      * @Route("/", name="homepage")
      */
-    public function index(Request $request)
+    public function index()
     {
         $env = getenv('APP_ENV');
 
@@ -215,10 +215,15 @@ class TrickController extends Controller
         // Cela permet de protéger la suppression d'annonce contre cette faille
         $form = $this->get('form.factory')->create();
 
-        //if ($request->isMethod('POST') && $form->handleRequest($request)->isSubmitted() && $form->handleRequest($request)->isValid()) {
+        /*if ($request->isMethod('POST')
+            && $form->handleRequest($request)->isSubmitted()
+            && $form->handleRequest($request)->isValid()
+        ) {
+            */
         if ($request->isMethod('POST')) {
             $this->logger->info('> > > > > > Before deleteMediaFromDB  < < < < < <'. \serialize($media));
-            $result = $this->trickManager->deleteMediaFromDB($media);
+            //$result = $this->trickManager->deleteMediaFromDB($media);
+            $this->trickManager->deleteMediaFromDB($media);
             $this->logger->info('> > > > > > After deleteMediaFromDB  < < < < < <'. \serialize($media));
 
             return new Response('{"id":' . $mediaId . '}');
