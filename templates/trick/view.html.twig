@@ -42,7 +42,7 @@
                             </article>
                         </div>
                         {% else %}
-                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div" data-toggle="modal" data-target="#myModal">
+                            <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
                                 <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal">
                                     {{ media.fileUrl | raw }}
                                 </article>
@@ -50,53 +50,6 @@
                         {% endif %}
                     {% endfor %}
                 </section>
-            </div>
-
-            {# On charge la bibliothèque jQuery depuis le CDN google. #}
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    let modalContainer = document.querySelector('div.modal-body');
-                    let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
-                    let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
-
-                    Array.from(photoElementsArray).forEach(function(elem) {
-                        elem.addEventListener("click", function(event) {
-                            var targetElement = event.target || event.srcElement;
-                            modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
-                        });
-                    });
-
-                    Array.from(videoElementsArray).forEach(function(elem) {
-                        elem.addEventListener("click", function(event) {
-                            var targetElement = event.target || event.srcElement;
-                            modalContainer.innerHTML = targetElement.innerHTML;
-                        });
-                    });
-
-                    function centerModal() {
-                        $(this).css('display', 'block');
-                        var $dialog = $(this).find(".modal-dialog");
-                        var offset = ($(window).height() - $dialog.height()) / 2;
-                        // Center modal vertically in window
-                        $dialog.css("margin-top", offset);
-                    }
-                    
-                    $('.modal').on('show.bs.modal', centerModal);
-                    $(window).on("resize", function () {
-                        $('.modal:visible').each(centerModal);
-                    });
-                });
-            </script>
-
-            <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <img src="" class="img-responsive modal-image">
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="container">
@@ -165,5 +118,7 @@
                 </section>
             </div>
         </div>
+
+        {{ include('trick/modal.html.twig') }}
         {% endblock %}
             

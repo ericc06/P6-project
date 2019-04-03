@@ -122,7 +122,7 @@ class TrickController extends Controller
     public function edit(Trick $trick, Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
-        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
+        //$trick = $this->getDoctrine()->getRepository(Trick::class)->find($request->get('id'));
 
         //\var_dump($trick->getMedias());
         //\var_dump($trick->getMedias());
@@ -215,15 +215,16 @@ class TrickController extends Controller
         // Cela permet de protéger la suppression d'annonce contre cette faille
         $form = $this->get('form.factory')->create();
 
-        /*if ($request->isMethod('POST')
-            && $form->handleRequest($request)->isSubmitted()
-            && $form->handleRequest($request)->isValid()
+        $this->logger->info('>>>>>>>>>>>>> IN deleteMedia  < < < < < <'. $request->request->get('token'));
+        
+        if ($request->isMethod('POST')
+            && ($this->isCsrfTokenValid('delete_media_tk', $request->request->get('token')))
+            //&& $form->handleRequest($request)->isSubmitted()
+            //&& $form->handleRequest($request)->isValid()
         ) {
-            */
-        if ($request->isMethod('POST')) {
+        //if ($request->isMethod('POST')) {
             $this->logger->info('> > > > > > Before deleteMediaFromDB  < < < < < <'. \serialize($media));
-            //$result = $this->trickManager->deleteMediaFromDB($media);
-            $this->trickManager->deleteMediaFromDB($media);
+            $result = $this->trickManager->deleteMediaFromDB($media);
             $this->logger->info('> > > > > > After deleteMediaFromDB  < < < < < <'. \serialize($media));
 
             return new Response('{"id":' . $mediaId . '}');

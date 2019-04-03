@@ -55,7 +55,8 @@ class Trick
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\Media",
      *     mappedBy="trick",
-     *     cascade={"persist", "remove"})
+     *     cascade={"persist", "remove"}
+     * )
      * @Assert\Valid()
      */
     private $medias;

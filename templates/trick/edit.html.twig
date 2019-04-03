@@ -10,112 +10,104 @@
     </div>
     #}
     {% if app.user %}
-    <div
-        class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
-    </div>
-    <div class="container main">
-        {# On affiche tous les messages flash #}
-        {% for label, messages in app.session.flashbag.all %}
-            {% for message in messages %}
-                <div class="flash flash-{{ label }} alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-        <div class="trick-update-warning-title">
-            <i class="fas fa-pen" aria-hidden="true"></i>
-            {{'update_a_trick'|trans }}
+        <div
+            class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
         </div>
-        {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
-        <div class="container header-img-div">
-            <div class="my-custom-class-for-errors">
-                {{ form_errors(form) }}
-            </div>
-            <div class="trick-header row">
-                <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
-                <div class="col-xs-12 text-center trick-title">
-                    <h1>
-                        <span class="bold" style="opacity: 1; display: inline;">
-                            {{ trick.name }}</span>
-                    </h1>
-                </div>
-            </div>
-            <div class="admin-icons">
-                <span class='cover-image-admin-title'>{{'cover_image'|trans }}</span>
-                <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
-                <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
-            </div>
-        </div>
-        <div class="container d-md-none see-medias-btn-div">
-            <section class="row">
-                <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
-            </section>
-        </div>
-        <div class="container trick-detail-container-div">
-            <a class="anchor" id="tricks-anchor"></a>
-            <section class="row" id="trick-detail-list">
-                {% for media in trick.medias %}
-                    {% if media.fileType == 0 %}
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
-                        <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
-                            <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
-                        </article>
-                        <div class="media-admin-icons">
-                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_image'|trans }}"></i>
-                            <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
-                                <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                            </a>
-                        </div>
+        <div class="container main">
+            {# On affiche tous les messages flash #}
+            {% for label, messages in app.session.flashbag.all %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ label }} alert-{{ label }}">
+                        {{ message }}
                     </div>
-                    {% else %}
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
-                        <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
-                            {{ media.fileUrl | raw }}
-                        </article>
-                        <div class="media-admin-icons">
-                            <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
-                            <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}">
-                                <i class="fas fa-trash-alt" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
                 {% endfor %}
-            </section>
-        </div>
-        <div class="container trick_edit_form_container">
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="well">
-                        {{ form_row(form.medias) }}
-                        {{ form_errors(form.medias) }}
-                        <div class="add_media_buttons_div">
-                            <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
-                            <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+            {% endfor %}
+            <div class="trick-update-warning-title">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                {{'update_a_trick'|trans }}
+            </div>
+            {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
+            <div class="container header-img-div">
+                <div class="my-custom-class-for-errors">
+                    {{ form_errors(form) }}
+                </div>
+                <div class="trick-header row">
+                    <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
+                    <div class="col-xs-12 text-center trick-title">
+                        <h1>
+                            <span class="bold" style="opacity: 1; display: inline;">
+                                {{ trick.name }}</span>
+                        </h1>
+                    </div>
+                </div>
+                <div class="admin-icons">
+                    <span class='cover-image-admin-title'>{{'cover_image'|trans }}</span>
+                    <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
+                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="container d-md-none see-medias-btn-div">
+                <section class="row">
+                    <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
+                </section>
+            </div>
+            <div class="container trick-detail-container-div">
+                <a class="anchor" id="tricks-anchor"></a>
+                <section class="row" id="trick-detail-list">
+                    {% for media in trick.medias %}
+                        {% if media.fileType == 0 %}
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
+                            <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
+                                <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
+                            </article>
+                            <div class="media-admin-icons">
+                                <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_image'|trans }}"></i>
+                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
+                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
-                        {{ form_row(form.name) }}
-                        {{ form_row(form.description) }}
-                        {{ form_row(form.trickGroup) }}
-                        {{ form_row(form._token) }}
-                        <input class="btn" type="submit" value="{{'update_trick'|trans }}"/>
+                        {% else %}
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
+                            <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
+                                {{ media.fileUrl | raw }}
+                            </article>
+                            <div class="media-admin-icons">
+                                <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
+                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
+                                    <i class="fas fa-trash-alt" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            </div>
+            <div class="container trick_edit_form_container">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="well">
+                            {{ form_row(form.medias) }}
+                            {{ form_errors(form.medias) }}
+                            <div class="add_media_buttons_div">
+                                <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
+                                <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+                            </div>
+                            {{ form_row(form.name) }}
+                            {{ form_row(form.description) }}
+                            {{ form_row(form.trickGroup) }}
+                            {{ form_row(form._token) }}
+                            <input class="btn" type="submit" value="{{'update_trick'|trans }}"/>
+                        </div>
                     </div>
                 </div>
             </div>
+            {{ form_end(form, {'render_rest': false}) }}
         </div>
-        {{ form_end(form, {'render_rest': false}) }}
-    </div>
 
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="" class="img-responsive modal-image">
-                </div>
-            </div>
-        </div>
-    </div>     
+        {{ include('trick/modal.html.twig') }}   
     {% else %} 
-    You must be logged in to edit a trick.
+        You must be logged in to edit a trick.
     {% endif %}  
 {% endblock %}
 
@@ -126,7 +118,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // On page load, we first remove from the DOM the form elements
-            // not useful for medias update
+            // not useful for medias update.
 
             // For images we remove the fileUrl field.
             // For videos we remove the file upload field.
@@ -142,36 +134,13 @@
                 $('article[media-id='+ $(this).attr('media-id') +']').children().css('border', '3px solid red');
                 $('article[media-id='+ $(this).attr('media-id') +']').css('border', '1px solid red');
 
+                // We hide all fieldsets...
                 $("fieldset.form-group").hide(200).children().hide(200);
 
+                // ... and we show the fieldset related to the chosen media.
                 let targetFielset = $("input[id$='_id'][value='" + $(this).attr('media-id') + "']").parents("fieldset.form-group");
-                targetFielset.show(200).children().not('legend').show(200);
+                targetFielset.show(200).children().not('legend, .btn-danger').show(200);
             });
-
-            let modalContainer = document.querySelector('div.modal-body');
-            let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
-            let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
-
-            Array.from(photoElementsArray).forEach(function(elem) {
-                elem.addEventListener("click", function(event) {
-                    var targetElement = event.target || event.srcElement;
-                    modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
-                });
-            });
-            Array.from(videoElementsArray).forEach(function(elem) {
-                elem.addEventListener("click", function(event) {
-                    var targetElement = event.target || event.srcElement;
-                    modalContainer.innerHTML = targetElement.innerHTML;
-                });
-            });
-
-            function centerModal() {
-                $(this).css('display', 'block');
-                var $dialog = $(this).find(".modal-dialog");
-                var offset = ($(window).height() - $dialog.height()) / 2;
-                // Center modal vertically in window
-                $dialog.css("margin-top", offset);
-            }
 
             // On page load and after an image removal we check the number of
             // remaining images. When it remains only one we blur the "delete"
@@ -188,11 +157,6 @@
                 }
             }
             
-            $('.modal').on('show.bs.modal', centerModal);
-            $(window).on("resize", function () {
-                $('.modal:visible').each(centerModal);
-            });
-
             $('.js-delete-media').on('click', function (e) {
                 e.preventDefault();
                 /*let el = $(this).find('.fa-trash-alt');
@@ -201,13 +165,19 @@
                 */
                 if(confirm("{{'confirm_delete_media'|trans }}")) {
                     var url = $(this).attr('href');
-
-                    $.ajax({
+                    var token = $(this).data('token');
+                    /*$.ajax({
+                        url: url,
                         type: "POST",
-                        url: url
-                    }).done(function (data) {
+                        token: token
+                        */
+                    $.post(url, {token: token}
+                    ).done(function (data) {
                         var id = JSON.parse(data).id;
-                        //$( "article[media-id=" + id + "]" ).parent().remove();
+                        // We remove from the form the fieldset related to the deleted media.
+                        let targetFielset = $("input[id$='_id'][value='" + id + "']").parents("fieldset.form-group");
+                        targetFielset.remove();
+                        // We hide the deleted image div with an collapse animation.
                         $( "article[media-id=" + id + "]" ).parent().animate({
                             opacity: 0.25,
                             width: 0
@@ -222,7 +192,7 @@
                     });
                 }
 
-                el.css('opacity', 1).css('cursor', 'pointer');
+                //el.css('opacity', 1).css('cursor', 'pointer');
             });
 
             $('.do-nothing').on('click', function (e) {

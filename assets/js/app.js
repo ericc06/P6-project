@@ -15,6 +15,7 @@ const $ = require('jquery');
 // no need to set this to a variable, just require it
 require('bootstrap');
 
+/*
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
 
 $(document).ready(function() {
@@ -30,3 +31,4 @@ $(document).ready(function() {
       }, 2000);
     });
   })
+  */
