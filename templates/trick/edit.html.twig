@@ -103,7 +103,7 @@
 
         {{ include('trick/modal.html.twig') }}   
     {% else %} 
-        You must be logged in to edit a trick.
+        {{'log_in_to_edit_trick'|trans }}
     {% endif %}  
 {% endblock %}
 
@@ -113,55 +113,84 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            // On page load, we first remove from the DOM the form elements
-            // not useful for medias update.
 
-            // For images we remove the fileUrl field.
-            // For videos we remove the file upload field.
-            $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
-            $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
-            
-            $('.edit-icon').on("click", function() {
-                // We remove any red border around all images
-                $('article[media-id]').children().css('border', 'none');
-                $('article[media-id]').css('border', '1px solid black');
-
-                // We add a red border only around the corresponding image
-                $('article[media-id='+ $(this).attr('media-id') +']').children().css('border', '3px solid red');
-                $('article[media-id='+ $(this).attr('media-id') +']').css('border', '1px solid red');
-
-                // We hide all fieldsets...
-                $("fieldset.form-group").hide(200).children().hide(200);
+            function showMediaFieldset(mediaId, i) {
+                // ... we remove the "required" attribute to all form elements...
+                $("div[id='trick_medias']").find("fieldset.form-group").find("*").removeAttr("required");
 
                 // ... and we show the fieldset related to the chosen media.
-                let targetFielset = $("input[id$='_id'][value='" + $(this).attr('media-id') + "']").parents("fieldset.form-group");
-                targetFielset.show(200).children().not('legend, .btn-danger').show(200);
+                let targetFielset = $("input[id$='_id'][value='" + mediaId + "']").parents("div[id^='trick_medias_']").parent();
+                targetFielset.slideDown(300).children().not("legend, .btn-danger").show(300);
+
+                // We set the "required" attribute to all required elements
+                if (targetFielset.find("input[id$='_fileType'][value='0']").length) {
+                    // For images: title and alt fields. The "file" field not
+                    // required because there is one already.
+                    targetFielset.find("input[id$='_title'], input[id$='_alt']").attr("required", "required");
+                } else {
+                    // For videos: fileUrl, title and alt fields.
+                    targetFielset.find("input[id$='_fileUrl'], input[id$='_title'], input[id$='_alt']").attr("required", "required");
+                }
+            }
+
+            $(".edit-icon").on("click", function() {
+                // We remove any red border around all images
+                $("article[media-id]").children().css("border", "none");
+                $("article[media-id]").css("border", "1px solid black");
+
+                // We add a red border only around the corresponding image
+                $("article[media-id="+ $(this).attr("media-id") +"]").children().css("border", "3px solid red");
+                $("article[media-id="+ $(this).attr("media-id") +"]").css("border", "1px solid red");
+
+                // DEBUG
+                //$('.trick-title').find('span').html($("div[id='trick_medias']").find("fieldset.form-group:visible").length);
+
+                // If a fieldset is visible, we hide it, and then show
+                // the clicked media fieldset...
+                var mediaId = $(this).attr("media-id");
+                if($("div[id='trick_medias']").find("fieldset.form-group:visible").length) {
+                    $("div[id='trick_medias']")
+                        .find("fieldset.form-group:visible")
+                        .slideUp(
+                            300, // Waiting for the slideUp to end.
+                            function() {
+                                showMediaFieldset(mediaId);
+                            }
+                        );
+                } else { // If there is no visible fielset,
+                    // we show the requested one without waiting.
+                    showMediaFieldset(mediaId);
+                }
+
+                /*$("input[id$='_fileType'][value='0']").parentsUntil("div[id^='trick_medias_']").css('border', '5px solid green');
+                $("input[id$='_fileType'][value='0']").parentsUntil("div[id^='trick_medias_']").find("input[id$='_file'][id$='_title'][id$='_alt']").attr("required", "required");
+                */
             });
 
             // On page load and after an image removal we check the number of
             // remaining images. When it remains only one we blur the "delete"
             // icon because at least one image must remain as trick cover image.
             function checkImageNumber() {
-                //alert($('.trick-photo-thumbnail-div').length);
-                if($('.trick-photo-thumbnail-div').length == 1) {
-                    let el = $('.trick-photo-thumbnail-div').find('.fa-trash-alt');
-                    el.css('opacity', 0.4).css('cursor', 'default').attr('title', "{{'Image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr('class', 'do-nothing');
+                //alert($(".trick-photo-thumbnail-div").length);
+                if($(".trick-photo-thumbnail-div").length == 1) {
+                    let el = $(".trick-photo-thumbnail-div").find(".fa-trash-alt");
+                    el.css("opacity", 0.4).css("cursor", "default").attr("title", "{{'Image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr("class", "do-nothing");
                 } else {
-                    $('.fa-trash-alt').each(function(){
-                        $(this).css('opacity', 1).css('cursor', 'pointer').attr('title', "{{'delete_this_image'|trans }}").parent().attr('class', 'js-delete-media');
+                    $(".fa-trash-alt").each(function(){
+                        $(this).css("opacity", 1).css("cursor", "pointer").attr("title", "{{'delete_this_image'|trans }}").parent().attr("class", "js-delete-media");
                     })
                 }
             }
             
-            $('.js-delete-media').on('click', function (e) {
+            $(".js-delete-media").on("click", function (e) {
                 e.preventDefault();
-                /*let el = $(this).find('.fa-trash-alt');
-                alert(el.attr('title'));
-                el.css('opacity', 0.4).css('cursor', 'default');
+                /*let el = $(this).find(".fa-trash-alt");
+                alert(el.attr("title"));
+                el.css("opacity", 0.4).css("cursor", "default");
                 */
                 if(confirm("{{'confirm_delete_media'|trans }}")) {
-                    var url = $(this).attr('href');
-                    var token = $(this).data('token');
+                    var url = $(this).attr("href");
+                    var token = $(this).data("token");
                     /*$.ajax({
                         url: url,
                         type: "POST",
@@ -184,14 +213,14 @@
 
                         checkImageNumber();
                     }).fail(function () {
-                        alert('Could not be deleted.');
+                        alert("Could not be deleted.");
                     });
                 }
 
-                //el.css('opacity', 1).css('cursor', 'pointer');
+                //el.css("opacity", 1).css("cursor", "pointer");
             });
 
-            $('.do-nothing').on('click', function (e) {
+            $(".do-nothing").on("click", function (e) {
                 e.preventDefault();
             });
 
@@ -201,7 +230,7 @@
 
     </script>
 
-    {{ include('trick/tricksJsTranslations.js.twig') }}
+    {{ include("trick/tricksJsTranslations.js.twig") }}
 
     <script src="{{ asset('./build/trick.js') }}"></script>
 {% endblock %}

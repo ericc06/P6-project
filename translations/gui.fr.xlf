@@ -227,6 +227,10 @@
                 <source>update_trick</source>
                 <target>Enregistrer les modifications</target>
             </trans-unit>
+            <trans-unit id="log_in_to_edit_trick">
+                <source>log_in_to_edit_trick</source>
+                <target>Vous devez vous connecter pour éditer une figure.</target>
+            </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>
