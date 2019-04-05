@@ -6,6 +6,8 @@ $(document).ready(function () {
     $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
 
     $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');//.detach();
+    
+    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_defaultCover']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0').parent('div').css('margin-bottom', '0');//.detach();
 
     // On récupère la balise <div> en question qui contient l'attribut "data-prototype" qui nous intéresse.
     var $container = $('div#trick_medias');
