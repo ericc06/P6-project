@@ -20,6 +20,7 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('trick', './assets/js/trick.js')
+    .addEntry('tools', './assets/js/tools.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

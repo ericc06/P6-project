@@ -26,30 +26,30 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fileUrl', TextType::class, array(
+            ->add('fileUrl', TextType::class, [
                 'required'=>false,
                 'label' => $this->i18n->trans('video_url'),
-            ))
-            ->add('file', FileType::class, array(
+            ])
+            ->add('file', FileType::class, [
                 'required'=>false,
                 'label' => $this->i18n->trans('image_file'),
-            ))
-            ->add('title', TextType::class, array(
+            ])
+            ->add('title', TextType::class, [
                 'required'=>false,
                 'label' => $this->i18n->trans('title'),
-            ))
-            ->add('alt', TextType::class, array(
+            ])
+            ->add('alt', TextType::class, [
                 'required'=>false,
                 'label' => $this->i18n->trans('alt'),
-            ))
+            ])
             ->add('defaultCover', RadioType::class, [
                 'label' => $this->i18n->trans('Use_as_default_cover_image'),
                 'required' => false,
             ])
             ->add('fileType', HiddenType::class)
-            ->add('id', HiddenType::class, array(
+            ->add('id', HiddenType::class, [
                 'disabled' => true,
-            ));
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

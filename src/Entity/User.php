@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -47,7 +50,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string")
      */
-    private $password ="";
+    private $password = "";
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -55,6 +58,11 @@ class User implements UserInterface
      * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif" })
      */
     private $avatar;
+
+    /**
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $fileExtension;
 
     /**
      * @ORM\Column(type="boolean")
@@ -65,7 +73,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $activationToken;
-    
+
     /**
      * @ORM\Column(type="json")
      */
@@ -80,6 +88,22 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $pwdTokenCreationDate;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Message",
+     *     mappedBy="user",
+     *     cascade="all",
+     *     orphanRemoval=true
+     * )
+     * @Assert\Valid()
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -141,9 +165,15 @@ class User implements UserInterface
         return $this->avatar;
     }
 
-    public function setAvatar(file $avatar): void
+    public function setAvatar(UploadedFile $avatar)
     {
         $this->avatar = $avatar;
+
+        // On vérifie si on avait déjà un fichier pour cette entité
+        if (null !== $this->fileUrl) {
+            // On sauvegarde l'extension du fichier pour le supprimer plus tard
+            $this->tempFilename = $this->fileUrl;
+        }
     }
 
     public function getIsActiveAccount()
@@ -172,7 +202,8 @@ class User implements UserInterface
     {
         $roles = $this->roles;
 
-        // il est obligatoire d'avoir au moins un rôle si on est authentifié, par convention c'est ROLE_USER
+        // il est obligatoire d'avoir au moins un rôle si on est authentifié,
+        // par convention c'est ROLE_USER
         if (empty($roles)) {
             $roles[] = 'ROLE_USER';
         }
@@ -211,9 +242,147 @@ class User implements UserInterface
         return $this->pwdTokenCreationDate;
     }
 
-    public function setPwdTokenCreationDate(?\DateTimeInterface $pwdTokenCreationDate): self
-    {
+    public function setPwdTokenCreationDate(
+        ?\DateTimeInterface $pwdTokenCreationDate
+    ): self {
         $this->pwdTokenCreationDate = $pwdTokenCreationDate;
+
+        return $this;
+    }
+
+    public function getFileExtension(): ?string
+    {
+        return $this->fileExtension;
+    }
+
+    public function setFileExtension(string $fileExtension): self
+    {
+        $this->fileExtension = $fileExtension;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
+        if (null === $this->avatar) {
+            return;
+        }
+
+        // Le nom du fichier est son id, on doit juste stocker également
+        // son extension.
+        // Pour faire propre, on devrait renommer cet attribut en "extension"
+        // plutôt que "url".
+        $this->fileExtension = $this->avatar->guessExtension();
+
+        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom
+        // du fichier sur le PC de l'internaute s'il n'est pas renseigné
+        // dans le formulaire.
+        /*if (null === $this->alt) {
+            $this->alt = $this->avatar->getClientOriginalName();
+        }
+        */
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
+        if (null === $this->avatar) {
+            return;
+        }
+
+        // Si on avait un ancien fichier, on le supprime
+        if (null !== $this->tempFilename) {
+            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.'
+                . $this->tempFilename;
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+
+        // On déplace le fichier envoyé dans le répertoire de notre choix
+        $this->avatar->move(
+            $this->getUploadRootDir(), // Le répertoire de destination
+            $this->id . '.' . $this->fileExtension // Le nom du fichier à créer,
+            // ici « id.extension »
+        );
+    }
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function preRemoveUpload()
+    {
+        // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
+        $this->tempFilename = $this->getUploadRootDir() . '/' . $this->id . '.'
+            . $this->fileExtension;
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        // En PostRemove, on n'a pas accès à l'id,
+        // on utilise notre nom sauvegardé
+        if (file_exists($this->tempFilename)) {
+            // On supprime le fichier
+            unlink($this->tempFilename);
+        }
+    }
+
+    public function getUploadDir()
+    {
+        // On retourne le chemin relatif vers l'image pour un navigateur
+        return 'uploads/images/users';
+    }
+
+    protected function getUploadRootDir()
+    {
+        // On retourne le chemin relatif vers l'image pour notre code PHP
+        return __DIR__ . '/../../public/' . $this->getUploadDir();
+    }
+
+    public function getFixturesPath()
+    {
+        return __DIR__ . '/../../src/DataFixtures/images/users';
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
 
         return $this;
     }

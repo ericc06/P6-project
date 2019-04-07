@@ -62,8 +62,8 @@
                 <source>trick_deleted_successfully</source>
                 <target>La figure a bien été supprimée.</target>
             </trans-unit>
-            <trans-unit id="trick_name_already_exists %link_start% %link_end%">
-                <source>trick_name_already_exists %link_start% %link_end%</source>
+            <trans-unit id="trick_name_already_exists">
+                <source>trick_name_already_exists</source>
                 <target>Une figure du même nom existe déjà. Modifiez le nom ou %link_start%éditez la figure existante.%link_end%</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">

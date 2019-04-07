@@ -31,13 +31,19 @@ class Media
 
     /**
      * @ORM\Column(type="string", length=150)
-     * @Assert\NotBlank(message="media.title.not_blank", groups={"media_creation"} )
+     * @Assert\NotBlank(
+     *     message="media.title.not_blank",
+     *     groups={"media_creation"}
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=150)
-     * @Assert\NotBlank(message="media.alt.not_blank", groups={"media_creation"} )
+     * @Assert\NotBlank(
+     *     message="media.alt.not_blank",
+     *     groups={"media_creation"}
+     * )
      */
     private $alt;
 
@@ -87,7 +93,10 @@ class Media
     private $tempFilename;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="medias")
+     * @ORM\ManyToOne(
+     *     targetEntity="App\Entity\Trick",
+     *     inversedBy="medias"
+     * )
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
@@ -172,7 +181,8 @@ class Media
         return $this->file;
     }
 
-    // On modifie le setter de File, pour prendre en compte l'upload d'un fichier lorsqu'il en existe déjà un autre
+    // On modifie le setter de File, pour prendre en compte
+    // l'upload d'un fichier lorsqu'il en existe déjà un autre.
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
@@ -207,16 +217,21 @@ class Media
      */
     public function preUpload()
     {
-        // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
+        // Si jamais il n'y a pas de fichier (champ facultatif),
+        // on ne fait rien.
         if (null === $this->file) {
             return;
         }
 
-        // Le nom du fichier est son id, on doit juste stocker également son extension
-        // Pour faire propre, on devrait renommer cet attribut en « extension », plutôt que « url »
+        // Le nom du fichier est son id, on doit juste stocker également
+        // son extension.
+        // Pour faire propre, on devrait renommer cet attribut en "extension",
+        // plutôt que "url".
         $this->fileUrl = $this->file->guessExtension();
 
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute s'il n'est pas renseigné dans le formulaire
+        // Et on génère l'attribut alt de la balise <img>, à la valeur
+        // du nom du fichier sur le PC de l'internaute s'il n'est pas
+        // renseigné dans le formulaire.
         if (null === $this->alt) {
             $this->alt = $this->file->getClientOriginalName();
         }
@@ -235,7 +250,8 @@ class Media
 
         // Si on avait un ancien fichier, on le supprime
         if (null !== $this->tempFilename) {
-            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->tempFilename;
+            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.'
+                . $this->tempFilename;
             if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
@@ -244,7 +260,8 @@ class Media
         // On déplace le fichier envoyé dans le répertoire de notre choix
         $this->file->move(
             $this->getUploadRootDir(), // Le répertoire de destination
-            $this->id . '.' . $this->fileUrl// Le nom du fichier à créer, ici « id.extension »
+            $this->id . '.' . $this->fileUrl // Le nom du fichier à créer,
+            // ici « id.extension »
         );
 
         // Updating the related trick update date
@@ -268,7 +285,8 @@ class Media
      */
     public function removeUpload()
     {
-        // En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
+        // En PostRemove, on n'a pas accès à l'id,
+        // on utilise notre nom sauvegardé
         if (file_exists($this->tempFilename)) {
             // On supprime le fichier
             unlink($this->tempFilename);

@@ -18,8 +18,32 @@ class TrickRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Trick::class);
     }
-    
-    // /**
+
+    /**
+     * @return int Returns the number of existing Trick objects
+     */
+    public function getTricksNumber()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('count(t.id)');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return Trick[] Returns an array of Trick objects
+     */
+    public function findAllTricksForPagination($limit, $offset)
+    {
+        return $this->findBy(
+            [], // No criteria
+            ['name' => 'asc'],
+            $limit,
+            $offset
+        );
+    }
+
+          // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */
     /*

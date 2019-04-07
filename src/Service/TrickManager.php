@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\Media;
 use App\Entity\Trick;
+use App\Entity\Message;
 use App\Entity\TrickGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -50,11 +51,14 @@ class TrickManager extends Controller
         } catch (UniqueConstraintViolationException $e) {
             $result['is_successful'] = false;
             $result['msg_type'] = 'danger';
-            $result['message'] = 'trick_name_already_exists %link_start% %link_end%'; //$e->getMessage();
+            $result['message'] = 'trick_name_already_exists';
             $result['message_params'] = [
-                '%link_start%' => '<a href="' . $this->generateUrl('trick_edit', ['id' => $this->em->getRepository(Trick::class)
-                        ->findByName($trick->getName())[0]->getId()]) . '">',
-                '%link_end%' => '</a>',
+                '%link_start%' => '<a href="'
+                    . $this->generateUrl('trick_edit', [
+                        'id' => $this->em->getRepository(Trick::class)
+                            ->findByName($trick->getName())[0]->getId()
+                    ]) . '">',
+                '%link_end%' => '</a>'
             ];
             $result['dest_page'] = 'trick_new';
             $result['trick'] = $trick;
@@ -84,6 +88,31 @@ class TrickManager extends Controller
         return $result;
     }
 
+    // Inserts or updates a forum message into the database.
+    public function saveMessageToDB(Message $message)
+    {
+        $result = [];
+
+        try {
+            $this->em->persist($message);
+            $this->em->flush();
+
+            $result['is_successful'] = true;
+            $result['msg_type'] = 'success';
+            $result['message'] = 'message_saved_successfully';
+            $result['message_params'] = [];
+            //$result['dest_page'] = 'homepage';
+        } catch (Exception $e) {
+            $result['is_successful'] = false;
+            $result['msg_type'] = 'danger';
+            $result['message'] = $e->getMessage();
+            //$result['dest_page'] = 'trick_new';
+            $result['forum_message'] = $message;
+        }
+
+        return $result;
+    }
+
     // Stores a trick in the session.
     public function storeTrickInSession(Trick $trick)
     {
@@ -97,7 +126,7 @@ class TrickManager extends Controller
         // and must be "merged" after being read from the session
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
-        // See https://stackoverflow.com/questions/7473872/entities-passed-to-the-choice-field-must-be-managed/7931437
+        // See https://stackoverflow.com/q/7473872/10980984
         $this->session->set('trickGroup', serialize($trick->getTrickGroup()));
     }
 
@@ -111,10 +140,28 @@ class TrickManager extends Controller
         // and must be "merged" after being read from the session
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
-        $trickGroup = $this->getDoctrine()->getEntityManager()->merge(unserialize($this->session->remove('trickGroup')));
+        $trickGroup = $this->getDoctrine()
+            ->getEntityManager()
+            ->merge(unserialize($this->session->remove('trickGroup')));
         $trick->setTrickGroup($trickGroup);
 
         return $trick;
+    }
+
+    // Stores a forum message in the session.
+    public function storeMessageInSession(Message $message)
+    {
+        $this->session->set('message', serialize($message));
+    }
+
+    // Reads a forum message from the session.
+    public function readMessageFromSession()
+    {
+        // Symfony remove() session method deletes a session attribute
+        // and returns its value.
+        $message = unserialize($this->session->remove('message'));
+
+        return $message;
     }
 
     // Deletes a media from the database.
@@ -150,11 +197,12 @@ class TrickManager extends Controller
         return $trick;
     }
 
-    // Returns all tricks with their cover image for the homepage (no media).
-    public function getAllTricksForIndexPage()
+    // Returns a subset of tricks with their cover image
+    // for the homepage (no media).
+    public function getTricksForIndexPage($limit, $offset)
     {
         $tricks = $this->em->getRepository(Trick::class)
-            ->findAll();
+        ->findAllTricksForPagination($limit, $offset);
 
         $tricksArray = [];
 
@@ -162,11 +210,23 @@ class TrickManager extends Controller
             $tricksArray[$key]['id'] = $trick->getId();
             $tricksArray[$key]['name'] = $trick->getName();
             $tricksArray[$key]['slug'] = $trick->getSlug();
-            $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId($trick->getId());
+            $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId(
+                $trick->getId()
+            );
         }
 
         return $tricksArray;
     }
+
+    // Returns a subset of messages.
+    /*public function getMessagesForTrickPage($limit, $offset)
+    {
+        $messagesArray = $this->em->getRepository(Message::class)
+        ->findAllMessagesForPagination($limit, $offset);
+
+        return $tricksArray;
+    }
+    */
 
     // Returns an array with the medias from a trick id.
     public function getMediasArrayByTrickId($id)
@@ -192,30 +252,28 @@ class TrickManager extends Controller
     // Returns the cover image file name from a trick id.
     public function getCoverImageByTrickId($id)
     {
-        $cover_image_details = $this->em->getRepository(Media::class)->findCoverImageOrDefault($id);
+        $cover_image_details = $this->em->getRepository(Media::class)
+            ->findCoverImageOrDefault($id);
 
-        return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
+        return $cover_image_details[0]->getId() . '.'
+            . $cover_image_details[0]->getFileUrl();
     }
 
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($id)
     {
-        return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
+        return $this->em->getRepository(TrickGroup::class)
+            ->findGroupNameByGroupId($id);
     }
 
     // Set the new cover image (the given media) for the given trick.
     public function setTrickCover($trick, $newCoverMedia)
     {
-        $this->logger->info('> > > > > > IN setTrickCover  < < < < < < TRICK : ' . $trick->getId());
-
         // First, we unset any set cover.
         $medias = $trick->getMedias();
 
         foreach ($medias as $media) {
             $media->setDefaultCover(false);
-
-            $var = ($media->getDefaultCover() === true ? 1 : 0);
-            $this->logger->info('> > > > > > IN setTrickCover  < < < < < < TRICK : ' . $media->getId() . ' / ' . $var);
             $this->em->persist($media);
         }
 

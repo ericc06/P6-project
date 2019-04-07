@@ -19,7 +19,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
 
 class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -35,15 +34,13 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         RouterInterface $router,
         CsrfTokenManagerInterface $csrfTokenManager,
         UserPasswordEncoderInterface $passwordEncoder,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
+        TranslatorInterface $translator
     ) {
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->i18n = $translator;
-        $this->logger = $logger;
     }
 
     public function supports(Request $request)
@@ -69,19 +66,21 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+
+        $user = $this->entityManager
+            ->getRepository(User::class)
+                ->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
             // Original message too explicit (security concerns).
-            //throw new CustomUserMessageAuthenticationException('Username could not be found.');
-            throw new CustomUserMessageAuthenticationException('Invalid credentials.');
+            throw new CustomUserMessageAuthenticationException(
+                'Invalid credentials.'
+            );
         }
 
         return $user;
@@ -90,15 +89,24 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         if (!$user->getIsActiveAccount()) {
-            throw new CustomUserMessageAuthenticationException($this->i18n->trans('account_not_activated_yet'));
+            throw new CustomUserMessageAuthenticationException(
+                $this->i18n->trans('account_not_activated_yet')
+            );
             return false;
         }
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        return $this->passwordEncoder
+            ->isPasswordValid($user, $credentials['password']);
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+    public function onAuthenticationSuccess(
+        Request $request,
+        TokenInterface $token,
+        $providerKey
+    ) {
+        if ($targetPath = $this->getTargetPath(
+            $request->getSession(),
+            $providerKey
+        )) {
             return new RedirectResponse($targetPath);
         }
 

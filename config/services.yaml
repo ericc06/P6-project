@@ -27,7 +27,9 @@ services:
         public: false       # Allows optimizing the container by removing unused services; this also means
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
-
+        bind:
+            $homeTricksLoadLimit: '%homepage_tricks_load_limit%'
+            $trickPageMsgLimit: '%trick_page_messages_load_limit%'
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -48,6 +50,19 @@ services:
     #        - method: setLogger
     #    arguments:
     #        - '@logger'
+
+    tools:
+        class: App\Utils\Tools
+
+    password_manager:
+        class: App\Service\PasswordManager
+        arguments:
+          - "@tools"
+
+    registration_manager:
+        class: App\Service\RegistrationManager
+        arguments:
+          - "@tools"
 
 imports:
     - { resource: './parameters_dev.yaml', ignore_errors: true }

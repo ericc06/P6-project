@@ -2,10 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use App\Entity\Media;
+use App\Entity\Message;
 use App\Entity\Trick;
 use App\Entity\TrickGroup;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
@@ -21,17 +22,47 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $this->loadUsersAndMessages($manager);
+        $this->loadGroups($manager);
+        $tricksDetailsArray = $this->initTricksDetails($manager);
+        $imagesDetailsArray = $this->initImagesDetails();
+        $videosDetailsArray = $this->initVideosDetails();
+        $this->loadTricks(
+            $tricksDetailsArray,
+            $imagesDetailsArray,
+            $videosDetailsArray,
+            $manager
+        );
+    }
 
+    public function loadUsersAndMessages(ObjectManager $manager)
+    {
         $user = new User();
 
         $user->setUsername('eric');
         $user->setEmail('eric.codron@gmail.com');
         $user->setPassword('$2y$13$/W5ATAIIrJTUU9GoSPAQG.emjMEYEDQlL9T811y.KyMWsLWmhMjW2');
+        $user->setIsActiveAccount(true);
 
         $manager->persist($user);
-    
         $manager->flush();
 
+        for ($i = 0; $i < 10; $i++) {
+            $message = new Message();
+
+            $message->setContent("Ceci est le " . strval($i + 1) . "° message du forum.");
+            $message->setDate(new \Datetime());
+            $message->setUser($user);
+            //$message->setTrick();
+
+            $manager->persist($message);
+        }
+
+        $manager->flush();
+    }
+
+    public function loadGroups(ObjectManager $manager)
+    {
         $groupsNameArray = [
             'Grab',
             'Rotation',
@@ -50,11 +81,10 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+    }
 
-        $groupsArray = $manager->getRepository(TrickGroup::class)->findAll();
-
-        //$this->logger->info('> > > > > > IN LOAD  < < < < < <'.array_rand($groupsArray, 1));
-
+    public function initTricksDetails(ObjectManager $manager)
+    {
         $tricksDetailsArray = [
             [
                 'name' => 'Mute',
@@ -97,9 +127,9 @@ class AppFixtures extends Fixture
                 'description' => "Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.
 
                 Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.
-                
+
                 Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip, ...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
-                
+
                 Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Flip'),
@@ -147,8 +177,11 @@ class AppFixtures extends Fixture
             ],
         ];
 
-        //$this->logger->info('> > > > > > IN LOAD  < < < < < <'.serialize($tricksDetailsArray[0]['trickGroup']));
+        return $tricksDetailsArray;
+    }
 
+    public function initImagesDetails()
+    {
         $imagesDetailsArray = [
             'mute' => [
                 [
@@ -371,8 +404,14 @@ class AppFixtures extends Fixture
                     'file_type' => 0,
                     'default_cover' => 0,
                 ],
-            ],        ];
+            ],
+        ];
 
+        return $imagesDetailsArray;
+    }
+
+    public function initVideosDetails()
+    {
         $videosDetailsArray = [
             'mute' => [
                 [
@@ -548,6 +587,15 @@ class AppFixtures extends Fixture
             ],
         ];
 
+        return $videosDetailsArray;
+    }
+
+    public function loadTricks(
+        $tricksDetailsArray,
+        $imagesDetailsArray,
+        $videosDetailsArray,
+        ObjectManager $manager
+    ) {
         foreach ($tricksDetailsArray as $trickDetails) {
             $trick = new Trick();
             $trick->setName($trickDetails['name']);

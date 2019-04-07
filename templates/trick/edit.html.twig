@@ -80,7 +80,9 @@
                         {% set thumbnailCount = thumbnailCount + 1 %}
                     {% endfor %}
                 </section>
-                <div class='cover-change-msg-div'></div>
+                <div class='cover-change-msg-div'>
+                    <span class="cover-change-msg"></span>
+                </div>
             </div>
             {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
             <div class="my-custom-class-for-errors">
@@ -119,22 +121,26 @@
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    {#<script src="{{ asset('./build/tools.js') }}"></script>#}
+
     <script type="text/javascript">
+
+        function displayMessage(msgType, message, targetElem) {
+            targetElem.html(message);//.css('margin-top', '15px');
+            switch (msgType) {
+                case "success":
+                    targetElem.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
+                    break;
+                case "error":
+                    targetElem.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
+                    break;
+                default:
+            }
+        };
+
         $(document).ready(function () {
 
-            function displayMessage(msgType, message, targetDiv) {
-                //let targetDiv =  $('.cover-change-msg-div');
-                targetDiv.html(message).css('margin-top', '15px');
-                switch (msgType) {
-                    case "success":
-                        targetDiv.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
-                        break;
-                    case "error":
-                        targetDiv.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
-                        break;
-                    default:
-                }
-            }
+
 
             function showMediaFieldset(mediaId, i) {
                 // ... we remove the "required" attribute to all form elements...
@@ -256,10 +262,10 @@
                             let newCoverFile = imgPath + "/" + mediaId + "." + extension;
                             $('.trick-header').find('img').attr('src', newCoverFile);
 
-                            displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg-div'))
+                            window.displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg'));
                         }).fail(function () {
                             //alert("Could not change cover image.");
-                            displayMessage("error", "{{'cover_image_change_failed'|trans }}", $('.cover-change-msg-div'))
+                            window.displayMessage("error", "{{'cover_image_change_failed'|trans }}", $('.cover-change-msg'));
                         });
                     });
                     //console.log( index + ": " + $( this ).text() );
@@ -348,8 +354,6 @@
 
             checkImageNumber();
         });
-
-
     </script>
 
     {{ include("trick/tricksJsTranslations.js.twig") }}
