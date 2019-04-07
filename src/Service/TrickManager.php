@@ -3,21 +3,23 @@
 
 namespace App\Service;
 
-use App\Entity\Trick;
 use App\Entity\Media;
+use App\Entity\Trick;
 use App\Entity\Message;
 use App\Entity\TrickGroup;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TrickManager extends Controller
 {
-    private $em;
+    protected $container;
     private $router;
     private $session;
+    private $em;
 
     public function __construct(
         Container $container,
@@ -25,9 +27,9 @@ class TrickManager extends Controller
         SessionInterface $session
     ) {
         $this->container = $container;
-        $this->em = $this->getDoctrine()->getManager();
         $this->router = $router;
         $this->session = $session;
+        $this->em = $this->getDoctrine()->getManager();
     }
 
     // Inserts or updates a trick into the database.
@@ -225,25 +227,72 @@ class TrickManager extends Controller
     */
 
     // Returns an array with the medias from a trick id.
-    public function getMediasByTrickId($id)
+    public function getMediasArrayByTrickId($id)
     {
         return $this->em->getRepository(Media::class)
             ->findMediasByTrickIdOrderedByFileType($id);
+    }
+
+    // Returns a collection with the medias from a trick id.
+    public function getMediasCollectionByTrickId($id)
+    {
+        $mediasArray = $this->getMediasArrayByTrickId($id);
+
+        $mediasCollection = new ArrayCollection();
+
+        foreach ($mediasArray as $media) {
+            $mediasCollection->add($media);
+        }
+
+        return $mediasCollection;
     }
 
     // Returns the cover image file name from a trick id.
     public function getCoverImageByTrickId($id)
     {
         $cover_image_details = $this->em->getRepository(Media::class)
-            ->findDefaultCoverForTrickOrTheFirstOne($id);
+            ->findCoverImageOrDefault($id);
 
         return $cover_image_details[0]->getId() . '.'
             . $cover_image_details[0]->getFileUrl();
     }
+
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($id)
     {
         return $this->em->getRepository(TrickGroup::class)
             ->findGroupNameByGroupId($id);
+    }
+
+    // Set the new cover image (the given media) for the given trick.
+    public function setTrickCover($trick, $newCoverMedia)
+    {
+        // First, we unset any set cover.
+        $medias = $trick->getMedias();
+
+        foreach ($medias as $media) {
+            $media->setDefaultCover(false);
+            $this->em->persist($media);
+        }
+
+        // Then we set the new cover image
+        $newCoverMedia->setDefaultCover(true);
+        $this->em->persist($newCoverMedia);
+
+        $this->em->flush();
+    }
+
+    // Unset the cover image for the given trick.
+    public function unsetTrickCover($trick)
+    {
+        // We unset any set cover.
+        $medias = $trick->getMedias();
+
+        foreach ($medias as $media) {
+            $media->setDefaultCover(false);
+            $this->em->persist($media);
+        }
+
+        $this->em->flush();
     }
 }

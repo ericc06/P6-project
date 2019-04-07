@@ -42,6 +42,7 @@ class TrickType extends AbstractType
                 'entry_type' => MediaType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'prototype' => true,
                 'by_reference' => false,
                 'label' => $this->i18n->trans('medias'),
                 'validation_groups' => $options['validation_groups']

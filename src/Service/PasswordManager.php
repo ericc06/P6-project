@@ -16,9 +16,13 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class PasswordManager extends Controller
 {
+    protected $container;
+    private $userManager;
     private $encoder;
     private $i18n;
     private $tools;
+    private $mailer;
+    private $em;
 
     public function __construct(
         Container $container,
@@ -31,9 +35,9 @@ class PasswordManager extends Controller
         $this->container = $container;
         $this->userManager = $userManager;
         $this->encoder = $encoder;
-        $this->mailer = $mailer;
         $this->i18n = $translator;
         $this->tools = $tools;
+        $this->mailer = $mailer;
         $this->em = $this->getDoctrine()->getManager();
     }
 

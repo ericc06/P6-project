@@ -171,13 +171,31 @@
 
     <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMsg }}">
     <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
+
+    {{ include('trick/modal.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    {#<script src="{{ asset('./build/tools.js') }}"></script>#}
+
     <script type="text/javascript">
+
+        function displayMessage(msgType, message, targetElem) {
+            targetElem.html(message);//.css('margin-top', '15px');
+            switch (msgType) {
+                case "success":
+                    targetElem.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
+                    break;
+                case "error":
+                    targetElem.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
+                    break;
+                default:
+            }
+        };
+
         $(document).ready(function () {
 
             $form = $('.leave-comment-form');
@@ -208,26 +226,14 @@
                         }).done(function (data) {
                             let container = $('#messages-list');
                             container.prepend(data);
-                            displayMessage("success", "{{ 'message_saved'|trans}}");
+                            displayMessage("success", "{{ 'message_saved'|trans}}", $('.result-message'));
                             $('#message_content').val('').prop('placeholder', "{{ 'your_comment_here'|trans}}");
                             $this.html($this.data('original-text'));
                         }).fail(function () {
-                            displayMessage("error", "{{ 'message_creation_failure'|trans}}");
+                            displayMessage("error", "{{ 'message_creation_failure'|trans}}", $('.result-message'));
                             $this.html($this.data('original-text'));
                         });
                     }  
-                }
-                function displayMessage(msgType, message) {
-                    $('.result-message').html(message).css('margin-top', '10px');
-                    switch (msgType) {
-                        case "success":
-                            $('.result-message').removeClass('error').addClass('success').slideDown("slow").delay(2000).slideUp("slow");
-                            break;
-                        case "error":
-                            $('.result-message').removeClass('success').addClass('error').slideDown("slow").delay(2000).slideUp("slow");
-                            break;
-                        default:
-                    }
                 }
             });
 

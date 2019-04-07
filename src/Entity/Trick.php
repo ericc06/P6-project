@@ -55,8 +55,7 @@ class Trick
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\Media",
      *     mappedBy="trick",
-     *     cascade="all",
-     *     orphanRemoval=true
+     *     cascade={"persist", "remove"}
      * )
      * @Assert\Valid()
      */

@@ -7,7 +7,10 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{{ 'welcome_homepage'|trans}}{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
     </head>
     <body>
 
