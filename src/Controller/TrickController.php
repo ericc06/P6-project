@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TrickController extends Controller
 {
     private $trickManager;
-    private $translator;
+    private $i18n;
     private $session;
     private $homeTricksLoadLimit;
     private $trickPageMsgLimit;
@@ -30,7 +30,7 @@ class TrickController extends Controller
         TranslatorInterface $translator,
         SessionInterface $session,
         Int $homeTricksLoadLimit,
-        Int $trickPageMsgLimit,
+        Int $trickPageMsgLimit
     ) {
         $this->trickManager = $trickManager;
         $this->i18n = $translator;

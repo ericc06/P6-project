@@ -16,21 +16,21 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistrationManager extends Controller
 {
-    private $userManager;
     protected $container;
+    private $userManager;
     private $tools;
     private $mailer;
     private $encoder;
 
     public function __construct(
-        UserManager $userManager,
         Container $container,
+        UserManager $userManager,
         Tools $tools,
         \Swift_Mailer $mailer,
         UserPasswordEncoderInterface $encoder
     ) {
-        $this->userManager = $userManager;
         $this->container = $container;
+        $this->userManager = $userManager;
         $this->tools = $tools;
         $this->mailer = $mailer;
         $this->encoder = $encoder;

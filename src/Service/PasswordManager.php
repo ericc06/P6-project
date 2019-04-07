@@ -19,7 +19,7 @@ class PasswordManager extends Controller
     protected $container;
     private $userManager;
     private $encoder;
-    private $translator;
+    private $i18n;
     private $tools;
     private $mailer;
     private $em;

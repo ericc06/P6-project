@@ -7,7 +7,6 @@ use App\Form\UserType;
 use App\Service\UserManager;
 use App\Service\PasswordManager;
 use App\Service\RegistrationManager;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,23 +18,20 @@ use Symfony\Component\Translation\TranslatorInterface;
 class UserController extends Controller
 {
     private $userManager;
-    private $passwordManager;
-    private $registrationManager;
-    private $translator;
-    private $logger;
+    private $pwdManager;
+    private $regManager;
+    private $i18n;
 
     public function __construct(
         UserManager $userManager,
         PasswordManager $passwordManager,
         RegistrationManager $registrationManager,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
+        TranslatorInterface $translator
     ) {
         $this->userManager = $userManager;
         $this->pwdManager =  $passwordManager;
         $this->regManager =  $registrationManager;
         $this->i18n = $translator;
-        $this->logger = $logger;
     }
 
     /**
@@ -172,8 +168,6 @@ class UserController extends Controller
      */
     public function userNewPwd(Request $request)
     {
-        //$this->logger->info('> > > > > > IN userNewPwd  < < < < < <');
-
         $form = $this->createForm(FormType::class, null);
 
         $form->handleRequest($request);

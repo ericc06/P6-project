@@ -15,18 +15,18 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class UserManager extends Controller
 {
-    private $encoder;
     protected $container;
+    private $encoder;
     private $mailer;
     private $em;
 
     public function __construct(
-        UserPasswordEncoderInterface $encoder,
         Container $container,
+        UserPasswordEncoderInterface $encoder,
         \Swift_Mailer $mailer
     ) {
-        $this->encoder = $encoder;
         $this->container = $container;
+        $this->encoder = $encoder;
         $this->mailer = $mailer;
         $this->em = $this->getDoctrine()->getManager();
     }
