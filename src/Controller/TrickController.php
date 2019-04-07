@@ -192,7 +192,7 @@ class TrickController extends Controller
         ));
     }
 
-//          * @ParamConverter("trick", class="App\Entity\Trick", options={"mapping": {"trickId": "id"}})
+//      * @ParamConverter("trick", class="App\Entity\Trick", options={"mapping": {"trickId": "id"}})
 //      * @ParamConverter("trick")
 
     /**
@@ -207,51 +207,90 @@ class TrickController extends Controller
      */
     public function deleteMedia(Media $media, Request $request)
     {
-        //$trick->setMedias($this->trickManager->getMediasArrayByTrickId($trick->getId()));
-        $this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($media));
+        //$this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($media));
 
         $mediaId = $media->getId();
         // On crée un formulaire vide, qui ne contiendra que le champ CSRF
         // Cela permet de protéger la suppression d'annonce contre cette faille
         $form = $this->get('form.factory')->create();
 
-        $this->logger->info('>>>>>>>>>>>>> IN deleteMedia  < < < < < <'. $request->request->get('token'));
-        
         if ($request->isMethod('POST')
             && ($this->isCsrfTokenValid('delete_media_tk', $request->request->get('token')))
-            //&& $form->handleRequest($request)->isSubmitted()
-            //&& $form->handleRequest($request)->isValid()
         ) {
-        //if ($request->isMethod('POST')) {
-            $this->logger->info('> > > > > > Before deleteMediaFromDB  < < < < < <'. \serialize($media));
             $result = $this->trickManager->deleteMediaFromDB($media);
-            $this->logger->info('> > > > > > After deleteMediaFromDB  < < < < < <'. \serialize($media));
 
             return new Response('{"id":' . $mediaId . '}');
-            /*
-            return new JsonResponse(array(
-                'message' => 'Success!',
-                'id' => $mediaId
-            ), 200);
-            */
         }
 
         $response = new JsonResponse(array('message' => 'Error'), 400);
         return $response;
+    }
 
-//        if ($result['is_successful'] === true) {
-//            return new Response('{"id":'.$media->getId().'}');
-//        } else {
-//            throw $this->createNotFoundException('The media couldn\'t be deleted');
-        //$this->trickManager->deleteMediaFromDB($media);
-        //$this->trickManager->flush();
+    // id & mediaId are all numeric, or respectively strictly equal to
+    // "TRICK" and "MEDIA" if used as placeholders (see "edit.html.twig").
+   /**
+     * @Route(
+     *      "/tricks/{id}/medias/{mediaId}/set_cover",
+     *      name="set_cover",
+     *      requirements={"id":"\d+|TRICK","mediaId":"\d+|MEDIA"},
+     *      methods={"GET","POST","DELETE"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     * @ParamConverter("media", class="App\Entity\Media", options={"mapping": {"mediaId": "id"}})
+     */
+    public function setCover(Trick $trick, Media $media, Request $request)
+    {
+        //$this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($media));
 
-        /*if ($request->isXmlHttpRequest()) {
-            return $this->redirectToRoute('homepage', [
-                'id' => $media->getId()
-            ]);
+        $mediaId = $media->getId();
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this->get('form.factory')->create();
+
+        $this->logger->info('> > > > > > IN setCover  < < < < < < MEDIA : '. $mediaId);
+        $this->logger->info('> > > > > > IN setCover  < < < < < < TOKEN : '. $request->request->get('token'));
+
+        if ($request->isMethod('POST')
+            && ($this->isCsrfTokenValid('update_cover_tk', $request->request->get('token')))
+        ) {
+            $this->trickManager->setTrickCover($trick, $media);
+
+            return new Response('{"id":' . $mediaId . ', "extension": "' . $media->getFileUrl() . '"}');
         }
-        */
-//        }
+
+        $response = new JsonResponse(array('message' => 'Error'), 400);
+        return $response;
+    }
+
+   /**
+     * @Route(
+     *      "/tricks/{id}/unset_cover",
+     *      name="unset_cover",
+     *      requirements={"id":"\d+"},
+     *      methods={"GET","POST","DELETE"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function unsetCover(Trick $trick, Request $request)
+    {
+        //$this->logger->info('> > > > > > IN deleteMedia  < < < < < <'. \serialize($media));
+
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this->get('form.factory')->create();
+
+        if ($request->isMethod('POST')
+            //&& ($this->isCsrfTokenValid('unset_cover_tk', $request->request->get('token')))
+        ) {
+            $this->trickManager->unsetTrickCover($trick);
+
+            $defaultCover = $this->trickManager->getCoverImageByTrickId($trick->getId());
+
+            // Returns image file name with extension.
+            return new Response('{"coverFile": "' . $defaultCover . '"}');
+        }
+
+        $response = new JsonResponse(array('message' => 'Error'), 400);
+        return $response;
     }
 }

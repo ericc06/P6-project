@@ -132,7 +132,7 @@ $(document).ready(function () {
 
     // We memorize the original name of each radio button and we store it
     // in the correponding radio button. We'll need it because radio buttons
-    // names are changed (all set with the sane value) on each radio button click.
+    // names are changed (all set with the same value) on each radio button click.
     $('form input:radio').each(function (e) {
         let radioName = $(this).attr('name');
         $(this).attr('original-name', radioName);

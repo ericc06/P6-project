@@ -22,11 +22,7 @@
                 <i class="fas fa-pen" aria-hidden="true"></i>
                 {{'update_a_trick'|trans }}
             </div>
-            {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
             <div class="container header-img-div">
-                <div class="my-custom-class-for-errors">
-                    {{ form_errors(form) }}
-                </div>
                 <div class="trick-header row">
                     <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
                     <div class="col-xs-12 text-center trick-title">
@@ -38,8 +34,10 @@
                 </div>
                 <div class="admin-icons">
                     <span class='cover-image-admin-title'>{{'cover_image'|trans }}</span>
-                    <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
-                    <a href={{ url("trick_delete", {"id": trick.id} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                    <a class="js-update-cover">
+                        <i class="fas fa-pen edit-icon" aria-hidden="true" title="{{'change_cover_image'|trans }}"></i></a>
+                    <a href={{ url("unset_cover", {"id": trick.id} ) }} class="js-unset-cover" data-token="{{ csrf_token('unset_cover_tk') }}">
+                        <i class="fas fa-trash-alt delete-icon" aria-hidden="true" title="{{'unset_cover_image'|trans }}"></i></a>
                 </div>
             </div>
             <div class="container d-md-none see-medias-btn-div">
@@ -49,17 +47,20 @@
             </div>
             <div class="container trick-detail-container-div">
                 <a class="anchor" id="tricks-anchor"></a>
+                <span class='choose-cover-title'>{{ 'choose_a_cover_image'|trans }}</span>
                 <section class="row" id="trick-detail-list">
+                    {% set thumbnailCount = 0 %}
                     {% for media in trick.medias %}
                         {% if media.fileType == 0 %}
-                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div" thumb-num="{{ thumbnailCount }}">
                             <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
                                 <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
                             </article>
                             <div class="media-admin-icons">
+                                <div class='ajax-radio-div'></div>
                                 <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_image'|trans }}"></i>
                                 <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
-                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                    <i class="fas fa-trash-alt delete-icon" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
@@ -71,13 +72,19 @@
                             <div class="media-admin-icons">
                                 <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
                                 <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
-                                    <i class="fas fa-trash-alt" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
+                                    <i class="fas fa-trash-alt delete-icon" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
                                 </a>
                             </div>
                         </div>
                         {% endif %}
+                        {% set thumbnailCount = thumbnailCount + 1 %}
                     {% endfor %}
                 </section>
+                <div class='cover-change-msg-div'></div>
+            </div>
+            {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
             </div>
             <div class="container trick_edit_form_container">
                 <div class="row">
@@ -93,6 +100,7 @@
                             {{ form_row(form.description) }}
                             {{ form_row(form.trickGroup) }}
                             {{ form_row(form._token) }}
+                            <input type="hidden" id="trick-id" value="{{trick.id}}">
                             <input class="btn btn-primary" type="submit" value="{{'update_trick'|trans }}"/>
                         </div>
                     </div>
@@ -113,6 +121,20 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            function displayMessage(msgType, message, targetDiv) {
+                //let targetDiv =  $('.cover-change-msg-div');
+                targetDiv.html(message).css('margin-top', '15px');
+                switch (msgType) {
+                    case "success":
+                        targetDiv.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
+                        break;
+                    case "error":
+                        targetDiv.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
+                        break;
+                    default:
+                }
+            }
 
             function showMediaFieldset(mediaId, i) {
                 // ... we remove the "required" attribute to all form elements...
@@ -174,14 +196,106 @@
                 //alert($(".trick-photo-thumbnail-div").length);
                 if($(".trick-photo-thumbnail-div").length == 1) {
                     let el = $(".trick-photo-thumbnail-div").find(".fa-trash-alt");
-                    el.css("opacity", 0.4).css("cursor", "default").attr("title", "{{'Image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr("class", "do-nothing");
+                    el.css("opacity", 0.4).css("cursor", "default").attr("title", "{{'image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr("class", "do-nothing");
                 } else {
-                    $(".fa-trash-alt").each(function(){
+                    $(".trick-photo-thumbnail-div").find(".fa-trash-alt").each(function(){
                         $(this).css("opacity", 1).css("cursor", "pointer").attr("title", "{{'delete_this_image'|trans }}").parent().attr("class", "js-delete-media");
                     })
                 }
             }
-            
+
+            $(".js-update-cover").on("click", function (e) {
+                e.preventDefault();
+                //$(this).find('i').addClass('inactive');
+                $('html, body').animate({
+                    scrollTop: $(".trick-title").find("span").offset().top
+                }, 600);
+                $('.choose-cover-title').slideDown(300);
+                var trickId = $('#trick-id').val();
+                $(".trick-photo-thumbnail").each(function() {
+                    let thumbNumber = $(this).parent().attr('thumb-num');
+                    let mediaId = $(this).attr('media-id');
+                    let radioElmt = $("#trick_medias_" + thumbNumber + "_defaultCover").clone();
+                    // We change these "ajax" radio buttons id's to avoid id's
+                    // duplication in the DOM.
+                    radioElmt.attr('id', radioElmt.attr('id') + "_ajax");
+                    radioElmt.addClass("ajax-radio-btn")
+                    //radioElmt.attr('id', radioElmt.attr('id') + "_ajax");
+                    //radioElmt.removeAttr('name');
+                    let targetDiv = $(this).parent().find('.ajax-radio-div');
+                    radioElmt.appendTo(targetDiv);
+                    targetDiv.slideDown(200);
+
+                    radioElmt.on('change', function() {
+                        // When an "ajax" radio button is checked, we give his original name to him
+                        // and to all others so that they all work together:
+                        // checking one unchecks all others.         
+                        let radioName = $(this).attr('original-name')
+                        $(".ajax-radio-btn").attr('name', radioName);
+        
+                        // We force the clicked radio button to be checked (it's not automatically
+                        // the case), and we also check the related "non-ajax" radio button
+                        // so that the "non-ajax" form radio buttons are consistent with
+                        // the "ajax" radio buttons.
+                        $(this).prop("checked", true);
+                        // We first uncheck all "non-ajax" radio buttons before checking the good one.
+                        $("form input[type='radio']").prop("checked", false);
+                        $("form input[name='"+ $(this).attr("name") + "']").prop("checked", true);
+
+                        var url = "{{ path('set_cover', {'id': 'TRICK', 'mediaId': 'MEDIA'}) }}".replace("TRICK", trickId).replace("MEDIA", mediaId);
+                        var token = "{{ csrf_token('update_cover_tk') }}";
+                        $.post(url, {token: token}
+                        ).done(function (data) {
+                            var mediaId = JSON.parse(data).id;
+                            var extension = JSON.parse(data).extension;
+                            let previousCoverFile = $('.trick-header').find('img').attr('src');
+                            let imgPath = previousCoverFile.substring(
+                                0,
+                                previousCoverFile.lastIndexOf('/')
+                            );
+                            let newCoverFile = imgPath + "/" + mediaId + "." + extension;
+                            $('.trick-header').find('img').attr('src', newCoverFile);
+
+                            displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg-div'))
+                        }).fail(function () {
+                            //alert("Could not change cover image.");
+                            displayMessage("error", "{{'cover_image_change_failed'|trans }}", $('.cover-change-msg-div'))
+                        });
+                    });
+                    //console.log( index + ": " + $( this ).text() );
+                });
+                  
+            });
+
+            $(".js-unset-cover").on("click", function (e) {
+                e.preventDefault();
+                if(confirm("{{'confirm_unset_cover'|trans }}")) {
+                    var url = $(this).attr("href");
+                    var token = $(this).data("token");
+                    $.post(url, {token: token}
+                    ).done(function (data) {
+                        // On success, the unsetCover method returns the id and image
+                        // file extension of the default cover image (the one with the
+                        // lowest id in the database).
+                        var coverFilename = JSON.parse(data).coverFile;
+                        let previousCoverFile = $('.trick-header').find('img').attr('src');
+                        let imgPath = previousCoverFile.substring(
+                            0,
+                            previousCoverFile.lastIndexOf('/')
+                        );
+                        let newCoverFile = imgPath + "/" + coverFilename;
+                        $('.trick-header').find('img').attr('src', newCoverFile);
+
+                        // We unchecked all radio buttons
+                        $("input[type='radio'").prop("checked", false);
+                        //displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg-div'))
+                        alert("{{'cover_image_unset_success'|trans }}");
+                    }).fail(function () {
+                        alert("{{'cover_image_unset_failed'|trans }}");
+                    });
+                }
+            });
+
             $(".js-delete-media").on("click", function (e) {
                 e.preventDefault();
                 /*let el = $(this).find(".fa-trash-alt");
@@ -222,6 +336,14 @@
 
             $(".do-nothing").on("click", function (e) {
                 e.preventDefault();
+            });
+
+            // We memorize the original name of each "ajax" radio button and we store it
+            // in the correponding radio button. We'll need it because radio buttons
+            // names are changed (all set with the same value) on each radio button click.
+            $(".ajax-radio-btn").each(function (e) {
+                let radioName = $(this).attr('name');
+                $(this).attr('original-name', radioName);
             });
 
             checkImageNumber();

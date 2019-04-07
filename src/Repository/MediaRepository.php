@@ -29,7 +29,7 @@ class MediaRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function findDefaultCoverForTrickOrTheFirstOne($trickId)
+    public function findCoverImageOrDefault($trickId)
     {
         $result = $this->createQueryBuilder('m') // . '.' . 'm.fileUrl')
             ->where('m.trick = :id')

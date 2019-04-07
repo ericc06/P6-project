@@ -250,6 +250,18 @@ body {
     font-size: 1.2rem;
 }
 
+.ajax-radio-div {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgb(51, 125, 255);
+    display: none;
+}
+
+.ajax-radio-div input[type="radio"] {
+    margin: 0;
+}
+
 .faded-bg-img img {
   opacity: 0.4;
   height: calc(100vh - #{$header-height});
@@ -292,6 +304,7 @@ form.trick_edit_form {
 }
 
 form.trick_edit_form {
+    margin-top: 3rem;
     .trick-photo-thumbnail, .trick-video-thumbnail {
         margin-bottom: 3.5rem;
     }
@@ -304,6 +317,7 @@ form.trick_edit_form {
     fieldset.form-group {
         border: 3px dashed #999;
         padding: 10px;
+        margin-top: 0.5rem;
     }
 }
 
@@ -321,6 +335,14 @@ form.trick_new_form {
 
 .trick-detail-container-div #trick-detail-list {
     display: flex;
+}
+
+.choose-cover-title {
+    margin-left: -10px;
+    margin-top: 15px;
+    color: rgb(51, 125, 255);
+    font-size: 1.5rem;
+    display: none;
 }
 
 .back-btn {
@@ -436,6 +458,10 @@ footer {
     display: none;
 }
 
+/*.trick_edit_form_container .well {
+    margin-top: 1.5rem;
+}
+*/
 .inner {
   display: flex;
   text-align: center;
@@ -578,8 +604,20 @@ div#trick_medias > fieldset.form-group > div > fieldset.form-group > .col-form-l
 	box-shadow: none;
 }
 
-.edit-icon {
+.edit-icon, .delete-icon {
     cursor: pointer;
+}
+
+.inactive {
+    cursor: default;
+    opacity: 0.4;
+}
+
+.cover-change-msg-div {
+    position: relative;
+    top: 40px;
+    font-size: 0.9rem;
+    height: 0;
 }
 
 /* max-width: 575px */

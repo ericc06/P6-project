@@ -3,15 +3,16 @@
 
 namespace App\Service;
 
-use App\Entity\Trick;
 use App\Entity\Media;
+use App\Entity\Trick;
 use App\Entity\TrickGroup;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TrickManager extends Controller
 {
@@ -22,12 +23,14 @@ class TrickManager extends Controller
     public function __construct(
         Container $container,
         UrlGeneratorInterface $router,
-        SessionInterface $session
+        SessionInterface $session,
+        LoggerInterface $logger
     ) {
         $this->container = $container;
         $this->em = $this->getDoctrine()->getManager();
         $this->router = $router;
         $this->session = $session;
+        $this->logger = $logger;
     }
 
     // Inserts or updates a trick into the database.
@@ -50,8 +53,8 @@ class TrickManager extends Controller
             $result['message'] = 'trick_name_already_exists %link_start% %link_end%'; //$e->getMessage();
             $result['message_params'] = [
                 '%link_start%' => '<a href="' . $this->generateUrl('trick_edit', ['id' => $this->em->getRepository(Trick::class)
-                ->findByName($trick->getName())[0]->getId()]) . '">',
-                '%link_end%' => '</a>'
+                        ->findByName($trick->getName())[0]->getId()]) . '">',
+                '%link_end%' => '</a>',
             ];
             $result['dest_page'] = 'trick_new';
             $result['trick'] = $trick;
@@ -146,12 +149,12 @@ class TrickManager extends Controller
 
         return $trick;
     }
-    
+
     // Returns all tricks with their cover image for the homepage (no media).
     public function getAllTricksForIndexPage()
     {
         $tricks = $this->em->getRepository(Trick::class)
-        ->findAll();
+            ->findAll();
 
         $tricksArray = [];
 
@@ -161,7 +164,7 @@ class TrickManager extends Controller
             $tricksArray[$key]['slug'] = $trick->getSlug();
             $tricksArray[$key]['coverImage'] = $this->getCoverImageByTrickId($trick->getId());
         }
-        
+
         return $tricksArray;
     }
 
@@ -189,14 +192,51 @@ class TrickManager extends Controller
     // Returns the cover image file name from a trick id.
     public function getCoverImageByTrickId($id)
     {
-        $cover_image_details = $this->em->getRepository(Media::class)->findDefaultCoverForTrickOrTheFirstOne($id);
+        $cover_image_details = $this->em->getRepository(Media::class)->findCoverImageOrDefault($id);
 
         return $cover_image_details[0]->getId() . '.' . $cover_image_details[0]->getFileUrl();
     }
-    
+
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($id)
     {
         return $this->em->getRepository(TrickGroup::class)->findGroupNameByGroupId($id);
+    }
+
+    // Set the new cover image (the given media) for the given trick.
+    public function setTrickCover($trick, $newCoverMedia)
+    {
+        $this->logger->info('> > > > > > IN setTrickCover  < < < < < < TRICK : ' . $trick->getId());
+
+        // First, we unset any set cover.
+        $medias = $trick->getMedias();
+
+        foreach ($medias as $media) {
+            $media->setDefaultCover(false);
+
+            $var = ($media->getDefaultCover() === true ? 1 : 0);
+            $this->logger->info('> > > > > > IN setTrickCover  < < < < < < TRICK : ' . $media->getId() . ' / ' . $var);
+            $this->em->persist($media);
+        }
+
+        // Then we set the new cover image
+        $newCoverMedia->setDefaultCover(true);
+        $this->em->persist($newCoverMedia);
+
+        $this->em->flush();
+    }
+
+    // Unset the cover image for the given trick.
+    public function unsetTrickCover($trick)
+    {
+        // We unset any set cover.
+        $medias = $trick->getMedias();
+
+        foreach ($medias as $media) {
+            $media->setDefaultCover(false);
+            $this->em->persist($media);
+        }
+
+        $this->em->flush();
     }
 }
