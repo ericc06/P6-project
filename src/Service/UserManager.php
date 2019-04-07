@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\User;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,15 +15,16 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class UserManager extends Controller
 {
-    private $logger;
+    private $encoder;
+    protected $container;
+    private $mailer;
+    private $em;
 
     public function __construct(
-        LoggerInterface $logger,
         UserPasswordEncoderInterface $encoder,
         Container $container,
         \Swift_Mailer $mailer
     ) {
-        $this->logger = $logger;
         $this->encoder = $encoder;
         $this->container = $container;
         $this->mailer = $mailer;

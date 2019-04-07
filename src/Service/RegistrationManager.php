@@ -17,8 +17,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class RegistrationManager extends Controller
 {
     private $userManager;
-    private $encoder;
+    protected $container;
     private $tools;
+    private $mailer;
+    private $encoder;
 
     public function __construct(
         UserManager $userManager,

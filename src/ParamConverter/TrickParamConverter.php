@@ -38,7 +38,8 @@ class TrickParamConverter implements ParamConverterInterface
         $trick = $this->em->getRepository(Trick::class)
         ->find($request->attributes->get('id'));
 
-        $mediasCollection = $this->trickManager->getMediasCollectionByTrickId($request->attributes->get('id'));
+        $mediasCollection = $this->trickManager
+            ->getMediasCollectionByTrickId($request->attributes->get('id'));
 
         $trick->setMedias($mediasCollection);
 

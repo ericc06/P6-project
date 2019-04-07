@@ -9,7 +9,6 @@ use App\Entity\Message;
 use App\Entity\TrickGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -17,21 +16,20 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TrickManager extends Controller
 {
-    private $em;
+    protected $container;
     private $router;
     private $session;
+    private $em;
 
     public function __construct(
         Container $container,
         UrlGeneratorInterface $router,
-        SessionInterface $session,
-        LoggerInterface $logger
+        SessionInterface $session
     ) {
         $this->container = $container;
-        $this->em = $this->getDoctrine()->getManager();
         $this->router = $router;
         $this->session = $session;
-        $this->logger = $logger;
+        $this->em = $this->getDoctrine()->getManager();
     }
 
     // Inserts or updates a trick into the database.

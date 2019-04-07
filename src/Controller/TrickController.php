@@ -14,33 +14,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrickController extends Controller
 {
     private $trickManager;
-    private $i18n;
-    private $logger;
+    private $translator;
     private $session;
-
-    /**
-     * @var int
-     */
     private $homeTricksLoadLimit;
+    private $trickPageMsgLimit;
 
     public function __construct(
         TrickManager $trickManager,
-        LoggerInterface $logger,
         TranslatorInterface $translator,
         SessionInterface $session,
         Int $homeTricksLoadLimit,
-        Int $trickPageMsgLimit
+        Int $trickPageMsgLimit,
     ) {
         $this->trickManager = $trickManager;
         $this->i18n = $translator;
-        $this->logger = $logger;
         $this->session = $session;
         $this->homeTricksLoadLimit = $homeTricksLoadLimit;
         $this->trickPageMsgLimit = $trickPageMsgLimit;
@@ -52,8 +45,6 @@ class TrickController extends Controller
     public function index()
     {
         $env = getenv('APP_ENV');
-        $this->logger->info('> > > > > > IN index  < < < < < <'
-            . $this->homeTricksLoadLimit);
 
         $tricksArray = $this->trickManager
             ->getTricksForIndexPage($this->homeTricksLoadLimit, 0);
@@ -248,16 +239,9 @@ class TrickController extends Controller
             ->getRepository(Trick::class)
             ->find($request->get('id'));
 
-        //\var_dump($trick->getMedias());
-        //\var_dump($trick->getMedias());
-        //\var_dump($trick->getMedias()[0]);
-        
-
-        //$medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
         $medias = $trick->getMedias();
 
         $trick->setMedias($medias);
-        //\var_dump($trick->getMedias());
 
         $cover_image_file = $this->trickManager
             ->getCoverImageByTrickId($trick->getId());
@@ -280,7 +264,6 @@ class TrickController extends Controller
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
-            //'medias' => $medias,
             'cover_image' => $cover_image_file,
         ]);
     }
@@ -342,16 +325,16 @@ class TrickController extends Controller
      */
     public function deleteMedia(Media $media, Request $request)
     {
-        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
-        // Cela permet de protéger la suppression d'annonce contre cette faille
-        $form = $this->get('form.factory')->create();
-
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid('delete_media_tk', $request->request->get('token')))
+            && ($this->isCsrfTokenValid(
+                'delete_media_tk',
+                $request->request->get('token')
+            ))
         ) {
-            $result = $this->trickManager->deleteMediaFromDB($media);
+            $mediaId = $media->getId();
+            $this->trickManager->deleteMediaFromDB($media);
 
-            return new Response('{"id":' . $media->getId() . '}');
+            return new Response('{"id":' . $mediaId . '}');
         }
 
         return new JsonResponse(array('message' => 'Error'), 400);
@@ -359,7 +342,7 @@ class TrickController extends Controller
 
     // id & mediaId are all numeric, or respectively strictly equal to
     // "TRICK" and "MEDIA" if used as placeholders (see "edit.html.twig").
-   /**
+    /**
      * @Route(
      *      "/tricks/{id}/medias/{mediaId}/set_cover",
      *      name="set_cover",
@@ -367,26 +350,30 @@ class TrickController extends Controller
      *      methods={"GET","POST","DELETE"},
      *      condition="request.isXmlHttpRequest()"
      * )
-     * @ParamConverter("media", class="App\Entity\Media", options={"mapping": {"mediaId": "id"}})
+     * @ParamConverter(
+     *      "media",
+     *      class="App\Entity\Media",
+     *      options={"mapping": {"mediaId": "id"}}
+     * )
      */
     public function setCover(Trick $trick, Media $media, Request $request)
     {
-        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
-        // Cela permet de protéger la suppression d'annonce contre cette faille
-        $form = $this->get('form.factory')->create();
-
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid('update_cover_tk', $request->request->get('token')))
+            && ($this->isCsrfTokenValid(
+                'update_cover_tk',
+                $request->request->get('token')
+            ))
         ) {
             $this->trickManager->setTrickCover($trick, $media);
 
-            return new Response('{"id":' . $media->getId() . ', "extension": "' . $media->getFileUrl() . '"}');
+            return new Response('{"id":' . $media->getId()
+                . ', "extension": "' . $media->getFileUrl() . '"}');
         }
 
-        return new JsonResponse(array('message' => 'Error'), 400);
+        return new JsonResponse(['message' => 'Error'], 400);
     }
 
-   /**
+    /**
      * @Route(
      *      "/tricks/{id}/unset_cover",
      *      name="unset_cover",
@@ -397,21 +384,21 @@ class TrickController extends Controller
      */
     public function unsetCover(Trick $trick, Request $request)
     {
-        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
-        // Cela permet de protéger la suppression d'annonce contre cette faille
-        $form = $this->get('form.factory')->create();
-
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid('unset_cover_tk', $request->request->get('token')))
+            && ($this->isCsrfTokenValid(
+                'unset_cover_tk',
+                $request->request->get('token')
+            ))
         ) {
             $this->trickManager->unsetTrickCover($trick);
 
-            $defaultCover = $this->trickManager->getCoverImageByTrickId($trick->getId());
+            $defaultCover = $this->trickManager
+                ->getCoverImageByTrickId($trick->getId());
 
             // Returns image file name with extension.
             return new Response('{"coverFile": "' . $defaultCover . '"}');
         }
 
-        return new JsonResponse(array('message' => 'Error'), 400);
+        return new JsonResponse(['message' => 'Error'], 400);
     }
 }

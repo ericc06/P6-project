@@ -18,6 +18,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
+    private $userManager;
+    private $passwordManager;
+    private $registrationManager;
+    private $translator;
+    private $logger;
+
     public function __construct(
         UserManager $userManager,
         PasswordManager $passwordManager,
@@ -28,7 +34,6 @@ class UserController extends Controller
         $this->userManager = $userManager;
         $this->pwdManager =  $passwordManager;
         $this->regManager =  $registrationManager;
-        $this->userManager = $userManager;
         $this->i18n = $translator;
         $this->logger = $logger;
     }

@@ -9,16 +9,10 @@ use App\Entity\TrickGroup;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(
-        LoggerInterface $logger
-    ) {
-        $this->logger = $logger;
-    }
 
     public function load(ObjectManager $manager)
     {
