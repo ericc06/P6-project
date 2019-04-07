@@ -17,11 +17,11 @@ $(document).ready(function () {
     // On page load, we first hide the form elements not useful for medias update:
     // For images we hide the fileUrl field.
     // For videos we hide the file upload field.
-    $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
+    $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0");
 
-    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0');
+    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0");
     
-    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_defaultCover']").parent('div').css('visibility', 'hidden').css('height', '0').css('margin', '0').parent('div').css('margin-bottom', '0');
+    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_defaultCover']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0").parent("div").css("margin-bottom", "0");
 
     // On récupère la balise <div> en question qui contient l'attribut "data-prototype" qui nous intéresse.
     var $container = $("div#trick_medias");
@@ -142,7 +142,7 @@ $(document).ready(function () {
     // and to all others so that they all work together:
     // checking one unchecks all others.
     $("form input:radio").on("click", function (e) {
-        let radioName = $(this).attr("original-name")
+        let radioName = $(this).attr("original-name");
         $("form input:radio").attr("name", radioName);
     });
 
