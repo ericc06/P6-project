@@ -236,17 +236,16 @@ body {
 }
 
 .media-admin-icons {
-  position: absolute;
-  top: 120px;
-  right: 5px;
-  height: 2rem;
-  width: 80px;
-  display: flex;
-  justify-content: space-evenly;
-  align-content: center;
-  padding-top: 6px;
-  border-radius: 5px;
-  background-color: #ddd;
+    height: 2rem;
+    width: 80px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 6px;
+    border-radius: 5px;
+    background-color: #ddd;
+    margin: 10px 0;
+    float: right;
 }
 .media-admin-icons i {
   font-size: 1.2rem;
@@ -330,7 +329,7 @@ form.trick_edit_form {
 }
 
 form.trick_edit_form {
-    margin-top: 3rem;
+    /*margin-top: 3rem;*/
     .trick-photo-thumbnail, .trick-video-thumbnail {
         margin-bottom: 3.5rem;
     }
@@ -341,7 +340,7 @@ form.trick_edit_form {
         display: none;
     }
     fieldset.form-group {
-        border: 3px dashed #999;
+        border: 3px dashed indianred;
         padding: 10px;
         margin-top: 0.5rem;
     }
@@ -471,17 +470,24 @@ footer {
     color: white;
   }
 }
-.trick_edit_form_container {
+/*.trick_edit_form_container {
   margin-top: 1.5rem;
-}
+}*/
 
 .trick_edit_form_container textarea {
-  width: 200%;
+  width: 100%;
   height: 15rem;
 }
 
 .trick_edit_form_container #trick_medias fieldset.form-group {
     display: none;
+}
+
+.fieldset-thumbnail {
+    width: 100%;
+    height: auto;
+    border: 1px solid black!important;
+    margin-bottom: 10px;
 }
 
 /*.trick_edit_form_container .well {
@@ -697,11 +703,11 @@ div#trick_medias
     opacity: 0.4;
 }
 
-.cover-change-msg-div {
-    position: relative;
-    top: 47px;
+.cover-change-msg {
+    display: none;
     font-size: 0.9rem;
-    height: 0;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 /* max-width: 575px */
@@ -788,6 +794,9 @@ div#trick_medias
   }
   .comment-text {
     width: 70%;
+  }
+  .trick_edit_form_container textarea {
+    width: 200%;
   }
 }
 

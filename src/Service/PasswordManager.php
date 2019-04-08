@@ -22,7 +22,7 @@ class PasswordManager extends Controller
     private $i18n;
     private $tools;
     private $mailer;
-    private $em;
+    private $entMan;
 
     public function __construct(
         Container $container,
@@ -38,7 +38,7 @@ class PasswordManager extends Controller
         $this->i18n = $translator;
         $this->tools = $tools;
         $this->mailer = $mailer;
-        $this->em = $this->getDoctrine()->getManager();
+        $this->entMan = $this->getDoctrine()->getManager();
     }
 
     // Returns an encoded user password.

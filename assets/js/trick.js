@@ -43,7 +43,7 @@ $(document).ready(function () {
             addDeleteLink($prototype);
         }
         // On ajoute le prototype modifié à la fin de la balise <div>
-        $container.append($prototype.css("display", "block").css("border", "none"));
+        $container.append($prototype.css("display", "block").css("border", "3px dashed #bbb"));
         
         switch ($mediaType) {
             case "image":

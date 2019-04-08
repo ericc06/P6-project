@@ -332,12 +332,24 @@ class TrickController extends Controller
             ))
         ) {
             $mediaId = $media->getId();
+            $trick = $media->getTrick();
             $this->trickManager->deleteMediaFromDB($media);
 
-            return new Response('{"id":' . $mediaId . '}');
+            //return new Response('{"id":' . $mediaId . '}');
+
+            // In case the delete media was used as the cover image
+            // we return the cover image to update the trick edition
+            // page header image. Of course, it can be the same image
+            // then previouly.
+            $defaultCover = $this->trickManager
+                ->getCoverImageByTrickId($trick->getId());
+
+            // Returns image file name including extension.
+            return new Response('{"id":' . $mediaId
+                . ', "coverFile": "' . $defaultCover . '"}');
         }
 
-        return new JsonResponse(array('message' => 'Error'), 400);
+        return new JsonResponse(['message' => 'Error'], 400);
     }
 
     // id & mediaId are all numeric, or respectively strictly equal to
@@ -395,7 +407,7 @@ class TrickController extends Controller
             $defaultCover = $this->trickManager
                 ->getCoverImageByTrickId($trick->getId());
 
-            // Returns image file name with extension.
+            // Returns image file name including extension.
             return new Response('{"coverFile": "' . $defaultCover . '"}');
         }
 

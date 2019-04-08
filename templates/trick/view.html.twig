@@ -184,16 +184,17 @@
     <script type="text/javascript">
 
         function displayMessage(msgType, message, targetElem) {
-            targetElem.html(message);//.css('margin-top', '15px');
+            targetElem.html(message);
             switch (msgType) {
                 case "success":
-                    targetElem.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
+                    targetElem.removeClass('error').addClass('success');
                     break;
                 case "error":
-                    targetElem.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
+                    targetElem.removeClass('success').addClass('error');
                     break;
                 default:
             }
+            targetElem.slideDown(400).delay(2000).slideUp(400);
         };
 
         $(document).ready(function () {
@@ -203,10 +204,18 @@
             $form.find('.submit-button').on("click", function(e) {
                 e.preventDefault();
 
-                if ($('#message_content').val() == "") {
-                    displayMessage("error", "{{ 'message_cant_be_empty'|trans}}");
+                if ($.trim($('#message_content').val()) === "") {
+                    displayMessage(
+                        "error",
+                        "{{ 'message_cant_be_empty'|trans}}",
+                        $('.result-message')
+                    );
                 } else if ($('#message_content').val().length >= 2500) {
-                    displayMessage("error", "{{ 'message_too_long'|trans}}");
+                    displayMessage(
+                        "error",
+                        "{{ 'message_too_long'|trans}}",
+                        $('.result-message')
+                    );
                 } else {
                     var $this = $(this);
                     var waitingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'action_running'|trans}}";
@@ -226,11 +235,23 @@
                         }).done(function (data) {
                             let container = $('#messages-list');
                             container.prepend(data);
-                            displayMessage("success", "{{ 'message_saved'|trans}}", $('.result-message'));
-                            $('#message_content').val('').prop('placeholder', "{{ 'your_comment_here'|trans}}");
+                            displayMessage(
+                                "success",
+                                "{{ 'message_saved'|trans}}",
+                                $('.result-message')
+                            );
+                            $('#message_content').val('')
+                                .prop(
+                                    'placeholder',
+                                    "{{ 'your_comment_here'|trans}}"
+                                );
                             $this.html($this.data('original-text'));
                         }).fail(function () {
-                            displayMessage("error", "{{ 'message_creation_failure'|trans}}", $('.result-message'));
+                            displayMessage(
+                                "error",
+                                "{{ 'message_creation_failure'|trans}}",
+                                $('.result-message')
+                            );
                             $this.html($this.data('original-text'));
                         });
                     }  

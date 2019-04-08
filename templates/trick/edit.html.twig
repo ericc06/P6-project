@@ -63,6 +63,9 @@
                                     <i class="fas fa-trash-alt delete-icon" aria-hidden="true"></i>
                                 </a>
                             </div>
+                            <div class='cover-change-msg-div'>
+                                <span class="cover-change-msg"></span>
+                            </div>
                         </div>
                         {% else %}
                         <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
@@ -80,9 +83,6 @@
                         {% set thumbnailCount = thumbnailCount + 1 %}
                     {% endfor %}
                 </section>
-                <div class='cover-change-msg-div'>
-                    <span class="cover-change-msg"></span>
-                </div>
             </div>
             {{ form_start(form, {'attr': {'class': 'trick_form trick_edit_form'}}) }}
             <div class="my-custom-class-for-errors">
@@ -126,92 +126,122 @@
     <script type="text/javascript">
 
         function displayMessage(msgType, message, targetElem) {
-            targetElem.html(message);//.css('margin-top', '15px');
+            targetElem.html(message);
             switch (msgType) {
                 case "success":
-                    targetElem.removeClass('error').addClass('success').slideDown(400).delay(2000).slideUp(400);
+                    targetElem.removeClass('error').addClass('success');
                     break;
                 case "error":
-                    targetElem.removeClass('success').addClass('error').slideDown(400).delay(2000).slideUp(400);
+                    targetElem.removeClass('success').addClass('error');
                     break;
                 default:
             }
+            targetElem.slideDown(400).delay(2000).slideUp(400);
         };
+
+        function showMediaFieldset(mediaId, thumbnailElem) {
+            // ... we remove the "required" attribute to all form elements...
+            $("div[id='trick_medias']")
+                .find("fieldset.form-group")
+                .find("*").removeAttr("required");
+
+            // ... and we show the fieldset related to the chosen media.
+            // But before, we add at the top of the fieldset the thumbnail
+            // of the media if it's not already present. 
+            let targetFielset = $("input[id$='_id'][value='" + mediaId + "']")
+                .parents("div[id^='trick_medias_']").parent();
+            if (! targetFielset.find('.fieldset-thumbnail').length) {
+                targetFielset.prepend(
+                    thumbnailElem.addClass("fieldset-thumbnail")
+                );
+            }
+            targetFielset.slideDown(300).children()
+                .not("legend, .btn-danger").show(300);
+
+            // We set the "required" attribute to all required elements
+            if (targetFielset.find("input[id$='_fileType'][value='0']").length) {
+                // For images: title and alt fields. The "file" field not
+                // required because there is one already.
+                targetFielset.find("input[id$='_title'], input[id$='_alt']")
+                   .attr("required", "required");
+            } else {
+                // For videos: fileUrl, title and alt fields.
+                targetFielset
+                    .find("input[id$='_fileUrl'], input[id$='_title'], input[id$='_alt']")
+                    .attr("required", "required");
+            }
+        }
 
         $(document).ready(function () {
 
+            $(".media-admin-icons .edit-icon").on("click", function() {
+                $(this).prop('disabled', true);
 
-
-            function showMediaFieldset(mediaId, i) {
-                // ... we remove the "required" attribute to all form elements...
-                $("div[id='trick_medias']").find("fieldset.form-group").find("*").removeAttr("required");
-
-                // ... and we show the fieldset related to the chosen media.
-                let targetFielset = $("input[id$='_id'][value='" + mediaId + "']").parents("div[id^='trick_medias_']").parent();
-                targetFielset.slideDown(300).children().not("legend, .btn-danger").show(300);
-
-                // We set the "required" attribute to all required elements
-                if (targetFielset.find("input[id$='_fileType'][value='0']").length) {
-                    // For images: title and alt fields. The "file" field not
-                    // required because there is one already.
-                    targetFielset.find("input[id$='_title'], input[id$='_alt']").attr("required", "required");
-                } else {
-                    // For videos: fileUrl, title and alt fields.
-                    targetFielset.find("input[id$='_fileUrl'], input[id$='_title'], input[id$='_alt']").attr("required", "required");
-                }
-            }
-
-            $(".edit-icon").on("click", function() {
                 // We remove any red border around all images
                 $("article[media-id]").children().css("border", "none");
                 $("article[media-id]").css("border", "1px solid black");
 
                 // We add a red border only around the corresponding image
-                $("article[media-id="+ $(this).attr("media-id") +"]").children().css("border", "3px solid red");
-                $("article[media-id="+ $(this).attr("media-id") +"]").css("border", "1px solid red");
+                $("article[media-id="+ $(this).attr("media-id") +"]")
+                    .children().css("border", "3px solid red");
+                $("article[media-id="+ $(this).attr("media-id") +"]")
+                    .css("border", "1px solid red");
 
+                let thumbnailElem = $(this)
+                    .parentsUntil('.trick-photo-thumbnail-div, .trick-video-thumbnail-div')
+                    .parent().find('article').children().clone();
+                //alert(thumbnailElem);
                 // DEBUG
                 //$('.trick-title').find('span').html($("div[id='trick_medias']").find("fieldset.form-group:visible").length);
 
                 // If a fieldset is visible, we hide it, and then show
                 // the clicked media fieldset...
                 var mediaId = $(this).attr("media-id");
-                if($("div[id='trick_medias']").find("fieldset.form-group:visible").length) {
+                if($("div[id='trick_medias']")
+                    .find("fieldset.form-group:visible").length
+                ) {
                     $("div[id='trick_medias']")
                         .find("fieldset.form-group:visible")
                         .slideUp(
                             300, // Waiting for the slideUp to end.
                             function() {
-                                showMediaFieldset(mediaId);
+                                showMediaFieldset(mediaId, thumbnailElem);
                             }
                         );
                 } else { // If there is no visible fielset,
                     // we show the requested one without waiting.
-                    showMediaFieldset(mediaId);
+                    showMediaFieldset(mediaId, thumbnailElem);
                 }
 
-                /*$("input[id$='_fileType'][value='0']").parentsUntil("div[id^='trick_medias_']").css('border', '5px solid green');
-                $("input[id$='_fileType'][value='0']").parentsUntil("div[id^='trick_medias_']").find("input[id$='_file'][id$='_title'][id$='_alt']").attr("required", "required");
-                */
+                $('html, body').animate({
+                    scrollTop: $("#trick_medias").offset().top
+                }, 600);
             });
 
             // On page load and after an image removal we check the number of
             // remaining images. When it remains only one we blur the "delete"
             // icon because at least one image must remain as trick cover image.
             function checkImageNumber() {
-                //alert($(".trick-photo-thumbnail-div").length);
                 if($(".trick-photo-thumbnail-div").length == 1) {
-                    let el = $(".trick-photo-thumbnail-div").find(".fa-trash-alt");
-                    el.css("opacity", 0.4).css("cursor", "default").attr("title", "{{'image_deletion_impossible_need_one_for_cover'|trans }}").parent().attr("class", "do-nothing");
+                    let elem = $(".trick-photo-thumbnail-div").find(".fa-trash-alt");
+                    elem.css("opacity", 0.4).css("cursor", "default")
+                        .attr(
+                            "title",
+                            "{{'image_deletion_impossible_need_one_for_cover'|trans }}"
+                        )
+                        .parent().attr("class", "do-nothing");
                 } else {
-                    $(".trick-photo-thumbnail-div").find(".fa-trash-alt").each(function(){
-                        $(this).css("opacity", 1).css("cursor", "pointer").attr("title", "{{'delete_this_image'|trans }}").parent().attr("class", "js-delete-media");
+                    $(".trick-photo-thumbnail-div")
+                        .find(".fa-trash-alt").each(function(){
+                            $(this).css("opacity", 1).css("cursor", "pointer")
+                                .attr("title", "{{'delete_this_image'|trans }}")
+                                .parent().attr("class", "js-delete-media");
                     })
                 }
             }
 
-            $(".js-update-cover").on("click", function (e) {
-                e.preventDefault();
+            $(".js-update-cover").on("click", function (evt) {
+                evt.preventDefault();
                 //$(this).find('i').addClass('inactive');
                 $('html, body').animate({
                     scrollTop: $(".trick-title").find("span").offset().top
@@ -221,35 +251,42 @@
                 $(".trick-photo-thumbnail").each(function() {
                     let thumbNumber = $(this).parent().attr('thumb-num');
                     let mediaId = $(this).attr('media-id');
-                    let radioElmt = $("#trick_medias_" + thumbNumber + "_defaultCover").clone();
+                    let radioElmt = $("#trick_medias_" + thumbNumber + "_defaultCover")
+                        .clone();
                     // We change these "ajax" radio buttons id's to avoid id's
                     // duplication in the DOM.
                     radioElmt.attr('id', radioElmt.attr('id') + "_ajax");
                     radioElmt.addClass("ajax-radio-btn")
-                    //radioElmt.attr('id', radioElmt.attr('id') + "_ajax");
-                    //radioElmt.removeAttr('name');
                     let targetDiv = $(this).parent().find('.ajax-radio-div');
                     radioElmt.appendTo(targetDiv);
                     targetDiv.slideDown(200);
 
                     radioElmt.on('change', function() {
-                        // When an "ajax" radio button is checked, we give his original name to him
-                        // and to all others so that they all work together:
+                        // When an "ajax" radio button is checked, we give his original
+                        // name to him and to all others so that they all work together:
                         // checking one unchecks all others.         
                         let radioName = $(this).attr('original-name')
                         $(".ajax-radio-btn").attr('name', radioName);
         
-                        // We force the clicked radio button to be checked (it's not automatically
-                        // the case), and we also check the related "non-ajax" radio button
-                        // so that the "non-ajax" form radio buttons are consistent with
-                        // the "ajax" radio buttons.
+                        // We force the clicked radio button to be checked (it's not
+                        // automatically the case), and we also check the related
+                        // "non-ajax" radio button so that the "non-ajax" form radio
+                        // buttons are consistent with the "ajax" radio buttons.
                         $(this).prop("checked", true);
-                        // We first uncheck all "non-ajax" radio buttons before checking the good one.
+                        // We first uncheck all "non-ajax" radio buttons before
+                        // checking the good one.
                         $("form input[type='radio']").prop("checked", false);
-                        $("form input[name='"+ $(this).attr("name") + "']").prop("checked", true);
+                        $("form input[name='"+ $(this).attr("name") + "']")
+                            .prop("checked", true);
 
-                        var url = "{{ path('set_cover', {'id': 'TRICK', 'mediaId': 'MEDIA'}) }}".replace("TRICK", trickId).replace("MEDIA", mediaId);
+                        var url = "{{ path('set_cover', {'id': 'TRICK', 'mediaId': 'MEDIA'}) }}"
+                            .replace("TRICK", trickId).replace("MEDIA", mediaId);
+
                         var token = "{{ csrf_token('update_cover_tk') }}";
+
+                        let msgTarget = $(this).parentsUntil(".trick-photo-thumbnail-div")
+                            .parent().find(".cover-change-msg");
+
                         $.post(url, {token: token}
                         ).done(function (data) {
                             var mediaId = JSON.parse(data).id;
@@ -262,13 +299,19 @@
                             let newCoverFile = imgPath + "/" + mediaId + "." + extension;
                             $('.trick-header').find('img').attr('src', newCoverFile);
 
-                            window.displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg'));
+                            displayMessage(
+                                "success",
+                                "{{'change_saved_successfully'|trans }}",
+                                msgTarget
+                            );
                         }).fail(function () {
-                            //alert("Could not change cover image.");
-                            window.displayMessage("error", "{{'cover_image_change_failed'|trans }}", $('.cover-change-msg'));
+                            displayMessage(
+                                "error",
+                                "{{'change_failed'|trans }}",
+                                msgTarget
+                            );
                         });
                     });
-                    //console.log( index + ": " + $( this ).text() );
                 });
                   
             });
@@ -294,7 +337,7 @@
 
                         // We unchecked all radio buttons
                         $("input[type='radio'").prop("checked", false);
-                        //displayMessage("success", "{{'cover_image_change_success'|trans }}", $('.cover-change-msg-div'))
+
                         alert("{{'cover_image_unset_success'|trans }}");
                     }).fail(function () {
                         alert("{{'cover_image_unset_failed'|trans }}");
@@ -311,25 +354,34 @@
                 if(confirm("{{'confirm_delete_media'|trans }}")) {
                     var url = $(this).attr("href");
                     var token = $(this).data("token");
-                    /*$.ajax({
-                        url: url,
-                        type: "POST",
-                        token: token
-                        */
+
                     $.post(url, {token: token}
                     ).done(function (data) {
                         var id = JSON.parse(data).id;
                         // We remove from the form the fieldset related to the deleted media.
-                        let targetFielset = $("input[id$='_id'][value='" + id + "']").parents("fieldset.form-group");
+                        let targetFielset = $("input[id$='_id'][value='" + id + "']")
+                            .parents("fieldset.form-group");
                         targetFielset.remove();
                         // We hide the deleted image div with an collapse animation.
                         $( "article[media-id=" + id + "]" ).parent().animate({
-                            opacity: 0.25,
-                            width: 0
-                          }, 500, function() {
+                                opacity: 0.25,
+                                width: 0
+                            }, 500, function() {
                             // Animation complete.
                             $( "article[media-id=" + id + "]" ).parent().remove();
-                          });
+                        });
+
+                        // On success, the unsetCover method returns the id and image
+                        // file extension of the default cover image (the one with the
+                        // lowest id in the database).
+                        var coverFilename = JSON.parse(data).coverFile;
+                        let previousCoverFile = $('.trick-header').find('img').attr('src');
+                        let imgPath = previousCoverFile.substring(
+                            0,
+                            previousCoverFile.lastIndexOf('/')
+                        );
+                        let newCoverFile = imgPath + "/" + coverFilename;
+                        $('.trick-header').find('img').attr('src', newCoverFile);
 
                         checkImageNumber();
                     }).fail(function () {

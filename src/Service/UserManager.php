@@ -18,7 +18,7 @@ class UserManager extends Controller
     protected $container;
     private $encoder;
     private $mailer;
-    private $em;
+    private $entMan;
 
     public function __construct(
         Container $container,
@@ -28,7 +28,7 @@ class UserManager extends Controller
         $this->container = $container;
         $this->encoder = $encoder;
         $this->mailer = $mailer;
-        $this->em = $this->getDoctrine()->getManager();
+        $this->entMan = $this->getDoctrine()->getManager();
     }
 
     /**
@@ -46,15 +46,15 @@ class UserManager extends Controller
     // Inserts or updates a user into the database.
     public function saveUserToDB(User $user)
     {
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->entMan->persist($user);
+        $this->entMan->flush();
     }
 
     // Deletes a user from the database.
     public function deleteUserFromDB(User $user)
     {
-        $this->em->remove($user);
-        $this->em->flush();
+        $this->entMan->remove($user);
+        $this->entMan->flush();
     }
 
     // Initializes the login form.
