@@ -199,6 +199,14 @@
                 <source>cover_image_change_success</source>
                 <target>La nouvelle image de couverture a bien été sauvegardée.</target>
             </trans-unit>
+            <trans-unit id="change_saved_successfully">
+                <source>change_saved_successfully</source>
+                <target>Modification sauvegardée.</target>
+            </trans-unit>
+            <trans-unit id="change_failed">
+                <source>change_failed</source>
+                <target>Echec de la modification.</target>
+            </trans-unit>
             <trans-unit id="cover_image_change_failed">
                 <source>cover_image_change_failed</source>
                 <target>Echec de sauvegarde de la nouvelle image de couverture.</target>

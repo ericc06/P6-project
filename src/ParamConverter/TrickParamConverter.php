@@ -12,13 +12,13 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TrickParamConverter implements ParamConverterInterface
 {
-    private $em;
+    private $entMan;
     private $trickManager;
 
-    public function __construct(EntityManagerInterface $em, TrickManager $trickManager)
+    public function __construct(EntityManagerInterface $entMan, TrickManager $trickManager)
     {
         $this->trickManager = $trickManager;
-        $this->em = $em;
+        $this->entMan = $entMan;
     }
 
     public function supports(ParamConverter $configuration)
@@ -35,7 +35,7 @@ class TrickParamConverter implements ParamConverterInterface
     public function apply(Request $request, ParamConverter $configuration)
     {
         // On récupère la valeur actuelle de l'attribut
-        $trick = $this->em->getRepository(Trick::class)
+        $trick = $this->entMan->getRepository(Trick::class)
         ->find($request->attributes->get('id'));
 
         $mediasCollection = $this->trickManager

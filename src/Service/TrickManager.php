@@ -19,7 +19,7 @@ class TrickManager extends Controller
     protected $container;
     private $router;
     private $session;
-    private $em;
+    private $entMan;
 
     public function __construct(
         Container $container,
@@ -29,7 +29,7 @@ class TrickManager extends Controller
         $this->container = $container;
         $this->router = $router;
         $this->session = $session;
-        $this->em = $this->getDoctrine()->getManager();
+        $this->entMan = $this->getDoctrine()->getManager();
     }
 
     // Inserts or updates a trick into the database.
@@ -38,8 +38,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->em->persist($trick);
-            $this->em->flush();
+            $this->entMan->persist($trick);
+            $this->entMan->flush();
 
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';
@@ -53,7 +53,7 @@ class TrickManager extends Controller
             $result['message_params'] = [
                 '%link_start%' => '<a href="'
                     . $this->generateUrl('trick_edit', [
-                        'id' => $this->em->getRepository(Trick::class)
+                        'id' => $this->entMan->getRepository(Trick::class)
                             ->findByName($trick->getName())[0]->getId()
                     ]) . '">',
                 '%link_end%' => '</a>'
@@ -71,8 +71,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->em->remove($trick);
-            $this->em->flush();
+            $this->entMan->remove($trick);
+            $this->entMan->flush();
 
             $result['msg_type'] = 'success';
             $result['message'] = 'trick_deleted_successfully';
@@ -92,8 +92,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->em->persist($message);
-            $this->em->flush();
+            $this->entMan->persist($message);
+            $this->entMan->flush();
 
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';
@@ -171,8 +171,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->em->remove($media);
-            $this->em->flush();
+            $this->entMan->remove($media);
+            $this->entMan->flush();
 
             $result['msg_type'] = 'success';
             $result['message'] = 'media_deleted_successfully';
@@ -199,7 +199,7 @@ class TrickManager extends Controller
     // for the homepage (no media).
     public function getTricksForIndexPage($limit, $offset)
     {
-        $tricks = $this->em->getRepository(Trick::class)
+        $tricks = $this->entMan->getRepository(Trick::class)
         ->findAllTricksForPagination($limit, $offset);
 
         $tricksArray = [];
@@ -219,7 +219,7 @@ class TrickManager extends Controller
     // Returns a subset of messages.
     /*public function getMessagesForTrickPage($limit, $offset)
     {
-        $messagesArray = $this->em->getRepository(Message::class)
+        $messagesArray = $this->entMan->getRepository(Message::class)
         ->findAllMessagesForPagination($limit, $offset);
 
         return $tricksArray;
@@ -227,16 +227,16 @@ class TrickManager extends Controller
     */
 
     // Returns an array with the medias from a trick id.
-    public function getMediasArrayByTrickId($id)
+    public function getMediasArrayByTrickId($trickId)
     {
-        return $this->em->getRepository(Media::class)
-            ->findMediasByTrickIdOrderedByFileType($id);
+        return $this->entMan->getRepository(Media::class)
+            ->findMediasByTrickIdOrderedByFileType($trickId);
     }
 
     // Returns a collection with the medias from a trick id.
-    public function getMediasCollectionByTrickId($id)
+    public function getMediasCollectionByTrickId($trickId)
     {
-        $mediasArray = $this->getMediasArrayByTrickId($id);
+        $mediasArray = $this->getMediasArrayByTrickId($trickId);
 
         $mediasCollection = new ArrayCollection();
 
@@ -248,20 +248,20 @@ class TrickManager extends Controller
     }
 
     // Returns the cover image file name from a trick id.
-    public function getCoverImageByTrickId($id)
+    public function getCoverImageByTrickId($trickId)
     {
-        $cover_image_details = $this->em->getRepository(Media::class)
-            ->findCoverImageOrDefault($id);
+        $cover_image_details = $this->entMan->getRepository(Media::class)
+            ->findCoverImageOrDefault($trickId);
 
         return $cover_image_details[0]->getId() . '.'
             . $cover_image_details[0]->getFileUrl();
     }
 
     // Returns the group name from a trick id.
-    public function getGroupNameByTrickGroupId($id)
+    public function getGroupNameByTrickGroupId($trickId)
     {
-        return $this->em->getRepository(TrickGroup::class)
-            ->findGroupNameByGroupId($id);
+        return $this->entMan->getRepository(TrickGroup::class)
+            ->findGroupNameByGroupId($trickId);
     }
 
     // Set the new cover image (the given media) for the given trick.
@@ -272,14 +272,14 @@ class TrickManager extends Controller
 
         foreach ($medias as $media) {
             $media->setDefaultCover(false);
-            $this->em->persist($media);
+            $this->entMan->persist($media);
         }
 
         // Then we set the new cover image
         $newCoverMedia->setDefaultCover(true);
-        $this->em->persist($newCoverMedia);
+        $this->entMan->persist($newCoverMedia);
 
-        $this->em->flush();
+        $this->entMan->flush();
     }
 
     // Unset the cover image for the given trick.
@@ -290,9 +290,9 @@ class TrickManager extends Controller
 
         foreach ($medias as $media) {
             $media->setDefaultCover(false);
-            $this->em->persist($media);
+            $this->entMan->persist($media);
         }
 
-        $this->em->flush();
+        $this->entMan->flush();
     }
 }
