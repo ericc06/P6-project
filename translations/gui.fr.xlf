@@ -3,6 +3,14 @@
     xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="page_not_found">
+                <source>page_not_found</source>
+                <target>Page non trouvée.</target>
+            </trans-unit>
+            <trans-unit id="check_requested_URL">
+                <source>check_requested_URL</source>
+                <target>La page demandée n'a pas été trouvée. Vérifiez l'adresse ou %link_start%retournez sur la page d'accueil%link_end%.</target>
+            </trans-unit>
             <trans-unit id="home">
                 <source>home</source>
                 <target>Accueil</target>
@@ -149,7 +157,7 @@
             </trans-unit>
             <trans-unit id="confirm_deletion_of_trick">
                 <source>confirm_deletion_of_trick</source>
-                <target>Etes-vous certain de vouloir supprimer la figure "  %trick_name%" ?</target>
+                <target>Etes-vous certain de vouloir supprimer la figure "%trick_name%" ?</target>
             </trans-unit>
             <trans-unit id="delete_trick">
                 <source>delete_trick</source>
@@ -161,11 +169,11 @@
             </trans-unit>
             <trans-unit id="added_image">
                 <source>added_image</source>
-                <target>Image à ajouter :</target>
+                <target>Image à ajouter</target>
             </trans-unit>
             <trans-unit id="added_video">
                 <source>added_video</source>
-                <target>Vidéo à ajouter :</target>
+                <target>Vidéo à ajouter</target>
             </trans-unit>
             <trans-unit id="video_url">
                 <source>video_url</source>
@@ -298,6 +306,14 @@
             <trans-unit id="log_in_to_edit_trick">
                 <source>log_in_to_edit_trick</source>
                 <target>Vous devez vous connecter pour éditer une figure.</target>
+            </trans-unit>
+            <trans-unit id="trick_not_found">
+                <source>trick_not_found</source>
+                <target>Figure non trouvée.</target>
+            </trans-unit>
+            <trans-unit id="trick_does_not_exist">
+                <source>trick_does_not_exist</source>
+                <target>La figure demandée n'existe pas. %link_start%Retourner sur la page d'accueil%link_end%.</target>
             </trans-unit>
             <trans-unit id="your_comment_here">
                 <source>your_comment_here</source>

@@ -131,8 +131,13 @@ class TrickController extends Controller
      *  methods={"GET"})
      * @ParamConverter("trick")
      */
-    public function show(Trick $trick)
+    public function show(Trick $trick = null)
     {
+        // If the given trick id doesn't exist we display an error page.
+        if ($trick === null) {
+            return $this->render('trick/notFound.html.twig');
+        }
+
         $medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
 
         $cover_image_file = $this->trickManager
@@ -232,12 +237,18 @@ class TrickController extends Controller
      *     methods={"GET","PUT","POST"}
      * )
      */
-    public function edit(Trick $trick, Request $request)
+    public function edit(Trick $trick = null, Request $request)
     {
         // Récupération d'une figure déjà existante, d'id $id.
-        $trick = $this->getDoctrine()
+        /*$trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->find($request->get('id'));
+        */
+
+        // If the given trick id doesn't exist we display an error page.
+        if ($trick === null) {
+            return $this->render('trick/notFound.html.twig');
+        }
 
         $medias = $trick->getMedias();
 

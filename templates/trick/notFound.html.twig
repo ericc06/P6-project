@@ -1,0 +1,29 @@
+{# templates/bundles/TwigBundle/Exception/notFound.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+<div class="container full-height-container">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="well">
+                <h1>{{ 'trick_not_found'|trans}}</h1>
+                
+                <p class="p-404">
+                    {{ 'trick_does_not_exist'
+                        |trans({
+                            '%link_start%': '<a href="' ~ path('homepage') ~ '">',
+                            '%link_end%': '</a>'
+                        })
+                        |raw
+                    }}
+                </p>
+                
+                <img class="error-page-image" src="{{ asset('./build/images/crash.jpg') }}" alt="404-image">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

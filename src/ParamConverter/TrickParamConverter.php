@@ -38,6 +38,15 @@ class TrickParamConverter implements ParamConverterInterface
         $trick = $this->entMan->getRepository(Trick::class)
         ->find($request->attributes->get('id'));
 
+        // If the given trick id does not exist, we set the trick
+        // with null so that the controller can handle this "trick
+        // not found" issue.
+        if ($trick === null) {
+            $request->attributes->set('trick', null);
+
+            return;
+        }
+
         $mediasCollection = $this->trickManager
             ->getMediasCollectionByTrickId($request->attributes->get('id'));
 

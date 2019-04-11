@@ -3,6 +3,7 @@ $primary: darken(#428bca, 20%);
 
 // customize some other variables
 $header-height: 56px;
+$bg-image-url: "/build/images/homepage.jpg";
 
 /// Stroke font-character
 /// @param  {Integer} $stroke - Stroke width
@@ -83,7 +84,7 @@ body {
 }
 
 #home {
-  background: url("/P6-project-flex/public/build/images/homepage.jpg") no-repeat;
+  background: url(#{$bg-image-url}) no-repeat;
   background-size: auto calc(100vh - #{$header-height});
   background-position: 25% bottom;
   opacity: 1;
@@ -95,6 +96,15 @@ body {
     width: 100%;
     height: calc(100vh - #{$header-height});
   }
+}
+
+.p-404 {
+    margin-top: 3rem;
+}
+
+.error-page-image {
+    width: 100%;
+    margin-top: 2rem;
 }
 
 .row:before {
@@ -322,23 +332,26 @@ body {
 }
 
 /*form[name=trick] {*/
-form.trick_edit_form {
+/*form.trick_edit_form {
   legend {
     display: none;
   }
-}
+}*/
 
 form.trick_edit_form {
     /*margin-top: 3rem;*/
     .trick-photo-thumbnail, .trick-video-thumbnail {
         margin-bottom: 3.5rem;
     }
+}
+
+form.trick_form {
     > fieldset.form-group > legend {
         display: block;
     }
-    > fieldset.form-group > fieldset.form-group > legend {
+/*    > fieldset.form-group > fieldset.form-group > legend {
         display: none;
-    }
+    }*/
     fieldset.form-group {
         border: 3px dashed indianred;
         padding: 10px;
@@ -351,11 +364,9 @@ div.well > fieldset.form-group {
   padding: 0;
 }
 
-form.trick_new_form {
-  fieldset.form-group {
-    border: none;
-    padding: 0;
-  }
+form.trick_new_form > fieldset.form-group {
+  border: none;
+  padding: 0;
 }
 
 .trick-detail-container-div #trick-detail-list {
@@ -599,6 +610,8 @@ hr {
 
 div#trick_medias > fieldset.form-group > .col-form-label {
   font-weight: bold;
+  width: auto;
+  padding: 0 10px;
 }
 div#trick_medias
   > fieldset.form-group

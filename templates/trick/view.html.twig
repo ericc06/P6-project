@@ -54,43 +54,6 @@
             </section>
         </div>
 
-        {# On charge la bibliothèque jQuery depuis le CDN google. #}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                let modalContainer = document.querySelector('div.modal-body');
-                let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
-                let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
-
-                Array.from(photoElementsArray).forEach(function(elem) {
-                    elem.addEventListener("click", function(event) {
-                        var targetElement = event.target || event.srcElement;
-                        modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
-                    });
-                });
-
-                Array.from(videoElementsArray).forEach(function(elem) {
-                    elem.addEventListener("click", function(event) {
-                        var targetElement = event.target || event.srcElement;
-                        modalContainer.innerHTML = targetElement.innerHTML;
-                    });
-                });
-
-                function centerModal() {
-                    $(this).css('display', 'block');
-                    var $dialog = $(this).find(".modal-dialog");
-                    var offset = ($(window).height() - $dialog.height()) / 2;
-                    // Center modal vertically in window
-                    $dialog.css("margin-top", offset);
-                }
-                
-                $('.modal').on('show.bs.modal', centerModal);
-                $(window).on("resize", function () {
-                    $('.modal:visible').each(centerModal);
-                });
-            });
-        </script>
-
         <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -179,9 +142,15 @@
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    {#<script src="{{ asset('./build/tools.js') }}"></script>#}
+    {{ parent() }}
+    {#{ encore_entry_script_tags('tools') }#}
 
-    <script type="text/javascript">
+    {#<script src="{{ asset('./build/tools.js') }}" type="module"></script>#}    
+
+    {# script type="module" #}
+    <script type="text/javascript"> 
+
+        //import { displayMessage } from "{{ asset('./build/tools.js') }}";
 
         function displayMessage(msgType, message, targetElem) {
             targetElem.html(message);
@@ -295,6 +264,39 @@
                         $this.html($this.data('original-text'));
                     });
                 }
+            });
+
+            /* Modal management */
+
+            let modalContainer = document.querySelector('div.modal-body');
+            let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
+            let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
+
+            Array.from(photoElementsArray).forEach(function(elem) {
+                elem.addEventListener("click", function(event) {
+                    var targetElement = event.target || event.srcElement;
+                    modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
+                });
+            });
+
+            Array.from(videoElementsArray).forEach(function(elem) {
+                elem.addEventListener("click", function(event) {
+                    var targetElement = event.target || event.srcElement;
+                    modalContainer.innerHTML = targetElement.innerHTML;
+                });
+            });
+
+            function centerModal() {
+                $(this).css('display', 'block');
+                var $dialog = $(this).find(".modal-dialog");
+                var offset = ($(window).height() - $dialog.height()) / 2;
+                // Center modal vertically in window
+                $dialog.css("margin-top", offset);
+            }
+            
+            $('.modal').on('show.bs.modal', centerModal);
+            $(window).on("resize", function () {
+                $('.modal:visible').each(centerModal);
             });
         });
     </script>

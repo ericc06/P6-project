@@ -121,6 +121,9 @@
     {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    {{ parent() }}
+    {{ encore_entry_script_tags('trick') }}
+
     {#<script src="{{ asset('./build/tools.js') }}"></script>#}
 
     <script type="text/javascript">
@@ -410,5 +413,5 @@
 
     {{ include("trick/tricksJsTranslations.js.twig") }}
 
-    <script src="{{ asset('./build/trick.js') }}"></script>
+    {#<script src="{{ asset('./build/trick.js') }}"></script>#}
 {% endblock %}

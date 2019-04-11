@@ -50,5 +50,6 @@
 
     {{ include('trick/tricksJsTranslations.js.twig') }}
 
-    <script src="{{ asset('./build/trick.js') }}"></script>
+    {{ parent() }}
+    {{ encore_entry_script_tags('trick') }}
 {% endblock %}
