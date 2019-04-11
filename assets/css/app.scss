@@ -3,6 +3,7 @@ $primary: darken(#428bca, 20%);
 
 // customize some other variables
 $header-height: 56px;
+$bg-image-url: "/build/images/homepage.jpg";
 
 /// Stroke font-character
 /// @param  {Integer} $stroke - Stroke width
@@ -34,6 +35,15 @@ body {
   font-family: Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+.full-height-container {
+  flex: 1 100%;
+  .row {
+    justify-content: center;
+    margin-top: 50px;
+  }
 }
 
 .page-bg {
@@ -44,12 +54,11 @@ body {
   top: 56px;
 }
 
-.page-bg::after {
-  content: "";
-  background-image: url(/P6-project-flex/public/./build/images/trick_buttering.jpg);
+.page-bg {
   background-size: 100% 100vh;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  background-position-y: 56px;
+  opacity: 0.3;
   top: 0;
   left: 0;
   bottom: 0;
@@ -69,8 +78,13 @@ body {
   margin-right: 0;
 }
 
+.greetings {
+  padding-top: 8px;
+  padding-right: 55px;
+}
+
 #home {
-  background: url("/P6-project-flex/public/build/images/homepage.jpg") no-repeat;
+  background: url(#{$bg-image-url}) no-repeat;
   background-size: auto calc(100vh - #{$header-height});
   background-position: 25% bottom;
   opacity: 1;
@@ -82,6 +96,15 @@ body {
     width: 100%;
     height: calc(100vh - #{$header-height});
   }
+}
+
+.p-404 {
+    margin-top: 3rem;
+}
+
+.error-page-image {
+    width: 100%;
+    margin-top: 2rem;
 }
 
 .row:before {
@@ -96,20 +119,62 @@ body {
   box-sizing: border-box;
 }
 
-.text-center {
+.well .flash {
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
+}
+
+#home .flash {
+  @extend .col-md-6;
+  @extend .col-sm-12;
   position: absolute;
-  top: 50%;
+  top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /*  position: absolute !important;
-  top: 35.8% !important;*/
-  width: 100%;
-  color: black;
-  text-shadow: stroke(2, white);
-  /*text-shadow: 0 0 2px #fff; /* horizontal-offset vertical-offset 'blur' colour 
-    -moz-text-shadow: 0 0 2px #fff;
-    -webkit-text-shadow: 0 0 2px #fff;
-    */
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #155724;
+}
+
+#home-text,
+.trick-title {
+  h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    color: black;
+    text-shadow: stroke(2, white);
+  }
+}
+
+.forgotten-pwd-div {
+  margin-top: -30px;
+  text-align: right;
+}
+
+.go-back-to-homepage {
+  margin-top: 30px;
+  text-align: center;
 }
 
 #arrow-down {
@@ -138,6 +203,7 @@ body {
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .trick-thumbnail p {
@@ -151,6 +217,85 @@ body {
 }
 
 /* Trick details page */
+
+.admin-icons {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  height: 2.5rem;
+  /*width: 90px;*/
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  padding-top: 8px;
+  padding-left: 15px;
+  border-radius: 5px;
+  > * {
+    margin-right: 15px;
+  }
+}
+.admin-icons i {
+  font-size: 1.5rem;
+}
+.fa-pen {
+  color: black;
+}
+.fa-trash-alt {
+  color: red;
+}
+
+.media-admin-icons {
+    height: 2rem;
+    width: 80px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    padding-top: 6px;
+    border-radius: 5px;
+    background-color: #ddd;
+    margin: 10px 0;
+    float: right;
+}
+.media-admin-icons i {
+  font-size: 1.2rem;
+}
+
+.tricks-list-admin-icons {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  height: 1.7rem;
+  width: 60px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  padding-top: 6px;
+  border-radius: 5px;
+  background-color: rgba(221, 221, 221, 0.7);
+}
+
+.tricks-list-admin-icons > * {
+  display: flex;
+  opacity: 0.7;
+}
+
+.tricks-list-admin-icons > *:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.ajax-radio-div {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgb(51, 125, 255);
+    display: none;
+}
+
+.ajax-radio-div input[type="radio"] {
+    margin: 0;
+}
 
 .faded-bg-img img {
   opacity: 0.4;
@@ -186,6 +331,59 @@ body {
   width: 100%;
 }
 
+/*form[name=trick] {*/
+/*form.trick_edit_form {
+  legend {
+    display: none;
+  }
+}*/
+
+form.trick_edit_form {
+    /*margin-top: 3rem;*/
+    .trick-photo-thumbnail, .trick-video-thumbnail {
+        margin-bottom: 3.5rem;
+    }
+}
+
+form.trick_form {
+    > fieldset.form-group > legend {
+        display: block;
+    }
+/*    > fieldset.form-group > fieldset.form-group > legend {
+        display: none;
+    }*/
+    fieldset.form-group {
+        border: 3px dashed indianred;
+        padding: 10px;
+        margin-top: 0.5rem;
+    }
+}
+
+div.well > fieldset.form-group {
+  border: none;
+  padding: 0;
+}
+
+form.trick_new_form > fieldset.form-group {
+  border: none;
+  padding: 0;
+}
+
+.trick-detail-container-div #trick-detail-list {
+    display: flex;
+}
+
+.choose-cover-title {
+    margin-left: -10px;
+    margin-top: 15px;
+    color: rgb(51, 125, 255);
+    font-size: 1.5rem;
+    display: none;
+}
+
+.back-btn {
+  background-color: buttonface;
+}
 .center-button {
   margin-left: auto;
   margin-right: auto;
@@ -212,6 +410,7 @@ footer {
 }
 
 .header-img-div {
+  position: relative;
   padding: 0;
 }
 .trick-header {
@@ -252,14 +451,60 @@ footer {
   margin-bottom: 30px;
 }
 
+.trick-infos-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
 .trick-info-box {
   padding: 10px;
+  flex: auto;
+  justify-content: center;
+  align-content: center;
 }
 .trick-info-text {
   display: inline-block;
   margin: auto;
 }
 
+.trick-update-warning-title {
+  background-color: red;
+  color: white;
+  margin: 0;
+  padding: 5px 10px;
+  margin-left: -15px;
+  margin-right: -15px;
+  i {
+    color: white;
+  }
+}
+/*.trick_edit_form_container {
+  margin-top: 1.5rem;
+}*/
+
+.trick_edit_form_container textarea {
+  width: 100%;
+  height: 15rem;
+}
+
+.trick_edit_form_container #trick_medias fieldset.form-group {
+    display: none;
+}
+
+.fieldset-thumbnail {
+    width: 100%;
+    height: auto;
+    border: 1px solid black!important;
+    margin-bottom: 10px;
+}
+
+/*.trick_edit_form_container .well {
+    margin-top: 1.5rem;
+}
+*/
 .inner {
   display: flex;
   text-align: center;
@@ -273,18 +518,28 @@ hr {
   width: 55%;
   border-color: #444;
 }
-#leave-comment-form {
+.leave-comment-form {
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 #form-div {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
 }
 
-#leave-comment-text {
-  width: 300px;
-  margin-bottom: -10px;
+#message_content {
+  width: 80%;
+  height: 4rem;
+  margin: 0 auto;
+}
+#form-div .btn {
+    width: 50%;
+    margin: 15px auto 0 auto;
 }
 
 .comment-div {
@@ -298,7 +553,7 @@ hr {
   white-space: normal;
   vertical-align: top;
   text-align: center;
-  margin-left: 25%;
+  margin-left: 5%;
   margin-top: 15px;
   width: 40px;
   border-radius: 50%;
@@ -310,12 +565,166 @@ hr {
   vertical-align: top;
   text-align: left;
   margin: 10px auto 10px 20px;
-  width: 40%;
+  width: 75%;
   border: 1px solid black;
   padding: 5px;
 }
 
+.modal-dialog {
+  max-width: 80vw;
+  max-height: 90vh;
+  max-width: unset;
+  display: inline-block;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.modal.show .modal-dialog {
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.img-responsive {
+  max-width: calc(80vw - 2 * 1rem);
+  max-height: calc(90vh - 2 * 1rem);
+}
+
+/* Trick creation form page */
+
+.add_media_buttons_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.add_media_buttons_div > .btn {
+  flex: 0 45%;
+}
+
+div#trick_medias > fieldset.form-group > .col-form-label {
+  font-weight: bold;
+  width: auto;
+  padding: 0 10px;
+}
+div#trick_medias
+  > fieldset.form-group
+  > div
+  > fieldset.form-group
+  > .col-form-label {
+  font-style: italic;
+}
+
+.trick_new_form > fieldset > .col-form-label {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
+
+.btn.outline {
+  background: none;
+  padding: 6px 16px;
+}
+
+.btn-primary.outline {
+  border: 2px solid #245682;
+  color: #245682;
+}
+
+.btn-primary.outline {
+  border: 2px solid #245682;
+  color: #245682;
+}
+
+.btn-primary.outline:hover,
+.btn-primary.outline:focus,
+.btn-primary.outline:active,
+.btn-primary.outline.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #1c4364;
+  border-color: #1c4364;
+  background-color: rgba(28, 67, 100, 0.15);
+}
+.btn-primary.outline:active,
+.btn-primary.outline.active {
+  border-color: #1c4364;
+  color: #1c4364;
+  box-shadow: none;
+}
+
+.btn-primary.outline:hover,
+.btn-primary.outline:focus,
+.btn-primary.outline:active,
+.btn-primary.outline.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #1c4364;
+  border-color: #1c4364;
+}
+.btn-primary.outline:active,
+.btn-primary.outline.active {
+  border-color: #1c4364;
+  color: #1c4364;
+  box-shadow: none;
+}
+
+.xs-fixed-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+}
+.trick-thumbnails-div,
+.trick-photo-thumbnail-div,
+.trick-video-thumbnail-div {
+  width: 100%;
+  flex-basis: unset;
+}
+#message_content {
+    font-size: 0.9rem;
+}
+
+#result-message-div {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    > span {
+        display: none;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+}
+
+.success {
+    color :green;
+}
+.error {
+    color :red;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+}
+
+.inactive {
+    cursor: default;
+    opacity: 0.4;
+}
+
+.cover-change-msg {
+    display: none;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
 /* max-width: 575px */
+/*
 @include media-breakpoint-up(xs) {
   .xs-fixed-bottom {
     position: fixed;
@@ -330,22 +739,27 @@ hr {
     width: 100%;
     flex-basis: unset;
   }
-  #leave-comment-form {
+  .trick-thumbnail {
+    text-align: center;
+  }
+  .leave-comment-form {
     width: 100%;
   }
   #form-div {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-content: center;
     width: 100%;
   }
-  #leave-comment-text {
-    width: unset;
-    margin: 10px;
+  #message_content {
+    width: 80%;
+    height: 4rem;
+    margin: 0 auto;
   }
-  #form-div button {
+  #form-div .btn {
     width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 15px auto 0 auto;
   }
   .comment-avatar {
     margin-left: 5%;
@@ -354,6 +768,7 @@ hr {
     width: 75%;
   }
 }
+*/
 
 /* min-width: 576px */
 @include media-breakpoint-up(sm) {
@@ -365,27 +780,26 @@ hr {
     z-index: unset;
   }
 
-  #leave-comment-form {
-    width: unset;
+  .leave-comment-form {
+    margin-left: auto;
+    margin-right: auto;
   }
+
   #form-div {
-    display: block;
-    flex-direction: unset;
-    width: unset;
+    display: flex;
+    flex-direction: row;
   }
-  #leave-comment-text {
+
+  #message_content {
     width: 300px;
-    height: 30px;
-    margin: unset;
-    top: 5px;
-    position: relative;
+    height: 2.3rem;
+    margin: 0 0 -10px 0;
   }
-  #form-div button {
+
+  #form-div .btn {
     width: unset;
-    margin-left: unset;
-    margin-right: unset;
-    top: -5px;
-    position: relative;
+    height: 2.3rem;
+    margin: 0 0 0 15px;
   }
 
   .comment-avatar {
@@ -393,6 +807,9 @@ hr {
   }
   .comment-text {
     width: 70%;
+  }
+  .trick_edit_form_container textarea {
+    width: 200%;
   }
 }
 

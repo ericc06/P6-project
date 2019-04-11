@@ -1,119 +1,303 @@
 {# templates/trick/view.html.twig #}
 
+{% trans_default_domain 'gui' %}
+
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-
     <!-- Detail page ================================================== -->
-
-    
-    <div class="page-bg container-fluid">
-        <!--<div id="bg-img" class="row faded-bg-img">
-            <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="homepage-image">
-        </div>-->
+    <div
+        class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
     </div>
-    
     <div class="container main">
         <div class="container header-img-div">
             <div class="trick-header row">
-                <img src="{{ asset('./build/images/trick_buttering.jpg') }}">
+                <img src="{{ asset('./uploads/images/' ~ cover_image) }}" />
                 <div class="col-xs-12 text-center trick-title">
                     <h1>
-                        <span class="bold" style="opacity: 1; display: inline;">{{ nom }}
-                            TRICK DETAILS PAGE</span></h1>
+                        <span class="bold" style="opacity: 1; display: inline;">
+                            {{ trick.name }}</span>
+                    </h1>
                 </div>
             </div>
+            {% if app.user %}
+            <div class="admin-icons">
+                <a href={{ url("trick_edit", {"id": trick.id} ) }}><i class="fas fa-pen" aria-hidden="true"></i></a>
+                <a href={{ url("trick_delete", {"id": trick.id, "slug": trick.slug} ) }}><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+            </div>
+            {% endif %}
         </div>
-
         <div class="container d-md-none see-medias-btn-div">
             <section class="row">
-                <button type="button" class="btn btn-primary center-button see-medias-btn">See medias</button>
+                <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
             </section>
         </div>
         <div class="container d-none d-md-block">
             <a class="anchor" id="tricks-anchor"></a>
             <section class="row" id="trick-detail-list">
-                {% for i in 0..2 %}
+                {% for media in medias %}
+                    {% if media.fileType == 0 %}
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div">
-                        <article class="trick-photo-thumbnail">
-                            <a href="trick-{{ i }}.php">
-                                <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="trick-image">-->
-                                <img src="{{ asset('./build/images/trick_buttering.jpg') }}" alt="bla-bla">
-                            </a>
+                        <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal">
+                        <!--<article class="trick-photo-thumbnail">-->
+                            <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
                         </article>
                     </div>
-                {% endfor %}
-                {% for i in 0..2 %}
-                    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
-                        <article class="trick-video-thumbnail">
-                            <iframe class="video-iframe" src="https://www.youtube.com/embed/XKpLbVu3mP4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
-                        </article>
-                    </div>
+                    {% else %}
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div" data-toggle="modal" data-target="#myModal">
+                            <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal">
+                                {{ media.fileUrl | raw }}
+                            </article>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </section>
+        </div>
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img src="" class="img-responsive modal-image">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="container">
             <section class="row col-10 offset-1 trick-description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                {{ trick.description|nl2br }}
             </section>
         </div>
-
         <div class="container">
-            <section class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 offset-lg-3 trick-info-box">
+            <div class="row trick-infos-container">
+                <div class="trick-info-box">
                     <div class="inner border-primary">
-                        <span class="trick-info-text">Créé le 12/08/2018</span>
+                        <span class="trick-info-text">Créé le
+                            {{ trick.creationDate|date("d/m/Y") }}</span>
                     </div>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
+                <div class="trick-info-box">
                     <div class="inner border-primary">
-                        <span class="trick-info-text">Groupe : Figures de base</span>
+                        <span class="trick-info-text">{{ group_name }}</span>
                     </div>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2 trick-info-box">
+                {% if trick.lastUpdateDate != null %}
+                <div class="trick-info-box">
                     <div class="inner border-primary">
-                        <span class="trick-info-text">Modifié le 17/08/2018</span>
+                        <span class="trick-info-text">Modifié le
+                            {{ trick.lastUpdateDate|date("d/m/Y") }}</span>
                     </div>
                 </div>
-            </section>
+                {% endif %}
+            </div>
         </div>
         <hr>
+        {% if app.user %}
         <div class="container">
             <section class="row">
-                <form id="leave-comment-form">
-                    <div id="form-div">
+                    {{ form_start(message_form, {'attr': {'class': 'leave-comment-form'}}) }}
+                        <div class="my-custom-class-for-errors">
+                            {{ form_errors(message_form) }}
+                        </div>
+                        <div id="form-div">
+                            {{ form_widget(message_form.content) }}
+                            {{ form_errors(message_form.content) }}
+                            {{ form_row(message_form._token) }}
+                            <!--<input class="btn btn-primary" type="submit" value="{{'leave_a_comment'|trans }}"/>-->
+                            <button type="submit" class="btn btn-primary center-button submit-button">{{ 'leave_a_comment'|trans}}</button>
+                            {{ form_end(message_form, {'render_rest': false}) }}
+                        </div>
+                        <div id="result-message-div">
+                            <span class="result-message"></span>
+                        </div>
+                    <!--<div id="form-div">
                         <textarea id="leave-comment-text" placeholder="Your comment here"></textarea>
                         <button type="submit">Leave a comment</button>
-                    </div>
+                    </div>-->
                 </form>
             </section>
         </div>
         <hr>
+        {% endif %}
         <div class="container">
-            <section class="row">
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                </div>
-                <div class="comment-div">
-                    <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-                    <p class="comment-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                </div>
-                <div class="container">
-                    <section class="row">
-                        <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
-                    </section>
-                </div>
+            <section class="row" id="messages-list">
+                {% include 'trick/messagesBlock.html.twig' with messagesArray %}
             </section>
+            <div class="container">
+                <section class="row">
+                    <button type="button" class="btn btn-primary center-button load-more-button">{{ 'load_more'|trans}}</button>
+                </section>
+            </div>
         </div>
     </div>
 
+    <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMsg }}">
+    <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
+
+    {{ include('trick/modal.html.twig') }}
 {% endblock %}
+
+{% block javascripts %}
+    {# On charge la bibliothèque jQuery depuis le CDN google. #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {{ parent() }}
+    {#{ encore_entry_script_tags('tools') }#}
+
+    {#<script src="{{ asset('./build/tools.js') }}" type="module"></script>#}    
+
+    {# script type="module" #}
+    <script type="text/javascript"> 
+
+        //import { displayMessage } from "{{ asset('./build/tools.js') }}";
+
+        function displayMessage(msgType, message, targetElem) {
+            targetElem.html(message);
+            switch (msgType) {
+                case "success":
+                    targetElem.removeClass('error').addClass('success');
+                    break;
+                case "error":
+                    targetElem.removeClass('success').addClass('error');
+                    break;
+                default:
+            }
+            targetElem.slideDown(400).delay(2000).slideUp(400);
+        };
+
+        $(document).ready(function () {
+
+            $form = $('.leave-comment-form');
+
+            $form.find('.submit-button').on("click", function(e) {
+                e.preventDefault();
+
+                if ($.trim($('#message_content').val()) === "") {
+                    displayMessage(
+                        "error",
+                        "{{ 'message_cant_be_empty'|trans}}",
+                        $('.result-message')
+                    );
+                } else if ($('#message_content').val().length >= 2500) {
+                    displayMessage(
+                        "error",
+                        "{{ 'message_too_long'|trans}}",
+                        $('.result-message')
+                    );
+                } else {
+                    var $this = $(this);
+                    var waitingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'action_running'|trans}}";
+                    if ($(this).html() !== waitingText) {
+                        $this.data('original-text', $(this).html());
+                        $this.html(waitingText);
+                    }
+                    var url = "{{ path('message_new') }}";
+
+                    saveMessage(url);
+                
+                    function saveMessage(url) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $form.serialize()
+                        }).done(function (data) {
+                            let container = $('#messages-list');
+                            container.prepend(data);
+                            displayMessage(
+                                "success",
+                                "{{ 'message_saved'|trans}}",
+                                $('.result-message')
+                            );
+                            $('#message_content').val('')
+                                .prop(
+                                    'placeholder',
+                                    "{{ 'your_comment_here'|trans}}"
+                                );
+                            $this.html($this.data('original-text'));
+                        }).fail(function () {
+                            displayMessage(
+                                "error",
+                                "{{ 'message_creation_failure'|trans}}",
+                                $('.result-message')
+                            );
+                            $this.html($this.data('original-text'));
+                        });
+                    }  
+                }
+            });
+
+            let messagesLoadingLimit = Number($('.numberOfInitialLoadedMessages').val());
+            let loadedMessages = messagesLoadingLimit;
+
+            $('.load-more-button').on("click", function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                var loadingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'loading_more'|trans}}";
+                if ($(this).html() !== loadingText) {
+                    $this.data('original-text', $(this).html());
+                    $this.html(loadingText);
+                }
+                // We add the limit and the offset at the end of the "load_tricks" route
+                var url = "{{ path('load_messages') }}/" + messagesLoadingLimit + "/" + loadedMessages;
+
+                loadMessages(url);
+            
+                function loadMessages(url) {
+                    $.ajax({
+                        type: "GET",
+                        url: url
+                    }).done(function (data) {
+                        let container = $('#messages-list');
+                        container.append(data);
+
+                        let newMessagesNumber = (data.match(/class="comment-div"/g) || []).length;
+                        loadedMessages += newMessagesNumber;
+                        let totalNumberOfMsg = Number($('.messagesTotalNumber').val());
+
+                        if ($('.load-more-button').length == 1 && loadedMessages == totalNumberOfMsg) {
+                            $('.load-more-button').parent().parent().hide();
+                        }
+                        $this.html($this.data('original-text'));
+                    }).fail(function () {
+                        alert('Could not load messages.');
+                        $this.html($this.data('original-text'));
+                    });
+                }
+            });
+
+            /* Modal management */
+
+            let modalContainer = document.querySelector('div.modal-body');
+            let photoElementsArray = document.getElementsByClassName('trick-photo-thumbnail');
+            let videoElementsArray = document.getElementsByClassName('trick-video-thumbnail');
+
+            Array.from(photoElementsArray).forEach(function(elem) {
+                elem.addEventListener("click", function(event) {
+                    var targetElement = event.target || event.srcElement;
+                    modalContainer.innerHTML = '<img src="' + targetElement.getAttribute('src') + '" class="img-responsive modal-image" data-toggle="modal" data-target="#myModal">';
+                });
+            });
+
+            Array.from(videoElementsArray).forEach(function(elem) {
+                elem.addEventListener("click", function(event) {
+                    var targetElement = event.target || event.srcElement;
+                    modalContainer.innerHTML = targetElement.innerHTML;
+                });
+            });
+
+            function centerModal() {
+                $(this).css('display', 'block');
+                var $dialog = $(this).find(".modal-dialog");
+                var offset = ($(window).height() - $dialog.height()) / 2;
+                // Center modal vertically in window
+                $dialog.css("margin-top", offset);
+            }
+            
+            $('.modal').on('show.bs.modal', centerModal);
+            $(window).on("resize", function () {
+                $('.modal:visible').each(centerModal);
+            });
+        });
+    </script>
+{% endblock %}            

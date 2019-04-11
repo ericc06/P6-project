@@ -7,7 +7,10 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{{ 'welcome_homepage'|trans}}{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
     </head>
     <body>
 
@@ -18,18 +21,27 @@
 
                 <div class="container-fluid" id="override-bs-css-navbar">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light xs-fixed-bottom">
-                        <a class="navbar-brand" href="#">Navbar [{{ app.request.getLocale() }}]</a>
+                        <a class="navbar-brand" href="#">Navbar [{{ app.request.getLocale() }}] - [{{ app_env }}]</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-zero">
+                                {% if app.user %}
+                                <li class="nav-item active greetings">
+                                    {{ 'hello'|trans }} {{ app.user.username }}
+                                </li>
+                                {% endif %}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('homepage') }}>{{ 'home'|trans }}
                                         <span class="sr-only">(current)</span></a>
                                 </li>
                                 {% if app.user %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('trick_new') }}>{{ 'add_a_trick'|trans }}
+                                        <span class="sr-only">(current)</span></a>
+                                </li>
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('app_logout') }}>{{ 'logout'|trans }}
                                         <span class="sr-only">(current)</span></a>
@@ -74,14 +86,10 @@
         {% block body %}{% endblock %}
 
         <footer class="container-fluid bg-light">
-                <div class="container wide-container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <p class="medium">Copyright © 2019</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <div class="col-xs-12">
+                <p class="medium">Copyright © 2019</p>
+            </div>
+        </footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html> 

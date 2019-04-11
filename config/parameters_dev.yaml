@@ -1,0 +1,20 @@
+parameters:
+    db_host: 127.0.0.1
+    db_port: null
+    db_name: symfony
+    db_user: root
+    db_password: null
+
+    mail_transport: smtp
+    mail_host: 127.0.0.1
+    mail_user: null
+    mail_password: null
+    secret_param: 62fd2fd775354fe3d9cbb65c770aac7ea687a6cd
+
+    swiftmailer_transport:  gmail
+    swiftmailer_username:   eric.codron@gmail.com
+    swiftmailer_password:   xwwlnqpryuvnvohe
+    swiftmailer_host:       localhost
+    swiftmailer_port:       465
+    swiftmailer_encryption: ssl
+    swiftmailer_auth-mode:  login

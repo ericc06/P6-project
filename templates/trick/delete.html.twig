@@ -1,0 +1,38 @@
+{# templates/trick/delete.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+
+{% set referer = app.request.headers.get('referer')|default('/') %}
+
+{% block title %}
+  Supprimer une figure - {{ trick.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="container full-height-container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="well">
+                    <h2>{{'delete_a_trick'|trans }}</h2>
+                    <p>
+                        {{'confirm_deletion_of_trick'|trans({'%trick_name%': trick.name}) }}
+                    </p>
+
+                    {# On met l'id de la figure dans la route de l'action du formulaire #}
+                    <form action="{{ path('trick_delete', {'id': trick.id}) }}" method="post">
+                        <a href="{{ referer }}" class="btn back-btn">
+                        <i class="fas fa-angle-left"></i>
+                        {{'cancel_deletion'|trans }}
+                        </a>
+                        {# Ici j'ai écrit le bouton de soumission à la main #}
+                        <input type="submit" value="{{'delete_trick'|trans }}" class="btn btn-danger" />
+                        {# Ceci va générer le champ CSRF #}
+                        {{ form_rest(form) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

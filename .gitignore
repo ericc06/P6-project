@@ -1,5 +1,6 @@
 ###> Custom ###
 /public/uploads/
+/config/parameters_dev.yaml
 ###< Custom ###
 
 ###> symfony/framework-bundle ###
@@ -9,14 +10,6 @@
 /vendor/
 /src/Migrations/
 ###< symfony/framework-bundle ###
-
-###> symfony/webpack-encore-pack ###
-/node_modules/
-/public/build/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-pack ###
-
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml

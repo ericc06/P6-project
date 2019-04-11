@@ -1,51 +1,61 @@
 {# templates/user/login.html.twig #}
-
 {% trans_default_domain 'gui' %}
-
 {% extends 'layout.html.twig' %}
 {% block content %}
-    <div class="container">
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
-            </div>
-        {% endif %}
+    <div class="container full-height-container">
         <div class="row">
             <div class="col-sm-5">
-                <div
-                    class="well">
-                    {# On affiche tous les messages flash #}
-                    {% for label, messages in app.session.flashbag.all %}
-                        {% for message in messages %}
-                            <div class="flash-{{ label }}">
-                                {{ message }}
-                            </div>
+                <div class="well">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                    {% endif %}
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY')
+                        and not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {# On affiche tous les messages flash #}
+                        {% for label, messages in app.session.flashbag.all %}
+                            {% for message in messages %}
+                                <div class="flash flash-{{ label }} alert-{{ label }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                    <form action="{{ path('user_login') }}" method="post">
-                        <fieldset>
-                            <legend>
-                                <i class="fa fa-lock" aria-hidden="true"></i>
-                                {{ 'login'|trans }}</legend>
-                            <div class="form-group">
-                                <label for="username">
-                                    {{ 'username'|trans }}</label>
-                                <input type="text" id="username" name="username" value="{{ last_username }}" class="form-control"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">
-                                    {{ 'password'|trans }}</label>
-                                <input class="form-control" id="password" name="password" type="password"/>
-                            </div>
-                            <input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}"/>
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                {{ 'sign_in'|trans }}
-                            </button>
-                        </fieldset>
-                    </form>
-                    <div class="forgotten-pwd-div"><a href="{{ path('user_forgotten_pwd') }}">{{ 'forgot_your_password'|trans }}</a></div>
+                        <form method="post">
+                            <fieldset>
+                                <legend>
+                                    <i aria-hidden="true" class="fa fa-lock"></i>
+                                    {{ 'login'|trans }}</legend>
+                                <div class="form-group">
+                                    <label for="username">
+                                        {{ 'username'|trans }}</label>
+                                    <input type="text" id="username" name="username" value="{{ last_username }}" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">
+                                        {{ 'password'|trans }}</label>
+                                    <input class="form-control" id="password" name="password" type="password" required/>
+                                </div>
+                                <input type="hidden" name="_target_path" value="{{ app.request.get('redirect_to') }}"/>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                                <button class="btn btn-primary" type="submit">
+                                    <i aria-hidden="true" class="fa fa-sign-in"></i>
+                                    {{ 'sign_in'|trans }}
+                                </button>
+                            </fieldset>
+                        </form>
+                        <div class="forgotten-pwd-div">
+                            <a href="{{ path('user_forgotten_pwd') }}">
+                                {{ 'forgot_your_password'|trans }}</a>
+                        </div>
+                        {% else %}
+                        <p class="alert alert-warning text-center">
+                            {{ 'already_logged_in'|trans }}
+                        </p>
+                        <div class="go-back-to-homepage">
+                            <a href="{{ path('homepage') }}">{{ 'go_back_to_homepage'|trans }}</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

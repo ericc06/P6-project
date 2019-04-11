@@ -1,59 +1,96 @@
 {# templates/index.html.twig #}
-
 {% trans_default_domain 'gui' %}
-
 {% extends 'layout.html.twig' %}
-
 {% block content %}
-
     <!-- Home ================================================== -->
-
     <div class="container-fluid">
-        <div id="home" class="row">
+        <div class="row" id="home">
             <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
-            <div id="home-text" class="col-xs-12 text-center">
-                <h1>
-                    <span class="bold" style="opacity: 1; display: inline;">[{{ nom }}] - {{ 'welcome_homepage'|trans}}</span>
-                </h1>
-                    {# On affiche tous les messages flash #}
-                    {% for label, messages in app.session.flashbag.all %}
-                        {% for message in messages %}
-                            <div class="flash-{{ label }}">
-                                    {{ message }}
-                            </div>
-                        {% endfor %}
+                <div class="col-xs-12 text-center" id="home-text">
+                    <h1>
+                        <p class="bold">
+                            {{ 'welcome_homepage'|trans }}
+                        </p>
+                    </h1>
+                </div>
+                {# On affiche tous les messages flash #}
+                {% for label, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                        <div class="flash flash-{{ label }} alert-{{ label }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
+                {% endfor %}
             </div>
-        </div>
-        <div id="arrow-down">
-            <a href="#tricks-anchor">
-                <i class="fa fa-arrow-down" style="font-size:30px"></i>
-            </a>
+            <div id="arrow-down">
+                <a href="#tricks-anchor">
+                    <i class="fa fa-arrow-down" style="font-size:30px"></i>
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="container">
         <a class="anchor" id="tricks-anchor"></a>
         <section class="row" id="tricks-list">
-            {% for i in 0..14 %}
-                <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
-                    <article class="trick-thumbnail">
-                        <!--<a href="trick-{{ i }}.php">-->
-                            <a href="http://localhost/P6-project-flex/public/trick/test">
-                            <!--<img src="images/tricks/trick-{{ i }}-thumb.jpg" alt="bla-bla">-->
-                            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="thumbnail">
-                        </a>
-                        <p>bla-bla</p>
-                    </article>
-                </div>
-            {% endfor %}
+            {% include 'trick/tricksBlock.html.twig' with tricksArray %}
         </section>
     </div>
 
     <div class="container">
         <section class="row">
-            <button type="button" class="btn btn-primary center-button" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loading more">Load more</button>
+            <button type="button" class="btn btn-primary center-button load-more-button">{{ 'load_more'|trans}}</button>
         </section>
     </div>
 
+    <input type="hidden" class="tricksTotalNumber" value="{{ totalNumberOfTricks }}">
+    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfLoadedTricks }}">
+{% endblock %}
+
+{% block javascripts %}
+    {# On charge la bibliothèque jQuery depuis le CDN google. #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let tricksLoadingLimit = Number($('.numberOfInitialLoadedTricks').val());
+            let loadedTricks = tricksLoadingLimit;
+
+            $('.load-more-button').on("click", function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                var loadingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'loading_more'|trans}}";
+                if ($(this).html() !== loadingText) {
+                  $this.data('original-text', $(this).html());
+                  $this.html(loadingText).delay( 2000 );
+                }
+                // We add the limit and the offset at the end of the "load_tricks" route
+                var url = "{{ path('load_tricks') }}/" + tricksLoadingLimit + "/" + loadedTricks;
+                loadTricks(url);
+            
+                function loadTricks(url) {
+                    $.ajax({
+                        type: "GET",
+                        url: url
+                    }).done(function (data) {
+                        let container = $('#tricks-list');
+                        container.append(data);
+
+                        let newTricksNumber = (data.match(/<article /g) || []).length;
+                        loadedTricks += newTricksNumber;
+                        let totalNumberOfTricks = Number($('.tricksTotalNumber').val());
+
+                        if ($('.load-more-button').length == 1 && loadedTricks == totalNumberOfTricks) {
+                            $('.load-more-button').parent().parent().hide();
+                        }
+                        $this.html($this.data('original-text'));
+                    }).fail(function () {
+                        alert('Could not load tricks.');
+                        $this.html($this.data('original-text'));
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}

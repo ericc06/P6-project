@@ -20,6 +20,9 @@
     "doctrine/common": {
         "version": "v2.9.0"
     },
+    "doctrine/data-fixtures": {
+        "version": "v1.3.1"
+    },
     "doctrine/dbal": {
         "version": "v2.8.0"
     },
@@ -34,6 +37,15 @@
     },
     "doctrine/doctrine-cache-bundle": {
         "version": "1.3.3"
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "fc52d86631a6dfd9fdf3381d0b7e3df2069e51b3"
+        }
     },
     "doctrine/doctrine-migrations-bundle": {
         "version": "1.2",
@@ -155,6 +167,9 @@
             "ref": "e3868d2f4a5104f19f844fe551099a00c6562527"
         }
     },
+    "symfony/contracts": {
+        "version": "v1.0.2"
+    },
     "symfony/debug": {
         "version": "v3.4.14"
     },
@@ -169,6 +184,9 @@
     },
     "symfony/event-dispatcher": {
         "version": "v3.4.14"
+    },
+    "symfony/expression-language": {
+        "version": "v3.4.23"
     },
     "symfony/filesystem": {
         "version": "v3.4.14"
@@ -345,15 +363,6 @@
             "branch": "master",
             "version": "1.0",
             "ref": "9aea6366d216792824dc4985fc56617fabdaf82b"
-        }
-    },
-    "symfony/webpack-encore-pack": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "b87dfd249390a7b534caa137450277930901236e"
         }
     },
     "symfony/yaml": {
