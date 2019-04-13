@@ -31,6 +31,7 @@ $(document).ready(function () {
     // La fonction qui ajoute un formulaire MediaType
     function addMedia($container, $mediaType, $fieldsetLabel, $showRemoveButton = true) {
         $(".trick_edit_form_container").find(".well").children().css("display", "block");
+        $(".trick_edit_form_container").find(".well").find(".add_media_buttons_div").css("display", "flex");
         // Dans le contenu de l'attribut « data-prototype », on remplace :
         // - le texte "__name__label__" qu'il contient par le label du champ
         // - le texte "__name__" qu'il contient par le numéro du champ

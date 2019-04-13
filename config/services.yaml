@@ -4,11 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    database_host: "%db_host%"
-    database_port: "%db_port%"
-    database_name: "%db_name%"
-    database_user: "%db_user%"
-    database_password: "%db_password%"
+    #database_host: "%db_host%"
+    #database_port: "%db_port%"
+    #database_name: "%db_name%"
+    #database_user: "%db_user%"
+    #database_password: "%db_password%"
     mailer_transport: "%mail_transport%"
     mailer_host: "%mail_host%"
     mailer_user: "%mail_user%"
@@ -17,7 +17,7 @@ parameters:
     locale: 'en'
     images_directory: '%kernel.project_dir%/public/uploads/images'
     homepage_tricks_load_limit : 5
-    trick_page_messages_load_limit : 3
+    trick_page_messages_load_limit : 10
 
 services:
     # default configuration for services in *this* file
@@ -66,3 +66,4 @@ services:
 
 imports:
     - { resource: './parameters_dev.yaml', ignore_errors: true }
+    - { resource: './parameters.yaml', ignore_errors: true }

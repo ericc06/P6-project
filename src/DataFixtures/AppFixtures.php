@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
         $manager->persist($user);
         $manager->flush();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $message = new Message();
 
             $message->setContent("Ceci est le " . strval($i + 1) . "° message du forum.");
