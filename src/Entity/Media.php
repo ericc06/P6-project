@@ -19,6 +19,9 @@ class Media
      */
     private $id;
 
+    // Image media: the "fileURL" only contains the image file extension.
+    // Video media: the "fileURL" contains the external video URL
+    // (ex: a Youtube video URL).
     /**
      * @ORM\Column(type="string", length=500, nullable=false)
      * @Assert\Expression(
@@ -59,10 +62,12 @@ class Media
      */
     private $defaultCover = 0;
 
+    // Image media: this property is used for image file upload.
+    // Video media: this property is not used.
     /**
      * @Assert\Expression(
      *     "not (this.getFileType() == 0 and this.getFile() === null)",
-     *     message="media.file.not_blank",
+     *     message="file.not_blank",
      *     groups={"media_creation"}
      * )
      * @Assert\File(
@@ -72,8 +77,8 @@ class Media
      *          "image/jpeg",
      *          "image/jpg"
      *          },
-     *     mimeTypesMessage = "media.file.invalid_image_file",
-     *     maxSizeMessage = "media.file.too_large",
+     *     mimeTypesMessage = "file.invalid_image_file",
+     *     maxSizeMessage = "file.too_large",
      *     groups={"media_creation"}
      * )
      * @Assert\Image(
@@ -81,10 +86,10 @@ class Media
      *     maxWidth = 1920,
      *     minHeight = 1080,
      *     maxHeight = 1080,
-     *     minWidthMessage = "media.file.required_dimensions",
-     *     maxWidthMessage = "media.file.required_dimensions",
-     *     minHeightMessage = "media.file.required_dimensions",
-     *     maxHeightMessage = "media.file.required_dimensions",
+     *     minWidthMessage = "file.required_dimensions",
+     *     maxWidthMessage = "file.required_dimensions",
+     *     minHeightMessage = "file.required_dimensions",
+     *     maxHeightMessage = "file.required_dimensions",
      *     groups={"media_creation"}
      * )
      */
@@ -300,7 +305,7 @@ class Media
     public function getUploadDir()
     {
         // On retourne le chemin relatif vers l'image pour un navigateur
-        return 'uploads/images';
+        return 'uploads/images/tricks';
     }
 
     protected function getUploadRootDir()

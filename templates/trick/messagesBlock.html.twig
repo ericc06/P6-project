@@ -1,6 +1,32 @@
 {% for message in messagesArray %}
+
+    {% if message.user.firstName is empty and message.user.lastName is empty %}
+        {% set displayedName = message.user.username %}
+    {% else %}
+        {% set displayedName = message.user.firstName
+            ~ " " ~ message.user.lastName %}
+    {% endif %}
+
+    {% if message.user.fileExtension is null %}
+        {% set displayedImage =
+            asset('./build/images/users/default_avatar.jpg')
+        %}
+    {% else %}
+        {% set displayedImage =
+            asset('./uploads/images/users/')
+            ~ message.user.id ~ '.' ~ message.user.fileExtension
+        %}
+    {% endif %}
+
     <div class="comment-div">
-        <img src="{{ asset('./build/images/Eric.jpg') }}" alt="comment-avatar" class="comment-avatar"/>
-        <div class="comment-text">{{ message.content|nl2br }}</div>
+        <img src="{{ displayedImage }}" alt="comment-avatar" class="comment-avatar"/>
+        <div class="comment-text">
+            <p class="message-header">
+                    {{ displayedName }} - {{ message.date|date("d/m/Y H:i:s") }}
+            </p>
+            <p>
+                {{ message.content|nl2br }}
+            </p>
+        </div>
     </div>
 {% endfor %}

@@ -17,8 +17,8 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'username',
-                'translation_domain' => 'gui',
+                //'disabled'   => true,
+                'label' => 'username'
             ])
             ->add(
                 'firstName',
@@ -26,6 +26,7 @@ class UserType extends AbstractType
                 [
                     'required' => false,
                     'empty_data' => "",
+                    'label' => 'firstname'
                 ]
             )
             ->add(
@@ -34,20 +35,18 @@ class UserType extends AbstractType
                 [
                     'required' => false,
                     'empty_data' => "",
+                    'label' => 'lastname'
                 ]
             )
             ->add('email', EmailType::class, [
-                'label' => 'email_address',
-                'translation_domain' => 'gui',
+                'label' => 'email_address'
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'password',
-                'translation_domain' => 'gui',
+                'label' => 'password'
             ])
             ->add('avatar', FileType::class, [
                 'label' => 'profile_avatar',
-                'translation_domain' => 'gui',
-                'required' => false,
+                'required' => false
             ])
         ;
     }
@@ -56,6 +55,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'translation_domain' => 'gui'
         ]);
     }
 }

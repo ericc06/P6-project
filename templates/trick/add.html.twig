@@ -7,37 +7,43 @@
     <div class="container full-height-container">
         <div class="row">
             <div class="col-sm-5">
-                <div
-                    class="well">
-                    {# On affiche tous les messages flash #}
-                    {% for label, messages in app.session.flashbag.all %}
-                        {% for message in messages %}
-                            <div class="flash flash-{{ label }} alert-{{ label }}">
-                                {{ message|raw }}
-                            </div>
+                <div class="well">
+                    {% if app.user %}
+                        {# On affiche tous les messages flash #}
+                        {% for label, messages in app.session.flashbag.all %}
+                            {% for message in messages %}
+                                <div class="flash flash-{{ label }} alert-{{ label }}">
+                                    {{ message|raw }}
+                                </div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                    {{ form_start(form, {'attr': {'class': 'trick_form trick_new_form'}}) }}
-                    <legend>
-                        <i class="fab fa-diaspora" aria-hidden="true"></i>
-                        {{'create_a_trick'|trans }}
-                    </legend>
-                    {#<div class="my-custom-class-for-errors">
-                        {{ form_errors(form) }}
-                    </div>#}
-                    {# form_widget(form) #}
-                    {{ form_row(form.name) }}
-                    {{ form_row(form.description) }}
-                    {{ form_row(form.trickGroup) }}
-                    {{ form_row(form.medias) }}
-                    {{ form_errors(form.medias) }}
-                    <div class="add_media_buttons_div">
-                        <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
-                        <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
-                    </div>
-                    {{ form_row(form._token) }}
-                    <input class="btn btn-primary" type="submit" value="{{'create_trick'|trans }}"/>
-                    {{ form_end(form, {'render_rest': false}) }}
+                        {{ form_start(form, {'attr': {'class': 'trick_form trick_new_form'}}) }}
+                        <legend>
+                            <i class="fab fa-diaspora" aria-hidden="true"></i>
+                            {{'create_a_trick'|trans }}
+                        </legend>
+                        {#<div class="my-custom-class-for-errors">
+                            {{ form_errors(form) }}
+                        </div>#}
+                        {# form_widget(form) #}
+                        {{ form_row(form.name) }}
+                        {{ form_row(form.description) }}
+                        {{ form_row(form.trickGroup) }}
+                        {{ form_row(form.medias) }}
+                        {{ form_errors(form.medias) }}
+                        <div class="add_media_buttons_div">
+                            <input class="btn btn-primary outline" type="button" id="add_image"
+                                value="{{'add_an_image'|trans }}"/>
+                            <input class="btn btn-primary outline" type="button" id="add_video"
+                                value="{{'add_a_video'|trans }}"/>
+                        </div>
+                        {{ form_row(form._token) }}
+                        <input class="btn btn-primary" type="submit"
+                            value="{{'create_trick'|trans }}"/>
+                        {{ form_end(form, {'render_rest': false}) }}
+                    {% else %} 
+                        {{'log_in_to_access_this_page'|trans }}
+                    {% endif %} 
                 </div>
             </div>
         </div>
