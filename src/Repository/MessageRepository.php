@@ -46,6 +46,24 @@ class MessageRepository extends ServiceEntityRepository
             $limit,
             $offset
         );
+
+        /*$qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.user', 'u')
+            ->addSelect('m.date')
+            ->addSelect('m.content')
+            ->addSelect('u.id as userId')
+            ->addSelect('u.username')
+            ->addSelect('u.firstName')
+            ->addSelect('u.lastName')
+            ->addSelect('u.fileExtension')
+            ->orderBy('m.date', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+        */
     }
 
     // /**

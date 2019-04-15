@@ -36,6 +36,7 @@ class AppFixtures extends Fixture
         $user->setUsername('eric');
         $user->setEmail('eric.codron@gmail.com');
         $user->setPassword('$2y$13$/W5ATAIIrJTUU9GoSPAQG.emjMEYEDQlL9T811y.KyMWsLWmhMjW2');
+        $user->setRoles(array('ROLE_USER'));
         $user->setIsActiveAccount(true);
 
         $manager->persist($user);
@@ -120,11 +121,11 @@ class AppFixtures extends Fixture
                 'slug' => 'front-flip',
                 'description' => "Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.
 
-                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.
+Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.
 
-                Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip, ...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
+Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip, ...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
 
-                Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
+Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Flip'),
             ],
@@ -133,7 +134,7 @@ class AppFixtures extends Fixture
                 'slug' => 'backflip',
                 'description' => "Un flip est une rotation verticale. Les backflips sont des rotations en arrière.
 
-                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.",
+Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Flip'),
             ],
@@ -142,7 +143,7 @@ class AppFixtures extends Fixture
                 'slug' => 'nose-slide',
                 'description' => "Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.
 
-                On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en nose slide, c'est-à-dire l'avant de la planche sur la barre.",
+On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en nose slide, c'est-à-dire l'avant de la planche sur la barre.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Slide'),
             ],
@@ -151,7 +152,7 @@ class AppFixtures extends Fixture
                 'slug' => 'tail-slide',
                 'description' => "Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.
 
-                On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en tail slide, l'arrière de la planche sur la barre.",
+On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en tail slide, l'arrière de la planche sur la barre.",
                 'creationDate' => new \Datetime(),
                 'trickGroup' => $manager->getRepository(TrickGroup::class)->findByName('Slide'),
             ],
@@ -618,7 +619,7 @@ class AppFixtures extends Fixture
                 $manager->persist($media);
             }
 
-            // And we also create the related images, based on the trick's slug.
+            // And we also create the related images, based on the trick's slug
             $imagesArray = $imagesDetailsArray[$trick->getSlug()];
 
             foreach ($imagesArray as $image) {
@@ -635,14 +636,18 @@ class AppFixtures extends Fixture
 
                 // Now we make a copy of the image and will upload this copy
                 // which will be automatically deleted during the process.
-                // The name of an image is the id of the media, plus the extension stored in the fileUrl attribute.
+                // The name of an image is the id of the media, plus the
+                // extension stored in the fileUrl attribute.
 
                 $fileName = $image['file_name'] . '.' . $media->getFileUrl();
                 $fileCopyName = $image['file_name'] . '-copy.' . $media->getFileUrl();
 
-                copy($media->getFixturesPath() . $trick->getSlug() . '/' . $fileName, $media->getFixturesPath() . $trick->getSlug() . '/' . $fileCopyName);
+                copy($media->getFixturesPath() . $trick->getSlug() . '/'
+                    . $fileName, $media->getFixturesPath()
+                    . $trick->getSlug() . '/' . $fileCopyName);
 
-                $file = new UploadedFile($media->getFixturesPath() . $trick->getSlug() . '/' . $fileCopyName, 'Image1', null, null, null, true);
+                $file = new UploadedFile($media->getFixturesPath() . $trick->getSlug()
+                    . '/' . $fileCopyName, 'Image1', null, null, null, true);
 
                 $media->setFile($file);
                 $manager->persist($media);

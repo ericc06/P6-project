@@ -6,8 +6,8 @@
 {% block content %}
     <!-- Edition page ================================================== -->
     {% if app.user %}
-        <div
-            class="page-bg container-fluid" style="background-image: url({{ asset('./uploads/images/' ~ cover_image) }})">
+        <div class="page-bg container-fluid"
+            style="background-image: url({{ asset('./uploads/images/tricks/' ~ cover_image) }})">
         </div>
         <div class="container main">
             {# On affiche tous les messages flash #}
@@ -24,7 +24,7 @@
             </div>
             <div class="container header-img-div">
                 <div class="trick-header row">
-                    <img src="{{ asset('./uploads/images/' ~ cover_image) }}">
+                    <img src="{{ asset('./uploads/images/tricks/' ~ cover_image) }}">
                     <div class="col-xs-12 text-center trick-title">
                         <h1>
                             <span class="bold" style="opacity: 1; display: inline;">
@@ -35,14 +35,20 @@
                 <div class="admin-icons">
                     <span class='cover-image-admin-title'>{{'cover_image'|trans }}</span>
                     <a class="js-update-cover">
-                        <i class="fas fa-pen edit-icon" aria-hidden="true" title="{{'change_cover_image'|trans }}"></i></a>
-                    <a href={{ url("unset_cover", {"id": trick.id} ) }} class="js-unset-cover" data-token="{{ csrf_token('unset_cover_tk') }}">
-                        <i class="fas fa-trash-alt delete-icon" aria-hidden="true" title="{{'unset_cover_image'|trans }}"></i></a>
+                        <i class="fas fa-pen edit-icon" aria-hidden="true"
+                            title="{{'change_cover_image'|trans }}"></i></a>
+                    <a href={{ url("unset_cover", {"id": trick.id} ) }} class="js-unset-cover"
+                        data-token="{{ csrf_token('unset_cover_tk') }}">
+                        <i class="fas fa-trash-alt delete-icon" aria-hidden="true"
+                            title="{{'unset_cover_image'|trans }}"></i>
+                    </a>
                 </div>
             </div>
             <div class="container d-md-none see-medias-btn-div">
                 <section class="row">
-                    <button class="btn btn-primary center-button see-medias-btn" type="button">See medias</button>
+                    <button class="btn btn-primary center-button see-medias-btn" type="button">
+                        See medias
+                    </button>
                 </section>
             </div>
             <div class="container trick-detail-container-div">
@@ -52,14 +58,19 @@
                     {% set thumbnailCount = 0 %}
                     {% for media in trick.medias %}
                         {% if media.fileType == 0 %}
-                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div" thumb-num="{{ thumbnailCount }}">
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-photo-thumbnail-div"
+                            thumb-num="{{ thumbnailCount }}">
                             <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
-                                <img src="{{ asset('./uploads/images/' ~ media.id ~ '.' ~ media.fileUrl) }}" alt="{{ media.alt }}"></a>
+                                <img src="{{ asset('./uploads/images/tricks/' ~ media.id ~ '.' ~ media.fileUrl) }}"
+                                    alt="{{ media.alt }}"></a>
                             </article>
                             <div class="media-admin-icons">
                                 <div class='ajax-radio-div'></div>
-                                <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_image'|trans }}"></i>
-                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
+                                <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}"
+                                    title="{{'edit_this_image'|trans }}"></i>
+                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}"
+                                    class="js-delete-media" id="{{ media.id }}"
+                                        data-token="{{ csrf_token('delete_media_tk') }}">
                                     <i class="fas fa-trash-alt delete-icon" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -69,13 +80,18 @@
                         </div>
                         {% else %}
                         <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-video-thumbnail-div">
-                            <article class="trick-video-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
+                            <article class="trick-video-thumbnail" data-toggle="modal"
+                                data-target="#myModal" media-id="{{ media.id }}">
                                 {{ media.fileUrl | raw }}
                             </article>
                             <div class="media-admin-icons">
-                                <i class="fas fa-pen edit-icon" aria-hidden="true" media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
-                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}" class="js-delete-media" id="{{ media.id }}" data-token="{{ csrf_token('delete_media_tk') }}">
-                                    <i class="fas fa-trash-alt delete-icon" aria-hidden="true" title="{{'delete_this_video'|trans }}"></i>
+                                <i class="fas fa-pen edit-icon" aria-hidden="true"
+                                    media-id="{{ media.id }}" title="{{'edit_this_video'|trans }}"></i>
+                                <a href="{{ path('media_delete', {'id': trick.id, 'mediaId': media.id}) }}"
+                                    class="js-delete-media" id="{{ media.id }}"
+                                    data-token="{{ csrf_token('delete_media_tk') }}">
+                                    <i class="fas fa-trash-alt delete-icon" aria-hidden="true"
+                                        title="{{'delete_this_video'|trans }}"></i>
                                 </a>
                             </div>
                         </div>
@@ -95,8 +111,10 @@
                             {{ form_row(form.medias) }}
                             {{ form_errors(form.medias) }}
                             <div class="add_media_buttons_div">
-                                <input class="btn btn-primary outline" type="button" id="add_image" value="{{'add_an_image'|trans }}"/>
-                                <input class="btn btn-primary outline" type="button" id="add_video" value="{{'add_a_video'|trans }}"/>
+                                <input class="btn btn-primary outline" type="button" id="add_image"
+                                    value="{{'add_an_image'|trans }}"/>
+                                <input class="btn btn-primary outline" type="button" id="add_video"
+                                    value="{{'add_a_video'|trans }}"/>
                             </div>
                             {{ form_row(form.name) }}
                             {{ form_row(form.description) }}
@@ -112,8 +130,17 @@
         </div>
 
         {{ include('trick/modal.html.twig') }}   
-    {% else %} 
-        {{'log_in_to_edit_trick'|trans }}
+
+    {% else %}
+        <div class="container full-height-container">
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="well">
+                        {{'log_in_to_edit_trick'|trans }}
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}  
 {% endblock %}
 
@@ -193,9 +220,6 @@
                 let thumbnailElem = $(this)
                     .parentsUntil('.trick-photo-thumbnail-div, .trick-video-thumbnail-div')
                     .parent().find('article').children().clone();
-                //alert(thumbnailElem);
-                // DEBUG
-                //$('.trick-title').find('span').html($("div[id='trick_medias']").find("fieldset.form-group:visible").length);
 
                 // If a fieldset is visible, we hide it, and then show
                 // the clicked media fieldset...
@@ -354,42 +378,51 @@
                 alert(el.attr("title"));
                 el.css("opacity", 0.4).css("cursor", "default");
                 */
-                if(confirm("{{'confirm_delete_media'|trans }}")) {
-                    var url = $(this).attr("href");
-                    var token = $(this).data("token");
 
-                    $.post(url, {token: token}
-                    ).done(function (data) {
-                        var id = JSON.parse(data).id;
-                        // We remove from the form the fieldset related to the deleted media.
-                        let targetFielset = $("input[id$='_id'][value='" + id + "']")
-                            .parents("fieldset.form-group");
-                        targetFielset.remove();
-                        // We hide the deleted image div with an collapse animation.
-                        $( "article[media-id=" + id + "]" ).parent().animate({
-                                opacity: 0.25,
-                                width: 0
-                            }, 500, function() {
-                            // Animation complete.
-                            $( "article[media-id=" + id + "]" ).parent().remove();
+                // It seems that Javascript keeps track of previous classes given
+                // to elements on page load. So, dynamically removing the
+                // 'js-delete-media' class and replacing it with 'do-nothing'
+                // is not sufficient. We need to check the class once more.
+                if($(this).hasClass("js-delete-media")) {
+                    if(confirm("{{'confirm_delete_media'|trans }}")) {
+                        var url = $(this).attr("href");
+                        var token = $(this).data("token");
+
+                        $.post(url, {token: token}
+                        ).done(function (data) {
+                            var id = JSON.parse(data).id;
+                            // We remove from the form the fieldset related to the deleted media.
+                            let targetFielset = $("input[id$='_id'][value='" + id + "']")
+                                .parent("fieldset.form-group");
+                            targetFielset.remove();
+                            // We hide the deleted image div with an collapse animation.
+                            $( "article[media-id=" + id + "]" ).parent().animate({
+                                    opacity: 0.25,
+                                    width: 0
+                                }, 500, function() {
+                                // Animation complete.
+                                $( "article[media-id=" + id + "]" ).parent().remove();
+                                checkImageNumber();
+                            });
+
+                            // On success, the unsetCover method returns the id and image
+                            // file extension of the default cover image (the one with the
+                            // lowest id in the database).
+                            var coverFilename = JSON.parse(data).coverFile;
+                            let previousCoverFile = $('.trick-header').find('img').attr('src');
+                            let imgPath = previousCoverFile.substring(
+                                0,
+                                previousCoverFile.lastIndexOf('/')
+                            );
+                            let newCoverFile = imgPath + "/" + coverFilename;
+                            $('.trick-header').find('img').attr('src', newCoverFile);
+                        }).fail(function () {
+                            alert("Could not be deleted.");
                         });
-
-                        // On success, the unsetCover method returns the id and image
-                        // file extension of the default cover image (the one with the
-                        // lowest id in the database).
-                        var coverFilename = JSON.parse(data).coverFile;
-                        let previousCoverFile = $('.trick-header').find('img').attr('src');
-                        let imgPath = previousCoverFile.substring(
-                            0,
-                            previousCoverFile.lastIndexOf('/')
-                        );
-                        let newCoverFile = imgPath + "/" + coverFilename;
-                        $('.trick-header').find('img').attr('src', newCoverFile);
-
-                        checkImageNumber();
-                    }).fail(function () {
-                        alert("Could not be deleted.");
-                    });
+                    }
+                }
+                else {
+                    alert("{{'image_deletion_impossible_need_one_for_cover'|trans }}");
                 }
 
                 //el.css("opacity", 1).css("cursor", "pointer");
@@ -397,6 +430,7 @@
 
             $(".do-nothing").on("click", function (e) {
                 e.preventDefault();
+                alert("{{'image_deletion_impossible_need_one_for_cover'|trans }}");
             });
 
             // We memorize the original name of each "ajax" radio button and we store it

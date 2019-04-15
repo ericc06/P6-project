@@ -15,7 +15,9 @@ parameters:
     mailer_password: "%mail_password%"
     secret: "%secret_param%"
     locale: 'en'
-    images_directory: '%kernel.project_dir%/public/uploads/images'
+    fixtures_img_directory: '%kernel.project_dir%/src/DataFixtures/images'
+    tricks_img_directory: '%kernel.project_dir%/public/uploads/images/tricks'
+    avatars_directory: '%kernel.project_dir%/public/uploads/images/users'
     homepage_tricks_load_limit : 5
     trick_page_messages_load_limit : 10
 
