@@ -21,7 +21,8 @@
 
                 <div class="container-fluid" id="override-bs-css-navbar">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light xs-fixed-bottom">
-                        <a class="navbar-brand" href="#">Navbar
+                        <a class="navbar-brand" href="{{ path('homepage') }}">
+                            <img src="{{ asset('./build/images/logo.png') }}" class="logo" alt="logo" />
                             {% if app.environment == "dev" %}
                                 [{{ app.request.getLocale() }}] - [{{ app_env }}]
                             {% endif %}
