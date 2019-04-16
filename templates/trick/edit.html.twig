@@ -24,7 +24,7 @@
             </div>
             <div class="container header-img-div">
                 <div class="trick-header row">
-                    <img src="{{ asset('./uploads/images/tricks/' ~ cover_image) }}">
+                    <img src="{{ asset('./uploads/images/tricks/' ~ cover_image) }}" />
                     <div class="col-xs-12 text-center trick-title">
                         <h1>
                             <span class="bold" style="opacity: 1; display: inline;">
@@ -62,7 +62,7 @@
                             thumb-num="{{ thumbnailCount }}">
                             <article class="trick-photo-thumbnail" data-toggle="modal" data-target="#myModal" media-id="{{ media.id }}">
                                 <img src="{{ asset('./uploads/images/tricks/' ~ media.id ~ '.' ~ media.fileUrl) }}"
-                                    alt="{{ media.alt }}"></a>
+                                    alt="{{ media.alt }}" /></a>
                             </article>
                             <div class="media-admin-icons">
                                 <div class='ajax-radio-div'></div>
