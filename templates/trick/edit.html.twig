@@ -51,9 +51,11 @@
                     </button>
                 </section>
             </div>
-            <div class="container trick-detail-container-div">
+            <div class="container xs-hidden d-md-block trick-detail-container-div">
                 <a class="anchor" id="tricks-anchor"></a>
-                <span class='choose-cover-title'>{{ 'choose_a_cover_image'|trans }}</span>
+                <div class="col-xs-12 col-sm-9 col-lg-6 auto-center">
+                    <span class='choose-cover-title'>{{ 'choose_a_cover_image'|trans }}</span>
+                </div>
                 <section class="row" id="trick-detail-list">
                     {% set thumbnailCount = 0 %}
                     {% for media in trick.medias %}
@@ -104,9 +106,9 @@
             <div class="my-custom-class-for-errors">
                 {{ form_errors(form) }}
             </div>
-            <div class="container trick_edit_form_container">
+            <div class="container trick-info-edit-container trick_edit_form_container">
                 <div class="row">
-                    <div class="col-sm-5">
+                    <div class="col-xs-12 col-sm-9 col-lg-6">
                         <div class="well">
                             {{ form_row(form.medias) }}
                             {{ form_errors(form.medias) }}
@@ -129,12 +131,10 @@
             {{ form_end(form, {'render_rest': false}) }}
         </div>
 
-        {{ include('trick/modal.html.twig') }}   
-
     {% else %}
         <div class="container full-height-container">
             <div class="row">
-                <div class="col-sm-5">
+                <div class="col-xs-12 col-sm-9 col-lg-6">
                     <div class="well">
                         {{'log_in_to_edit_trick'|trans }}
                     </div>
@@ -145,11 +145,12 @@
 {% endblock %}
 
 {% block javascripts %}
-    {# On charge la bibliothèque jQuery depuis le CDN google. #}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     {{ parent() }}
     {{ encore_entry_script_tags('trick') }}
+
+    {{ include('trick/modal.html.twig') }}   
 
     {#<script src="{{ asset('./build/tools.js') }}"></script>#}
 
@@ -171,10 +172,11 @@
 
         function showMediaFieldset(mediaId, thumbnailElem) {
             // ... we remove the "required" attribute to all form elements...
-            $("div[id='trick_medias']")
+            /*$("div[id='trick_medias']")
                 .find("fieldset.form-group")
                 .find("*").removeAttr("required");
-
+            */
+           
             // ... and we show the fieldset related to the chosen media.
             // But before, we add at the top of the fieldset the thumbnail
             // of the media if it's not already present. 
@@ -185,8 +187,11 @@
                     thumbnailElem.addClass("fieldset-thumbnail")
                 );
             }
-            targetFielset.slideDown(300).children()
+            /*targetFielset.slideDown(300).children()
                 .not("legend, .btn-danger").show(300);
+            */
+            targetFielset.find("legend").detach()   ;
+            targetFielset.slideDown(300).children().show(300);
 
             // We set the "required" attribute to all required elements
             if (targetFielset.find("input[id$='_fileType'][value='0']").length) {
@@ -221,14 +226,27 @@
                     .parentsUntil('.trick-photo-thumbnail-div, .trick-video-thumbnail-div')
                     .parent().find('article').children().clone();
 
-                // If a fieldset is visible, we hide it, and then show
-                // the clicked media fieldset...
+                // If a fieldset starting with an image is visible (it's a existing image
+                // edition fieldset), we hide it, and then show the clicked media fieldset...
                 var mediaId = $(this).attr("media-id");
                 if($("div[id='trick_medias']")
-                    .find("fieldset.form-group:visible").length
+                    .find("fieldset.form-group > img:visible").length
                 ) {
                     $("div[id='trick_medias']")
-                        .find("fieldset.form-group:visible")
+                        .find("fieldset.form-group > img:visible").parent()
+                        .slideUp(
+                            300, // Waiting for the slideUp to end.
+                            function() {
+                                showMediaFieldset(mediaId, thumbnailElem);
+                            }
+                        );
+                // If a fieldset starting with an iframe is visible (it's a existing video
+                // edition fieldset), we hide it, and then show the clicked media fieldset...
+                } else if($("div[id='trick_medias']")
+                    .find("fieldset.form-group > iframe:visible").length
+                ) {
+                    $("div[id='trick_medias']")
+                        .find("fieldset.form-group > iframe:visible").parent()
                         .slideUp(
                             300, // Waiting for the slideUp to end.
                             function() {
@@ -241,7 +259,7 @@
                 }
 
                 $('html, body').animate({
-                    scrollTop: $("#trick_medias").offset().top
+                    scrollTop: $("#trick_medias").offset().top - 70
                 }, 600);
             });
 
@@ -271,7 +289,7 @@
                 evt.preventDefault();
                 //$(this).find('i').addClass('inactive');
                 $('html, body').animate({
-                    scrollTop: $(".trick-title").find("span").offset().top
+                    scrollTop: $(".trick-title").find("span").offset().top - 70
                 }, 600);
                 $('.choose-cover-title').slideDown(300);
                 var trickId = $('#trick-id').val();
@@ -431,6 +449,11 @@
             $(".do-nothing").on("click", function (e) {
                 e.preventDefault();
                 alert("{{'image_deletion_impossible_need_one_for_cover'|trans }}");
+            });
+
+            $(".see-medias-btn").on("click", function() {
+                $(".container.xs-hidden.d-md-block").slideDown(400);
+                $(this).parent().parent().detach();
             });
 
             // We memorize the original name of each "ajax" radio button and we store it

@@ -3,13 +3,12 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('./build/app.css') }}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
     <!--<h1>Snowtricks web site</h1>-->
-
+    {{ parent() }}
     {% block content %}{% endblock %}
 {% endblock %}
 

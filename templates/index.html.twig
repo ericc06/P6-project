@@ -22,10 +22,8 @@
                     {% endfor %}
                 {% endfor %}
             </div>
-            <div id="arrow-down">
-                <a href="#tricks-anchor">
-                    <i class="fa fa-arrow-down" style="font-size:30px"></i>
-                </a>
+            <div class="arrow-div" id="arrow-down">
+                <i class="fa fa-arrow-down"></i>
             </div>
         </div>
     </div>
@@ -43,13 +41,17 @@
         </section>
     </div>
 
+    <div class="arrow-div" id="arrow-up">
+        <i class="fa fa-arrow-up"></i>
+    </div>
+
     <input type="hidden" class="tricksTotalNumber" value="{{ totalNumberOfTricks }}">
     <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfLoadedTricks }}">
 {% endblock %}
 
 {% block javascripts %}
-    {# On charge la bibliothèque jQuery depuis le CDN google. #}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {{ parent() }}
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -91,6 +93,19 @@
                     });
                 }
             });
+
+            $(".fa-arrow-down").on("click", function(){
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#tricks-list").offset().top - 10
+                }, 500);
+            });
+
+            $(".fa-arrow-up").on("click", function(){
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(document.body).offset().top
+                }, 500);
+            });
+
         });
     </script>
 {% endblock %}
