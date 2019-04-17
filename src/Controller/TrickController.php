@@ -46,18 +46,23 @@ class TrickController extends Controller
     {
         $env = getenv('APP_ENV');
 
+        $numberOfInitialTricks = $this->container
+            ->getParameter('homepage_tricks_initial_number');
+
         $tricksArray = $this->trickManager
-            ->getTricksForIndexPage($this->homeTricksLoadLimit, 0);
+            ->getTricksForIndexPage($numberOfInitialTricks, 0);
 
         $totalNumberOfTricks = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->getTricksNumber();
 
+
         return $this->render('index.html.twig', [
             'env_name' => $env,
             'tricksArray' => $tricksArray,
             'totalNumberOfTricks' => $totalNumberOfTricks,
-            'numberOfLoadedTricks' => $this->homeTricksLoadLimit
+            'numberOfInitialLoadedTricks' => $numberOfInitialTricks,
+            'tricksLoadMoreLimit' => $this->homeTricksLoadLimit
         ]);
     }
 
@@ -318,6 +323,33 @@ class TrickController extends Controller
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route(
+     *      "/tricks/{id}/ajax-delete",
+     *      name="trick_delete_ajax",
+     *      requirements={"id":"\d+"},
+     *      methods={"GET","POST","DELETE"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function deleteTrickAjax(Trick $trick, Request $request)
+    {
+        if ($request->isMethod('POST')
+            && ($this->isCsrfTokenValid(
+                'delete_trick_tk',
+                $request->request->get('token')
+            ))
+        ) {
+            $trickId = $trick->getId();
+            $this->trickManager->deleteTrickFromDB($trick);
+
+            // Returns deleted trick id.
+            return new Response('{"id":' . $trickId . '}');
+        }
+
+        return new JsonResponse(['message' => 'Error'], 400);
     }
 
     /**

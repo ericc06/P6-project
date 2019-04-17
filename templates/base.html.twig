@@ -67,25 +67,6 @@
                                     </a>
                                 </li>
                                 {% endif %}
-                                {#
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#">Disabled</a>
-                                </li>
-                                #}
                             </ul>
                         </div>
                     </nav>
@@ -111,60 +92,48 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-zero">
-                                {% if app.user %}
+                                {#% if app.user %}
                                 <li class="nav-item active greetings">
-                                        <a class="nav-link" href={{ path('user_edit', {'id': app.user.id}) }}>
-                                            {{ 'hello'|trans }} {{ app.user.username }}
-                                        </a>
+                                    {{ 'hello'|trans }} {{ app.user.username }}
                                 </li>
-                                {% endif %}
+                                {% endif %#}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('homepage') }}>{{ 'home'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% if app.user %}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('trick_new') }}>{{ 'add_a_trick'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item active">
+                                        <a class="nav-link" href={{ path('user_edit', {'id': app.user.id}) }}>
+                                            {{ 'my_account'|trans }}
+                                        </a>
                                 </li>
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('app_logout') }}>{{ 'logout'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% else %}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('user_registration') }}>{{ 'register'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('user_login') }}>{{ 'login_menu'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% endif %}
-                                {#
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#">Disabled</a>
-                                </li>
-                                #}
                             </ul>
                         </div>
                     </nav>
                 </div>
-
             </header>
         </div>
 

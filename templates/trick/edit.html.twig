@@ -44,10 +44,10 @@
                     </a>
                 </div>
             </div>
-            <div class="container d-md-none see-medias-btn-div">
+            <div class="container d-sm-none see-medias-btn-div">
                 <section class="row">
                     <button class="btn btn-primary center-button see-medias-btn" type="button">
-                        See medias
+                        {{'see_medias'|trans }}
                     </button>
                 </section>
             </div>
@@ -123,7 +123,12 @@
                             {{ form_row(form.trickGroup) }}
                             {{ form_row(form._token) }}
                             <input type="hidden" id="trick-id" value="{{trick.id}}">
-                            <input class="btn btn-primary" type="submit" value="{{'update_trick'|trans }}"/>
+                            <div class="edit_form_buttons_div">
+                                <input class="btn btn-primary" type="submit" value="{{'update_trick'|trans }}"/>
+                                <a href={{ url("trick_delete", {"id": trick.id, "slug": trick.slug} ) }}>
+                                    <input type="button" value="{{'delete_trick'|trans }}" class="btn btn-danger" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,7 +181,7 @@
                 .find("fieldset.form-group")
                 .find("*").removeAttr("required");
             */
-           
+
             // ... and we show the fieldset related to the chosen media.
             // But before, we add at the top of the fieldset the thumbnail
             // of the media if it's not already present. 

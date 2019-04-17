@@ -105,7 +105,7 @@ body {
     }
 }
 
-.navbar.d-sm-flex li:not(:first-of-type):not(:last-of-type) {
+.navbar.d-sm-flex li:not(.greetings):not(:last-of-type) {
     border-right: 1px solid #bbb;
 }
 
@@ -132,6 +132,7 @@ body {
 
 .greetings {
   padding-right: 45px;
+  padding-top: 0.2rem;
 }
 
 #home {
@@ -218,7 +219,7 @@ body {
   }
 }
 
-.forgotten-pwd-div {
+.forgotten-pwd-div, .already-an-account-div {
   margin-top: -30px;
   text-align: right;
 }
@@ -242,6 +243,7 @@ body {
 
 #arrow-up {
     position: relative;
+    display: none;
     width: 30px;
     margin-right: 15px;
     margin-top: -15px;
@@ -402,6 +404,16 @@ form.trick_edit_form {
     /*margin-top: 3rem;*/
     .trick-photo-thumbnail, .trick-video-thumbnail {
         margin-bottom: 3.5rem;
+    }
+}
+
+.edit_form_buttons_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    input[type="submit"] {
+        margin-bottom: 15px;
     }
 }
 
@@ -681,8 +693,10 @@ hr {
   margin-bottom: 1rem;
 }
 
-.add_media_buttons_div > .btn {
+.add_media_buttons_div > .btn.outline {
   flex: 0 45%;
+  font-size: 0.8rem;
+  padding: 6px 5px;
 }
 
 div#trick_medias > fieldset.form-group > .col-form-label {
@@ -812,6 +826,9 @@ div#trick_medias
     margin: 10px 0;
     border-radius: 50%;
 }
+.load-more-button-div {
+    display: none;
+}
 /* max-width: 575px */
 /*
 @include media-breakpoint-up(xs) {
@@ -887,6 +904,11 @@ div#trick_medias
     margin: 0 0 0 15px;
   }
 
+  .add_media_buttons_div > .btn.outline {
+    font-size: 1rem;
+    padding: 6px 16px;
+  }
+  
   .comment-avatar {
     margin-left: 10%;
   }
