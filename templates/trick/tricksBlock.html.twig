@@ -1,5 +1,6 @@
 {% for trick in tricksArray %}
-    <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div">
+    <div class="col-xl-2_4 col-lg-4 col-md-4 col-sm-6 col-xs-6 col trick-thumbnails-div"
+        trick-id="{{ trick.id }}">
         <a href="{{ asset('./tricks/' ~ trick.id ~ '-' ~ trick.slug) }}">
             <article class="trick-thumbnail">
                 <img src="{{ asset('./uploads/images/tricks/' ~ trick.coverImage) }}"
@@ -15,8 +16,11 @@
                     <i class="fas fa-pen edit-icon" aria-hidden="true"
                         trick-id="{{ trick.id }}"></i>
                 </a>
-                <a href="{{ path('trick_delete', {'id': trick.id}) }}"
-                    class="js-delete-trick" id="{{ trick.id }}">
+                {#<a href="{{ path('trick_delete', {'id': trick.id}) }}"
+                    class="js-delete-trick" id="{{ trick.id }}">#}
+                <a href="{{ path('trick_delete_ajax', {'id': trick.id}) }}"
+                    class="js-delete-trick" id="{{ trick.id }}"
+                    data-token="{{ csrf_token('delete_trick_tk') }}">
                     <i aria-hidden="true" class="fas fa-trash-alt"></i>
                 </a>
             </div>

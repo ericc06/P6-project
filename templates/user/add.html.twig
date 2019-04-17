@@ -6,7 +6,7 @@
 {% block content %}
     <div class="container full-height-container">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-xs-12 col-sm-9 col-lg-6">
                 <div
                     class="well">
                     {# On affiche tous les messages flash #}
@@ -32,6 +32,10 @@
                     {{ form_row(form._token) }}
                     <input class="btn btn-primary" type="submit" value="{{'create_account'|trans }}"/>
                     {{ form_end(form, {'render_rest': false}) }}
+                    <div class="already-an-account-div">
+                        <a href="{{ path('user_login') }}">
+                            {{ 'already_an_account'|trans }}</a>
+                    </div>
                 </div>
             </div>
         </div>

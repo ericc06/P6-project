@@ -31,14 +31,14 @@
             </div>
             {% endif %}
         </div>
-        <div class="container d-md-none see-medias-btn-div">
+        <div class="container d-sm-none see-medias-btn-div">
             <section class="row">
                 <button class="btn btn-primary center-button see-medias-btn" type="button">
-                    See medias
+                    {{'see_medias'|trans }}
                 </button>
             </section>
         </div>
-        <div class="container d-none d-md-block">
+        <div class="container xs-hidden d-md-block">
             <a class="anchor" id="tricks-anchor"></a>
             <section class="row" id="trick-detail-list">
                 {% for media in medias %}
@@ -75,7 +75,7 @@
         </div>
 
         <div class="container">
-            <section class="row col-10 offset-1 trick-description">
+            <section class="col-xs-12 col-sm-10 col-lg-8 auto-center trick-description">
                 {{ trick.description|nl2br }}
             </section>
         </div>
@@ -144,8 +144,6 @@
 
     <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMsg }}">
     <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
-
-    {{ include('trick/modal.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
@@ -153,6 +151,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     {{ parent() }}
+
+    {{ include('trick/modal.html.twig') }}
+
     {#{ encore_entry_script_tags('tools') }#}
 
     {#<script src="{{ asset('./build/tools.js') }}" type="module"></script>#}    
@@ -310,6 +311,11 @@
             $(window).on("resize", function () {
                 $('.modal:visible').each(centerModal);
             });
+
+            $(".see-medias-btn").on("click", function() {
+                $(".container.xs-hidden.d-md-block").slideDown(400);
+                $(this).parent().parent().detach();
+            });
         });
     </script>
-{% endblock %}            
+{% endblock %}

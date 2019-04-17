@@ -10,17 +10,74 @@
         {% block stylesheets %}
             {# 'app' must match the first argument to addEntry() in webpack.config.js #}
             {{ encore_entry_link_tags('app') }}
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         {% endblock %}
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#00a300">
+        <meta name="theme-color" content="#ffffff">
     </head>
     <body>
-
         <div class="container-fluid" id="override-bs-css-header">
             <header>
 
                 <!-- Navigation ================================================== -->
 
                 <div class="container-fluid" id="override-bs-css-navbar">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light xs-fixed-bottom">
+                    {# Smartphone (xs) navigation menu #}
+                    {# Visible only on xs sizes thanks to classes ".d-block .d-sm-none". #}
+                    <nav class="navbar navbar-light bg-light d-block d-sm-none xs-fixed-bottom">
+                        <div>
+                            <ul class="navbar-nav navbar-nav-small mr-zero">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('homepage') }}>
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
+                                {% if app.user %}
+                                <li class="nav-item active">
+                                        <a class="nav-link" href={{ path('user_edit', {'id': app.user.id}) }}>
+                                            <i class="fas fa-user"></i>
+                                        </a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('trick_new') }}>
+                                        <i class="fas fa-file-medical"></i>
+                                    </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('app_logout') }}>
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('user_registration') }}>
+                                            <i class="fas fa-user-plus"></i></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href={{ path('user_login') }}>
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </nav>
+
+                    {# Other sizes (larger than xs) navigation menu. #}
+                    {# Comes in 2 display types: #}
+                    {# - All menu items always displayed on larger screens. #}
+                    {# - Menu items always hidden by default and displayed 
+                        via the "hamburger" button on smaller screens. #}
+                    {# Hidden only on xs sizes thanks to classes ".d-none .d-sm-flex". #}
+                    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top d-none d-sm-flex">
                         <a class="navbar-brand" href="{{ path('homepage') }}">
                             <img src="{{ asset('./build/images/logo.png') }}" class="logo" alt="logo" />
                             {% if app.environment == "dev" %}
@@ -33,73 +90,90 @@
                             aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav mr-zero">
-                                {% if app.user %}
+                                {#% if app.user %}
                                 <li class="nav-item active greetings">
-                                        <a class="nav-link" href={{ path('user_edit', {'id': app.user.id}) }}>
-                                            {{ 'hello'|trans }} {{ app.user.username }}
-                                        </a>
+                                    {{ 'hello'|trans }} {{ app.user.username }}
                                 </li>
-                                {% endif %}
+                                {% endif %#}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('homepage') }}>{{ 'home'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% if app.user %}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('trick_new') }}>{{ 'add_a_trick'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item active">
+                                        <a class="nav-link" href={{ path('user_edit', {'id': app.user.id}) }}>
+                                            {{ 'my_account'|trans }}
+                                        </a>
                                 </li>
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('app_logout') }}>{{ 'logout'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% else %}
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('user_registration') }}>{{ 'register'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 <li class="nav-item active">
                                     <a class="nav-link" href={{ path('user_login') }}>{{ 'login_menu'|trans }}
-                                        <span class="sr-only">(current)</span></a>
+                                        <span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 {% endif %}
-                                {#
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" href="#">Disabled</a>
-                                </li>
-                                #}
                             </ul>
                         </div>
                     </nav>
                 </div>
-
             </header>
         </div>
 
-        {% block body %}{% endblock %}
+        {% block body %}
+            <div class="fixed-menu-spacer d-none d-sm-block"></div>
+        {% endblock %}
 
         <footer class="container-fluid bg-light">
             <div class="col-xs-12">
                 <p class="medium">Copyright © 2019</p>
             </div>
         </footer>
-        {% block javascripts %}{% endblock %}
+
+        {% block javascripts %}
+            {# On charge la bibliothèque jQuery depuis le CDN google. #}
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+            {# Having a fixed navigation menu brings an issue with forms validation:
+               An invalid form field may be hidden under the navbar when HTML5 goes
+               back to the field. This script is aimed at solving this issue.
+               See https://stackoverflow.com/a/30247982/10980984 #}
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    var delay = 0;
+                    var offset = 150;
+
+                    document.addEventListener('invalid', function(e){
+                    $(e.target).addClass("invalid");
+                    $('html, body').animate({scrollTop: $($(".invalid")[0]).offset().top - offset }, delay);
+                    }, true);
+                    document.addEventListener('change', function(e){
+                    $(e.target).removeClass("invalid")
+                    }, true);
+                });
+
+            </script>
+
+{% endblock %}
     </body>
 </html> 
