@@ -11,6 +11,14 @@
                 <source>check_requested_URL</source>
                 <target>La page demandée n'a pas été trouvée. Vérifiez l'adresse ou %link_start%retournez sur la page d'accueil%link_end%.</target>
             </trans-unit>
+            <trans-unit id="an_error_occurred">
+                <source>an_error_occurred</source>
+                <target>Une erreur est survenue.</target>
+            </trans-unit>
+            <trans-unit id="go_back_to_homepage">
+                <source>go_back_to_homepage</source>
+                <target>Retourner sur la page d'accueil.</target>
+            </trans-unit>
             <trans-unit id="home">
                 <source>home</source>
                 <target>Accueil</target>
@@ -22,6 +30,10 @@
             <trans-unit id="register">
                 <source>register</source>
                 <target>S'enregistrer</target>
+            </trans-unit>
+            <trans-unit id="my_account">
+                <source>my_account</source>
+                <target>Mon compte</target>
             </trans-unit>
             <trans-unit id="logout">
                 <source>logout</source>
@@ -55,6 +67,10 @@
                 <source>loading_more</source>
                 <target>Chargement...</target>
             </trans-unit>
+            <trans-unit id="see_medias">
+                <source>see_medias</source>
+                <target>Voir les médias</target>
+            </trans-unit>
             <trans-unit id="username">
                 <source>username</source>
                 <target>Identifiant</target>
@@ -75,6 +91,10 @@
                 <source>create_account</source>
                 <target>Créer mon compte</target>
             </trans-unit>
+            <trans-unit id="already_an_account">
+                <source>already_an_account</source>
+                <target>Déjà un compte ?</target>
+            </trans-unit>
             <trans-unit id="login">
                 <source>login</source>
                 <target>Connexion</target>
@@ -90,10 +110,6 @@
             <trans-unit id="already_logged_in">
                 <source>already_logged_in</source>
                 <target>Vous êtes déjà connecté sur le site.</target>
-            </trans-unit>
-            <trans-unit id="go_back_to_homepage">
-                <source>go_back_to_homepage</source>
-                <target>Retourner sur la page d'accueil.</target>
             </trans-unit>
             <trans-unit id="forgot_your_password">
                 <source>forgot_your_password</source>
@@ -157,7 +173,15 @@
             </trans-unit>
             <trans-unit id="confirm_deletion_of_trick">
                 <source>confirm_deletion_of_trick</source>
-                <target>Etes-vous certain de vouloir supprimer la figure "%trick_name%" ?</target>
+                <target>Etes-vous certain(e) de vouloir supprimer la figure "%trick_name%" ?</target>
+            </trans-unit>
+            <trans-unit id="confirm_delete_trick">
+                <source>confirm_delete_trick</source>
+                <target>Etes-vous certain(e) de vouloir supprimer cette figure ?</target>
+            </trans-unit>
+            <trans-unit id="trick_deletion_failed">
+                <source>trick_deletion_failed</source>
+                <target>Echec de suppression de la figure.</target>
             </trans-unit>
             <trans-unit id="delete_trick">
                 <source>delete_trick</source>
@@ -221,15 +245,15 @@
             </trans-unit>
             <trans-unit id="confirm_unset_cover">
                 <source>confirm_unset_cover</source>
-                <target>Ne plus utiliser cette image comme couverture et utiliser l image par défaut ?</target>
+                <target>Ne plus utiliser cette image comme couverture et utiliser la photo par défaut ?</target>
             </trans-unit>
             <trans-unit id="cover_image_unset_success">
                 <source>cover_image_unset_success</source>
-                <target>L image de couverture est maintenant celle par défaut.</target>
+                <target>La photo de couverture est maintenant celle par défaut.</target>
             </trans-unit>
             <trans-unit id="cover_image_unset_failed">
                 <source>cover_image_unset_failed</source>
-                <target>Echec. L image de couverture n'a pas pu être établie par défaut.</target>
+                <target>Echec. La photo de couverture n'a pas pu être établie par défaut.</target>
             </trans-unit>
             <trans-unit id="title">
                 <source>title</source>
@@ -307,6 +331,10 @@
                 <source>log_in_to_edit_trick</source>
                 <target>Vous devez vous connecter pour éditer une figure.</target>
             </trans-unit>
+            <trans-unit id="log_in_to_access_this_page">
+                <source>log_in_to_access_this_page</source>
+                <target>Vous devez vous connecter pour accéder à cette page.</target>
+            </trans-unit>
             <trans-unit id="trick_not_found">
                 <source>trick_not_found</source>
                 <target>Figure non trouvée.</target>
@@ -342,6 +370,34 @@
             <trans-unit id="message_too_long">
                 <source>message_too_long</source>
                 <target>La longeur du message ne peut excéder 2500 caractères.</target>
+            </trans-unit>
+            <trans-unit id="user_profile_update">
+                <source>user_profile_update</source>
+                <target>Modification de votre profil</target>
+            </trans-unit>
+            <trans-unit id="firstname">
+                <source>firstname</source>
+                <target>Prénom</target>
+            </trans-unit>
+            <trans-unit id="lastname">
+                <source>lastname</source>
+                <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="profile_avatar">
+                <source>profile_avatar</source>
+                <target>Photo de profil</target>
+            </trans-unit>
+            <trans-unit id="update_profile">
+                <source>update_profile</source>
+                <target>Valider</target>
+            </trans-unit>
+            <trans-unit id="profile_saved_successfully">
+                <source>profile_saved_successfully</source>
+                <target>Votre profil a bien été mis à jour.</target>
+            </trans-unit>
+            <trans-unit id="email_address_already_exists">
+                <source>email_address_already_exists</source>
+                <target>Cette adresse e-mail est déjà utilisée.</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>

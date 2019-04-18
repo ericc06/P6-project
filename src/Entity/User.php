@@ -8,13 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Serializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
  *
  */
-class User implements UserInterface
+class User implements UserInterface, Serializable
 {
     /**
      * @ORM\Id
@@ -24,7 +25,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
@@ -41,23 +42,45 @@ class User implements UserInterface
     private $lastName = "";
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      * @Assert\NotBlank()
      * @Assert\Email()
      */
     private $email = "";
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $password = "";
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif" })
+     * @Assert\File(
+     *     maxSize = "1024k",
+     *     mimeTypes = {
+     *          "image/png",
+     *          "image/jpeg",
+     *          "image/jpg"
+     *          },
+     *     mimeTypesMessage = "file.invalid_image_file",
+     *     maxSizeMessage = "file.too_large",
+     *     groups={"user_creation"}
+     * )
+     * @Assert\Image(
+     *     minWidth = 40,
+     *     minHeight = 40,
+     *     allowSquare = true,
+     *     allowLandscape = false,
+     *     allowPortrait = false,
+     *     minWidthMessage = "user.avatar.required_dimensions",
+     *     minHeightMessage = "user.avatar.required_dimensions",
+     *     allowLandscapeMessage = "user.avatar.image_must_be_square",
+     *     allowPortraitMessage = "user.avatar.image_must_be_square",
+     *     groups={"user_creation"}
+     * )
      */
     private $avatar;
+
+    private $tempFilename;
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
@@ -65,7 +88,7 @@ class User implements UserInterface
     private $fileExtension;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $isActiveAccount = false;
 
@@ -74,8 +97,9 @@ class User implements UserInterface
      */
     private $activationToken;
 
+    // @ORM\Column(type="json")
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(name="roles", type="array")
      */
     private $roles = [];
 
@@ -93,8 +117,7 @@ class User implements UserInterface
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\Message",
      *     mappedBy="user",
-     *     cascade="all",
-     *     orphanRemoval=true
+     *     cascade={"persist", "remove"}
      * )
      * @Assert\Valid()
      */
@@ -165,15 +188,22 @@ class User implements UserInterface
         return $this->avatar;
     }
 
+    // On modifie le setter de File, pour prendre en compte
+    // l'upload d'un fichier lorsqu'il en existe déjà un autre.
     public function setAvatar(UploadedFile $avatar)
     {
         $this->avatar = $avatar;
 
         // On vérifie si on avait déjà un fichier pour cette entité
-        if (null !== $this->fileUrl) {
+        if (null !== $this->fileExtension) {
             // On sauvegarde l'extension du fichier pour le supprimer plus tard
-            $this->tempFilename = $this->fileUrl;
+            $this->tempFilename = $this->fileExtension;
         }
+    }
+
+    public function emptyFile()
+    {
+        $this->avatar = null;
     }
 
     public function getIsActiveAccount()
@@ -385,5 +415,37 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    // To avoid "Serialization of
+    // 'Symfony\Component\HttpFoundation\File\UploadedFile' is not allowed"
+    // on user profile edition submission.
+    // See https://symfonycasts.com/screencast/symfony2-ep2/user-serialization
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->firstName,
+            $this->lastName,
+            $this->email,
+            $this->password,
+            $this->fileExtension,
+            $this->isActiveAccount
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->firstName,
+            $this->lastName,
+            $this->email,
+            $this->password,
+            $this->fileExtension,
+            $this->isActiveAccount
+        ) = unserialize($serialized);
     }
 }

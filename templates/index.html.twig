@@ -5,7 +5,7 @@
     <!-- Home ================================================== -->
     <div class="container-fluid">
         <div class="row" id="home">
-            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image">
+            <img src="{{ asset('./build/images/homepage.jpg') }}" alt="homepage-image" />
                 <div class="col-xs-12 text-center" id="home-text">
                     <h1>
                         <p class="bold">
@@ -22,10 +22,8 @@
                     {% endfor %}
                 {% endfor %}
             </div>
-            <div id="arrow-down">
-                <a href="#tricks-anchor">
-                    <i class="fa fa-arrow-down" style="font-size:30px"></i>
-                </a>
+            <div class="arrow-div" id="arrow-down">
+                <i class="fa fa-arrow-down"></i>
             </div>
         </div>
     </div>
@@ -37,60 +35,175 @@
         </section>
     </div>
 
-    <div class="container">
+    <div class="container load-more-button-div">
         <section class="row">
             <button type="button" class="btn btn-primary center-button load-more-button">{{ 'load_more'|trans}}</button>
         </section>
     </div>
 
-    <input type="hidden" class="tricksTotalNumber" value="{{ totalNumberOfTricks }}">
-    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfLoadedTricks }}">
+    <div class="arrow-div" id="arrow-up">
+        <i class="fa fa-arrow-up"></i>
+    </div>
+
+    <input type="hidden" class="totalNumberOfTricks" value="{{ totalNumberOfTricks }}">
+    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfInitialLoadedTricks }}">
+    <input type="hidden" class="tricksLoadMoreLimit" value="{{ tricksLoadMoreLimit }}">
 {% endblock %}
 
 {% block javascripts %}
-    {# On charge la bibliothèque jQuery depuis le CDN google. #}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {{ parent() }}
 
     <script type="text/javascript">
         $(document).ready(function () {
 
-            let tricksLoadingLimit = Number($('.numberOfInitialLoadedTricks').val());
-            let loadedTricks = tricksLoadingLimit;
+            let totalNumberOfTricks = Number($('.totalNumberOfTricks').val());
+            let numberOfLoadedTricks = Number($('.numberOfInitialLoadedTricks').val());
+            let tricksLoadMoreLimit = Number($('.tricksLoadMoreLimit').val());
+
+            // We make the values consistant, according to the number of tricks
+            // stored in the database.
+            if (numberOfLoadedTricks > totalNumberOfTricks) {
+                numberOfLoadedTricks = totalNumberOfTricks;
+            }
+
+            function manageLoadMoreButton() {
+                //alert(totalNumberOfTricks + " / " + numberOfLoadedTricks);
+                if (numberOfLoadedTricks == totalNumberOfTricks) {
+                    $(".load-more-button-div").hide();
+                }
+                else {
+                    $(".load-more-button-div").show();
+                }
+            }
+
+            function manageUpArrow() {
+                //alert(totalNumberOfTricks + " / " + numberOfLoadedTricks);
+                if (numberOfLoadedTricks > 15) {
+                    $("#arrow-up").show();
+                }
+                else {
+                    $("#arrow-up").hide();
+                }
+            }
+
+            // When scrolling to some sections of the page, the offset depends
+            // on the location of the navbar: at the bottom of the screen for
+            // extra small (xs) screens, or at the top for other widths.
+            // This function returns the additional offset accordingly.
+            function headerheight() {
+                if($(".xs-fixed-bottom:visible").length == 1) {
+                    return 0;
+                }
+                else {
+                    return 75;
+                }
+            }
+
+            function loadTricks(url) {
+                // See https://stackoverflow.com/a/9865124/10980984
+                // about the "return" statement.
+                return $.ajax({
+                    type: "GET",
+                    url: url
+                }).done(function (data) {
+                    let container = $("#tricks-list");
+                    container.append(data);
+
+                    let addedTricksNumber = (data.match(/<article /g) || []).length;
+                    numberOfLoadedTricks += addedTricksNumber;
+
+                    if ($(".load-more-button").length == 1 && numberOfLoadedTricks == totalNumberOfTricks) {
+                        $(".load-more-button-div").hide();
+                    }
+                }).fail(function () {
+                    alert('Could not load tricks.');
+                });
+            }
 
             $('.load-more-button').on("click", function(e) {
                 e.preventDefault();
                 var $this = $(this);
+                var initialButtonOffset = $this.offset();
                 var loadingText = "<i class='fa fa-spinner fa-spin '></i> {{ 'loading_more'|trans}}";
-                if ($(this).html() !== loadingText) {
-                  $this.data('original-text', $(this).html());
-                  $this.html(loadingText).delay( 2000 );
+                if ($this.html() !== loadingText) {
+                  $this.data("original-text", $this.html());
+                  $this.html(loadingText);
+                  //alert('changed');
                 }
-                // We add the limit and the offset at the end of the "load_tricks" route
-                var url = "{{ path('load_tricks') }}/" + tricksLoadingLimit + "/" + loadedTricks;
-                loadTricks(url);
-            
-                function loadTricks(url) {
-                    $.ajax({
-                        type: "GET",
-                        url: url
-                    }).done(function (data) {
-                        let container = $('#tricks-list');
-                        container.append(data);
+                // We add the limit and the offset at the end of the "load_tricks" route.
+                var url = "{{ path('load_tricks') }}/" + tricksLoadMoreLimit
+                    + "/" + numberOfLoadedTricks;
 
-                        let newTricksNumber = (data.match(/<article /g) || []).length;
-                        loadedTricks += newTricksNumber;
-                        let totalNumberOfTricks = Number($('.tricksTotalNumber').val());
-
-                        if ($('.load-more-button').length == 1 && loadedTricks == totalNumberOfTricks) {
-                            $('.load-more-button').parent().parent().hide();
-                        }
-                        $this.html($this.data('original-text'));
-                    }).fail(function () {
-                        alert('Could not load tricks.');
-                        $this.html($this.data('original-text'));
-                    });
-                }
+                $.when(loadTricks(url)).done(function(){
+                    $this.html($this.data('original-text'));
+                    manageUpArrow();
+                    $("html, body").animate({
+                        scrollTop: initialButtonOffset.top - 10 - headerheight()
+                    }, 500);
+                });
             });
+
+            // Delegated event to bind the "click" event also to the
+            // elements dynamically created in the future, not only 
+            // to the ones present on page load.
+            // See https://stackoverflow.com/a/1207393/10980984
+            $(document).on("click", ".js-delete-trick", function(e){
+            //$(".js-delete-trick").on("click", function (e) {
+                e.preventDefault();
+
+                if(confirm("{{'confirm_delete_trick'|trans }}")) {
+                    var url = $(this).attr("href");
+                    var token = $(this).data("token");
+
+                    $.post(url, {token: token}
+                    ).done(function (data) {
+                        var id = JSON.parse(data).id;
+                        // We hide the deleted image div with an collapse animation.
+                        $( "div[trick-id=" + id + "]" ).find(".tricks-list-admin-icons, .tricks-list-admin-icons *").animate({
+                                opacity: 0.1,
+                                width: 0
+                            }, 400);
+                        $( "div[trick-id=" + id + "]" ).animate({
+                                opacity: 0.1,
+                                flexBasis: "0%"
+                            }, 500, function() {
+                            // Animation complete.
+                            $( "div[trick-id=" + id + "]" ).remove();
+                        });
+
+                        totalNumberOfTricks--;
+                        numberOfLoadedTricks--;
+
+                        // We add load one trick to fill the space left
+                        // by the deleted one.
+                        var url = "{{ path('load_tricks') }}/" + 1
+                            + "/" + numberOfLoadedTricks;
+
+                        loadTricks(url);
+                        manageUpArrow();
+                    }).fail(function () {
+                        alert("{{'trick_deletion_failed'|trans }}");
+                    });                    
+                }
+
+            });
+
+            $(".fa-arrow-down").on("click", function(){
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#tricks-list").offset().top - 10 - headerheight()
+                }, 500);
+            });
+
+            $(".fa-arrow-up").on("click", function(){
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#tricks-list").offset().top - 10 - headerheight()
+                }, 500);
+            });
+
+            manageLoadMoreButton();
+            manageUpArrow();
+
         });
     </script>
 {% endblock %}

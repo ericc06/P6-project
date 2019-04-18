@@ -46,8 +46,34 @@ class UserManager extends Controller
     // Inserts or updates a user into the database.
     public function saveUserToDB(User $user)
     {
-        $this->entMan->persist($user);
-        $this->entMan->flush();
+        $result = [];
+
+        try {
+            $this->entMan->persist($user);
+            $this->entMan->flush();
+
+            $result['is_successful'] = true;
+            $result['msg_type'] = 'success';
+            $result['message'] = 'profile_saved_successfully';
+            $result['message_params'] = [];
+            $result['dest_page'] = 'homepage';
+        } catch (UniqueConstraintViolationException $e) {
+            $result['is_successful'] = false;
+            $result['msg_type'] = 'danger';
+            $result['message'] = 'email_address_already_exists';
+            $result['message_params'] = [
+                '%link_start%' => '<a href="'
+                    . $this->generateUrl('user_edit', [
+                        'id' => $this->entMan->getRepository(User::class)
+                            ->findByUsername($user->getUsername())[0]->getId()
+                    ]) . '">',
+                '%link_end%' => '</a>'
+            ];
+            $result['dest_page'] = 'user_edit';
+            $result['user'] = $user;
+        }
+
+        return $result;
     }
 
     // Deletes a user from the database.

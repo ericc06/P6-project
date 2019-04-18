@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 class TrickController extends Controller
 {
@@ -46,18 +47,23 @@ class TrickController extends Controller
     {
         $env = getenv('APP_ENV');
 
+        $numberOfInitialTricks = $this->container
+            ->getParameter('homepage_tricks_initial_number');
+
         $tricksArray = $this->trickManager
-            ->getTricksForIndexPage($this->homeTricksLoadLimit, 0);
+            ->getTricksForIndexPage($numberOfInitialTricks, 0);
 
         $totalNumberOfTricks = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->getTricksNumber();
 
+
         return $this->render('index.html.twig', [
             'env_name' => $env,
             'tricksArray' => $tricksArray,
             'totalNumberOfTricks' => $totalNumberOfTricks,
-            'numberOfLoadedTricks' => $this->homeTricksLoadLimit
+            'numberOfInitialLoadedTricks' => $numberOfInitialTricks,
+            'tricksLoadMoreLimit' => $this->homeTricksLoadLimit
         ]);
     }
 
@@ -320,6 +326,34 @@ class TrickController extends Controller
         ]);
     }
 
+
+    /**
+     * @Route(
+     *      "/tricks/{id}/ajax-delete",
+     *      name="trick_delete_ajax",
+     *      requirements={"id":"\d+"},
+     *      methods={"GET","POST","DELETE"},
+     *      condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function deleteTrickAjax(Trick $trick, Request $request)
+    {
+        if ($request->isMethod('POST')
+            && ($this->isCsrfTokenValid(
+                'delete_trick_tk',
+                $request->request->get('token')
+            ))
+        ) {
+            $trickId = $trick->getId();
+            $this->trickManager->deleteTrickFromDB($trick);
+
+            // Returns deleted trick id.
+            return new Response('{"id":' . $trickId . '}');
+        }
+
+        return new JsonResponse(['message' => 'Error'], 400);
+    }
+
     /**
      * @Route(
      *      "/tricks/{id}/medias/{mediaId}/delete",
@@ -367,7 +401,7 @@ class TrickController extends Controller
     // "TRICK" and "MEDIA" if used as placeholders (see "edit.html.twig").
     /**
      * @Route(
-     *      "/tricks/{id}/medias/{mediaId}/set_cover",
+     *      "/tricks/{id}/medias/{mediaId}/set-cover",
      *      name="set_cover",
      *      requirements={"id":"\d+|TRICK","mediaId":"\d+|MEDIA"},
      *      methods={"GET","POST","DELETE"},
@@ -398,7 +432,7 @@ class TrickController extends Controller
 
     /**
      * @Route(
-     *      "/tricks/{id}/unset_cover",
+     *      "/tricks/{id}/unset-cover",
      *      name="unset_cover",
      *      requirements={"id":"\d+"},
      *      methods={"GET","POST","DELETE"},

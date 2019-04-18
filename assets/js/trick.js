@@ -54,8 +54,9 @@ $(document).ready(function () {
                 let radioName = radioButton.attr("name");
                 radioButton.attr("original-name", radioName).on("click", function (e) {
                     let name = $(this).attr("original-name");
-                    //$(this).attr("name", $radioName);
                     $("form input:radio").attr("name", name);
+                    // We need this, else the radio button is not always checked.
+                    $(this).prop("checked", true);
                 });
                 $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").hide();
                 // On initialise le champ hidden "fileType" à 0 (valeur pour une image)

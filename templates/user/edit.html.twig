@@ -1,0 +1,79 @@
+{# templates/user/edit.html.twig #}
+
+{% trans_default_domain 'gui' %}
+
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <!-- Edition page ================================================== -->
+    {% if app.user %}
+        {% if user.fileExtension is null %}
+            {% set displayedImage =
+                asset('./build/images/users/default_avatar.jpg')
+            %}
+        {% else %}
+            {% set displayedImage =
+                 asset('./uploads/images/users/')
+                 ~ user.id ~ '.' ~ user.fileExtension
+            %}
+        {% endif %}
+
+        <div class="container full-height-container user_edit_form_container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-9 col-lg-6">
+                    <div class="well">
+                        {{ form_start(form, {'attr': {'class': 'user_form user_edit_form'}}) }}
+                        <legend>
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                                {{'user_profile_update'|trans }}
+                        </legend>
+                        <div class="my-custom-class-for-errors">
+                            {{ form_errors(form) }}
+                        </div>
+                        {#{ form_row(form) }#}
+                        {{ form_row(form.username) }}
+                        {{ form_row(form.firstName) }}
+                        {{ form_row(form.lastName) }}
+                        {{ form_row(form.email) }}
+                        {{ form_label(form.avatar) }}
+                        <img src="{{ displayedImage }}" class="user-edit-img" />
+                        {{ form_widget(form.avatar) }}
+                        {{ form_row(form._token) }}
+                        <input type="hidden" id="user_password" name="user[password]" value="{{user.password}}">                            {#<input type="hidden" id="user-id" value="{{user.id}}">
+                        <input type="hidden" id="user_username" value="{{user.username}}">
+                        <input type="hidden" id="user_email" value="{{user.email}}">#}
+                        <input class="btn btn-primary" type="submit" value="{{'update_profile'|trans }}"/>
+                        {{ form_end(form, {'render_rest': false}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container full-height-container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-9 col-lg-6">
+                    <div class="well">
+                        {{'log_in_to_access_this_page'|trans }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}  
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    {#{ encore_entry_script_tags('tools') }#}
+
+    {#<script src="{{ asset('./build/tools.js') }}" type="module"></script>#}    
+
+    {# script type="module" #}
+    <script type="text/javascript"> 
+
+        $(document).ready(function () {
+
+            $("#user_username").attr("readonly", true);
+        });
+
+    </script>
+{% endblock %}

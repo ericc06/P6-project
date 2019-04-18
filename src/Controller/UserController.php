@@ -88,13 +88,69 @@ class UserController extends Controller
     }
 
     /**
-     * User profile modification form.
+     * User update form.
      *
-     * @Route("/edit-profile", name="user_profile_edition")
+     * @Route(
+     *     "/user/{id}/edit",
+     *     name="user_edit",
+     *     methods={"GET","PUT","POST"}
+     * )
      */
-    public function edit()
+    public function edit(User $user = null, Request $request)
     {
-        // TODO
+        // If the given user id doesn't exist we display an error page.
+        if ($user === null) {
+            return $this->render('user/notFound.html.twig');
+        }
+
+        //\var_dump($user);
+
+        //$avatar_image_file = $user->getId() . "." . $user->getFileExtension();
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $file stores the uploaded image file
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+            $file = $user->getAvatar();
+
+            if ($file !== null) {
+                $fileName = $user->getId().'.'.$file->guessExtension();
+
+                $user->setFileExtension($file->guessExtension());
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $file->move(
+                        $this->getParameter('avatars_directory'),
+                        $fileName
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+
+            // updates the 'avatar' property to store the image file name
+            // instead of its contents
+            //$user->setAvatar($fileName);
+
+            $result = $this->userManager->saveUserToDB($user);
+
+            $request->getSession()->getFlashBag()->add(
+                $result['msg_type'],
+                $this->i18n->trans($result['message'], [], 'gui')
+            );
+
+            return $this->redirectToRoute($result['dest_page']);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+            //'avatar_image' => $avatar_image_file,
+        ]);
     }
 
     /**
