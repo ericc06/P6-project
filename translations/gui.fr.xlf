@@ -173,7 +173,15 @@
             </trans-unit>
             <trans-unit id="confirm_deletion_of_trick">
                 <source>confirm_deletion_of_trick</source>
-                <target>Etes-vous certain de vouloir supprimer la figure "%trick_name%" ?</target>
+                <target>Etes-vous certain(e) de vouloir supprimer la figure "%trick_name%" ?</target>
+            </trans-unit>
+            <trans-unit id="confirm_delete_trick">
+                <source>confirm_delete_trick</source>
+                <target>Etes-vous certain(e) de vouloir supprimer cette figure ?</target>
+            </trans-unit>
+            <trans-unit id="trick_deletion_failed">
+                <source>trick_deletion_failed</source>
+                <target>Echec de suppression de la figure.</target>
             </trans-unit>
             <trans-unit id="delete_trick">
                 <source>delete_trick</source>

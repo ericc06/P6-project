@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 class TrickController extends Controller
 {
@@ -325,6 +326,7 @@ class TrickController extends Controller
         ]);
     }
 
+
     /**
      * @Route(
      *      "/tricks/{id}/ajax-delete",
@@ -399,7 +401,7 @@ class TrickController extends Controller
     // "TRICK" and "MEDIA" if used as placeholders (see "edit.html.twig").
     /**
      * @Route(
-     *      "/tricks/{id}/medias/{mediaId}/set_cover",
+     *      "/tricks/{id}/medias/{mediaId}/set-cover",
      *      name="set_cover",
      *      requirements={"id":"\d+|TRICK","mediaId":"\d+|MEDIA"},
      *      methods={"GET","POST","DELETE"},
@@ -430,7 +432,7 @@ class TrickController extends Controller
 
     /**
      * @Route(
-     *      "/tricks/{id}/unset_cover",
+     *      "/tricks/{id}/unset-cover",
      *      name="unset_cover",
      *      requirements={"id":"\d+"},
      *      methods={"GET","POST","DELETE"},
