@@ -144,12 +144,13 @@
                 });
             });
 
-            $(".js-delete-trick").on("click", function (e) {
+            // Delegated event to bind the "click" event also to the
+            // elements dynamically created in the future, not only 
+            // to the ones present on page load.
+            // See https://stackoverflow.com/a/1207393/10980984
+            $(document).on("click", ".js-delete-trick", function(e){
+            //$(".js-delete-trick").on("click", function (e) {
                 e.preventDefault();
-                /*let el = $(this).find(".fa-trash-alt");
-                alert(el.attr("title"));
-                el.css("opacity", 0.4).css("cursor", "default");
-                */
 
                 if(confirm("{{'confirm_delete_trick'|trans }}")) {
                     var url = $(this).attr("href");
@@ -182,14 +183,10 @@
                         loadTricks(url);
                         manageUpArrow();
                     }).fail(function () {
-                        alert("Could not delete trick.");
+                        alert("{{'trick_deletion_failed'|trans }}");
                     });                    
                 }
-                else {
-                    alert("{{'trick_deletion_failed'|trans }}");
-                }
 
-                //el.css("opacity", 1).css("cursor", "pointer");
             });
 
             $(".fa-arrow-down").on("click", function(){
