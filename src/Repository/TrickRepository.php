@@ -29,10 +29,10 @@ class TrickRepository extends ServiceEntityRepository
      */
     public function getTricksNumber()
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('count(t.id)');
+        $qbuilder = $this->createQueryBuilder('t');
+        $qbuilder->select('count(t.id)');
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $qbuilder->getQuery()->getSingleScalarResult();
     }
 
     /**

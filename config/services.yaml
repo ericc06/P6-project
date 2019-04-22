@@ -18,8 +18,12 @@ parameters:
     fixtures_img_directory: '%kernel.project_dir%/src/DataFixtures/images'
     tricks_img_directory: '%kernel.project_dir%/public/uploads/images/tricks'
     avatars_directory: '%kernel.project_dir%/public/uploads/images/users'
+    # Number ot tricks displayed on homepage load.
     homepage_tricks_initial_number : 5
+    # Number ot tricks loaded when clicking the "load mode" button.
     homepage_tricks_load_limit : 5
+    # Number ot messages loaded on the trick details page
+    # when clicking the "load mode" button.
     trick_page_messages_load_limit : 10
 
 services:
@@ -31,6 +35,7 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
+            $homeTricksInitialNbr: '%homepage_tricks_initial_number%'
             $homeTricksLoadLimit: '%homepage_tricks_load_limit%'
             $trickPageMsgLimit: '%trick_page_messages_load_limit%'
     # makes classes in src/ available to be used as services

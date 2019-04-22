@@ -15,8 +15,10 @@ class TrickParamConverter implements ParamConverterInterface
     private $entMan;
     private $trickManager;
 
-    public function __construct(EntityManagerInterface $entMan, TrickManager $trickManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entMan,
+        TrickManager $trickManager
+    ) {
         $this->trickManager = $trickManager;
         $this->entMan = $entMan;
     }

@@ -1,7 +1,10 @@
+// The "translations" array is initialized in tricksJsTranslations.js.twig
+// which is included in the templates before this script.
+
 // La fonction qui ajoute un lien de suppression d'un media
 function addDeleteLink($prototype) { // Création du lien
-    var $deleteLink = $('<a href="#" class="btn btn-danger">'
-        + translations['remove_media_trans'] + '</a>');
+    var $deleteLink = $("<a href='#' class='btn btn-danger'>"
+        + translations["remove_media_trans"] + "</a>");
     // Ajout du lien
     $prototype.append($deleteLink);
 

@@ -128,7 +128,7 @@ class UserController extends Controller
                         $fileName
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    // ... handle exception if sth happens during file upload
                 }
             }
 
