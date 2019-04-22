@@ -35,7 +35,7 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
-            $homeTricksInitialNbr: '%homepage_tricks_initial_number%'
+            $homeTricksInitNbr: '%homepage_tricks_initial_number%'
             $homeTricksLoadLimit: '%homepage_tricks_load_limit%'
             $trickPageMsgLimit: '%trick_page_messages_load_limit%'
     # makes classes in src/ available to be used as services
