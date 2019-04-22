@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Psr\Log\LoggerInterface;
 
 class TrickController extends Controller
 {
@@ -25,18 +25,21 @@ class TrickController extends Controller
     private $session;
     private $homeTricksLoadLimit;
     private $trickPageMsgLimit;
+    private $logger;
 
     public function __construct(
         TrickManager $trickManager,
         TranslatorInterface $translator,
         SessionInterface $session,
         Int $homeTricksLoadLimit,
+        LoggerInterface $logger,
         Int $trickPageMsgLimit
     ) {
         $this->trickManager = $trickManager;
         $this->i18n = $translator;
         $this->session = $session;
         $this->homeTricksLoadLimit = $homeTricksLoadLimit;
+        $this->logger = $logger;
         $this->trickPageMsgLimit = $trickPageMsgLimit;
     }
 
@@ -245,12 +248,6 @@ class TrickController extends Controller
      */
     public function edit(Trick $trick = null, Request $request)
     {
-        // Récupération d'une figure déjà existante, d'id $id.
-        /*$trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->find($request->get('id'));
-        */
-
         // If the given trick id doesn't exist we display an error page.
         if ($trick === null) {
             return $this->render('trick/notFound.html.twig');

@@ -79,12 +79,16 @@ class PasswordManager extends Controller
             ->setTo('eric.codron@gmail.com')
         ;
 
+        $logo_path = realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\logo.png";
+
         $img_path = realpath(__DIR__ . "\\..\\..\\")
             . "\\public\\build\\images\\emails\\homepage-500.jpg";
 
         $data = [
             'userName' => $user->getUsername(),
             'pwdResetUrl' => $pwd_reset_url,
+            'logo_src' => $message->embed(\Swift_Image::fromPath($logo_path)),
             'image_src' => $message->embed(\Swift_Image::fromPath($img_path)),
         ];
 

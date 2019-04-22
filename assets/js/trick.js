@@ -1,6 +1,7 @@
 // La fonction qui ajoute un lien de suppression d'un media
 function addDeleteLink($prototype) { // Création du lien
-    var $deleteLink = $('<a href="#" class="btn btn-danger">' + translations['remove_media_trans'] + '</a>');
+    var $deleteLink = $('<a href="#" class="btn btn-danger">'
+        + translations['remove_media_trans'] + '</a>');
     // Ajout du lien
     $prototype.append($deleteLink);
 
@@ -17,25 +18,37 @@ $(document).ready(function () {
     // On page load, we first hide the form elements not useful for medias update:
     // For images we hide the fileUrl field.
     // For videos we hide the file upload field.
-    $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group").find("input[id$='_fileUrl']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0");
+    $("input[id$='_fileType'][value='0']").parentsUntil("fieldset.form-group")
+        .find("input[id$='_fileUrl']").parent("div").css("visibility", "hidden")
+        .css("height", "0").css("margin", "0");
 
-    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_file']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0");
+    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group")
+        .find("input[id$='_file']").parent("div").css("visibility", "hidden")
+        .css("height", "0").css("margin", "0");
     
-    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group").find("input[id$='_defaultCover']").parent("div").css("visibility", "hidden").css("height", "0").css("margin", "0").parent("div").css("margin-bottom", "0");
+    $("input[id$='_fileType'][value='1']").parentsUntil("fieldset.form-group")
+        .find("input[id$='_defaultCover']").parent("div")
+        .css("visibility", "hidden").css("height", "0").css("margin", "0")
+        .parent("div").css("margin-bottom", "0");
 
-    // On récupère la balise <div> en question qui contient l'attribut "data-prototype" qui nous intéresse.
+    // On récupère la balise <div> en question qui contient l'attribut
+    // "data-prototype" qui nous intéresse.
     var $container = $("div#trick_medias");
     // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
     var index = $container.find(":input").length;
 
     // La fonction qui ajoute un formulaire MediaType
     function addMedia($container, $mediaType, $fieldsetLabel, $showRemoveButton = true) {
-        $(".trick_edit_form_container").find(".well").children().css("display", "block");
-        $(".trick_edit_form_container").find(".well").find(".add_media_buttons_div").css("display", "flex");
+        $(".trick_edit_form_container").find(".well").children()
+            .not(".edit_form_buttons_div").css("display", "block");
+        $(".trick_edit_form_container").find(".well")
+            .find(".add_media_buttons_div").css("display", "flex");
         // Dans le contenu de l'attribut « data-prototype », on remplace :
         // - le texte "__name__label__" qu'il contient par le label du champ
         // - le texte "__name__" qu'il contient par le numéro du champ
-        var template = $container.attr("data-prototype").replace(/__name__label__/g, $fieldsetLabel).replace(/__name__/g, index);//.replace(/value_to_be_replaced/g, 0);
+        var template = $container.attr("data-prototype")
+            .replace(/__name__label__/g, $fieldsetLabel)
+            .replace(/__name__/g, index);
         // On crée un objet jquery qui contient ce template
         var $prototype = $(template);
         // On ajoute au prototype un bouton pour pouvoir supprimer le media
@@ -44,11 +57,13 @@ $(document).ready(function () {
             addDeleteLink($prototype);
         }
         // On ajoute le prototype modifié à la fin de la balise <div>
-        $container.append($prototype.css("display", "block").css("border", "3px dashed #bbb"));
+        $container.append($prototype.css("display", "block")
+            .css("border", "3px dashed #bbb"));
         
         switch ($mediaType) {
             case "image":
-                // On montre le champ d'upload de l'image et on cache celui de saisie de l'URL de la video
+                // On montre le champ d'upload de l'image et on cache celui
+                // de saisie de l'URL de la video
                 $("input#trick_medias_" + index + "_file").parent().closest("div").show();
                 let radioButton = $("input#trick_medias_" + index + "_defaultCover");
                 let radioName = radioButton.attr("name");
@@ -61,7 +76,6 @@ $(document).ready(function () {
                 $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").hide();
                 // On initialise le champ hidden "fileType" à 0 (valeur pour une image)
                 $("input#trick_medias_" + index + "_fileType").val(0);
-                //$("input#trick_medias_" + index + "_defaultCover").attr("name", "defaultCover");//.attr("checked", false);
 
                 // We set the "required" attribute to all required elements 
                 $("input#trick_medias_" + index + "_file").attr("required", "required");
@@ -70,9 +84,11 @@ $(document).ready(function () {
 
                 break;
             case "video":
-                // On cache le champ d'upload de l'image et on montre celui de saisie de l'URL de la video
+                // On cache le champ d'upload de l'image et on montre celui de saisie
+                // de l'URL de la video
                 $("input#trick_medias_" + index + "_file").parent().closest("div").hide();
-                $("input#trick_medias_" + index + "_defaultCover").parent().closest("div.form-group").hide();
+                $("input#trick_medias_" + index + "_defaultCover").parent()
+                    .closest("div.form-group").hide();
                 $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").show();
                 // On initialise le champ hidden "fileType" à 1 (valeur pour une video)
                 $("input#trick_medias_" + index + "_fileType").val(1);
@@ -121,7 +137,8 @@ $(document).ready(function () {
                 if(! $("#trick_medias_" + fieldsetNumber + "_id").val()) {
                     addDeleteLink($(this));
                 }
-                if ($(this).children("div#trick_medias_" + fieldsetNumber).children("input#trick_medias_"+fieldsetNumber+"_fileType").val() === 0) {
+                if ($(this).children("div#trick_medias_" + fieldsetNumber)
+                    .children("input#trick_medias_"+fieldsetNumber+"_fileType").val() === 0) {
                     $(this).children("legend").html(translations["added_image_trans"]);
                 } else {
                     $(this).children("legend").html(translations["added_video_trans"]);
