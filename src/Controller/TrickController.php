@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Form\MessageType;
 use App\Form\TrickType;
 use App\Service\TrickManager;
+use App\Service\MessageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,28 +17,37 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Psr\Log\LoggerInterface;
 
 class TrickController extends Controller
 {
     private $trickManager;
+    private $messageManager;
     private $i18n;
     private $session;
+    private $homeTricksInitNbr;
     private $homeTricksLoadLimit;
     private $trickPageMsgLimit;
+    private $logger;
 
     public function __construct(
         TrickManager $trickManager,
+        MessageManager $messageManager,
         TranslatorInterface $translator,
         SessionInterface $session,
+        Int $homeTricksInitNbr,
         Int $homeTricksLoadLimit,
-        Int $trickPageMsgLimit
+        Int $trickPageMsgLimit,
+        LoggerInterface $logger
     ) {
         $this->trickManager = $trickManager;
+        $this->messageManager = $messageManager;
         $this->i18n = $translator;
         $this->session = $session;
+        $this->homeTricksInitNbr = $homeTricksInitNbr;
         $this->homeTricksLoadLimit = $homeTricksLoadLimit;
         $this->trickPageMsgLimit = $trickPageMsgLimit;
+        $this->logger = $logger;
     }
 
     /**
@@ -47,22 +57,18 @@ class TrickController extends Controller
     {
         $env = getenv('APP_ENV');
 
-        $numberOfInitialTricks = $this->container
-            ->getParameter('homepage_tricks_initial_number');
-
         $tricksArray = $this->trickManager
-            ->getTricksForIndexPage($numberOfInitialTricks, 0);
+            ->getTricksForIndexPage($this->homeTricksInitNbr, 0);
 
         $totalNumberOfTricks = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->getTricksNumber();
 
-
         return $this->render('index.html.twig', [
             'env_name' => $env,
             'tricksArray' => $tricksArray,
             'totalNumberOfTricks' => $totalNumberOfTricks,
-            'numberOfInitialLoadedTricks' => $numberOfInitialTricks,
+            'numberOfInitialLoadedTricks' => $this->homeTricksInitNbr,
             'tricksLoadMoreLimit' => $this->homeTricksLoadLimit
         ]);
     }
@@ -198,7 +204,7 @@ class TrickController extends Controller
     public function addMessage(Request $request)
     {
         if (null !== $this->session->get('message')) {
-            $message = $this->trickManager->readMessageFromSession();
+            $message = $this->messageManager->readMessageFromSession();
         } else {
             $message = new Message();
             $message->setDate(new \Datetime());
@@ -213,12 +219,12 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->trickManager->saveMessageToDB($message);
+            $result = $this->messageManager->saveMessageToDB($message);
 
             // In case of error, we store the message content to the session
             // to be able to initialize the form with it.
             if (isset($result['forum_message'])) {
-                $this->trickManager->storeMessageInSession(
+                $this->messageManager->storeMessageInSession(
                     $result['forum_message']
                 );
             }
@@ -245,12 +251,6 @@ class TrickController extends Controller
      */
     public function edit(Trick $trick = null, Request $request)
     {
-        // Récupération d'une figure déjà existante, d'id $id.
-        /*$trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->find($request->get('id'));
-        */
-
         // If the given trick id doesn't exist we display an error page.
         if ($trick === null) {
             return $this->render('trick/notFound.html.twig');

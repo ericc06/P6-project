@@ -188,7 +188,7 @@ class User implements UserInterface, Serializable
         return $this->avatar;
     }
 
-    // On modifie le setter de File, pour prendre en compte
+    // On modifie le setter de Avatar, pour prendre en compte
     // l'upload d'un fichier lorsqu'il en existe déjà un autre.
     public function setAvatar(UploadedFile $avatar)
     {
@@ -305,17 +305,7 @@ class User implements UserInterface, Serializable
 
         // Le nom du fichier est son id, on doit juste stocker également
         // son extension.
-        // Pour faire propre, on devrait renommer cet attribut en "extension"
-        // plutôt que "url".
         $this->fileExtension = $this->avatar->guessExtension();
-
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom
-        // du fichier sur le PC de l'internaute s'il n'est pas renseigné
-        // dans le formulaire.
-        /*if (null === $this->alt) {
-            $this->alt = $this->avatar->getClientOriginalName();
-        }
-        */
     }
 
     /**
@@ -369,21 +359,10 @@ class User implements UserInterface, Serializable
         }
     }
 
-    public function getUploadDir()
-    {
-        // On retourne le chemin relatif vers l'image pour un navigateur
-        return 'uploads/images/users';
-    }
-
     protected function getUploadRootDir()
     {
         // On retourne le chemin relatif vers l'image pour notre code PHP
-        return __DIR__ . '/../../public/' . $this->getUploadDir();
-    }
-
-    public function getFixturesPath()
-    {
-        return __DIR__ . '/../../src/DataFixtures/images/users';
+        return __DIR__ . '/../../public/uploads/images/users';
     }
 
     /**
@@ -423,7 +402,7 @@ class User implements UserInterface, Serializable
     // See https://symfonycasts.com/screencast/symfony2-ep2/user-serialization
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->firstName,
@@ -432,7 +411,7 @@ class User implements UserInterface, Serializable
             $this->password,
             $this->fileExtension,
             $this->isActiveAccount
-        ));
+        ]);
     }
 
     public function unserialize($serialized)

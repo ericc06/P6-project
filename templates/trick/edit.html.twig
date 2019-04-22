@@ -176,13 +176,7 @@
         };
 
         function showMediaFieldset(mediaId, thumbnailElem) {
-            // ... we remove the "required" attribute to all form elements...
-            /*$("div[id='trick_medias']")
-                .find("fieldset.form-group")
-                .find("*").removeAttr("required");
-            */
-
-            // ... and we show the fieldset related to the chosen media.
+            // We show the fieldset related to the chosen media.
             // But before, we add at the top of the fieldset the thumbnail
             // of the media if it's not already present. 
             let targetFielset = $("input[id$='_id'][value='" + mediaId + "']")
@@ -210,6 +204,128 @@
                     .find("input[id$='_fileUrl'], input[id$='_title'], input[id$='_alt']")
                     .attr("required", "required");
             }
+        }
+
+        function removeMediaFieldset(mediaId) {
+            // We remove the fieldset related to the given media.
+            // But first, if this fieldset is visible, we slide it up.
+            let targetFieldset = $("input[id$='_id'][value='" + mediaId + "']")
+                .parents("div[id^='trick_medias_']").parent();
+
+            // we store the numeric id of this fieldset
+            let fieldsetNum = parseInt(
+                targetFieldset.find("div[id^='trick_medias_']").attr("id")
+                    .substring(targetFieldset.find("div[id^='trick_medias_']")
+                    .attr("id").lastIndexOf('_') + 1)
+            );
+            //alert("fieldsetNum: " + fieldsetNum);
+
+            // Decreases by 1 the numeric id (0, 1, 2...) of all fieldsets
+            // whose id is bigger than the given one.
+            // The goal is, after removing a fieldset from the DOM,
+            // to fill the lacking id so that there is no "hole" in id's.
+            // We assume that fieldsets are always sorted by id.
+            // Param startingInt is numeric.
+
+            // !!! THIS FUNCTION IS NOT USED CURRENTLY (call commented) !!!
+            function shiftFieldsets(startingId) {
+                $("div[id^='trick_medias_']").each(function() {
+
+                    let fieldsetNumber = parseInt($(this).attr("id")
+                        .substring($(this).attr("id").lastIndexOf('_') + 1));
+
+                    if(fieldsetNumber > startingId) {
+                        let fromId = fieldsetNumber.toString();
+                        let toId = (fieldsetNumber - 1).toString();
+
+                        $(this).attr("id", "trick_medias_" + toId);
+
+                        let fieldsArray = [
+                            "fileUrl",
+                            "file",
+                            "title",
+                            "alt",
+                            "defaultCover",
+                            "fileType",
+                            "id"
+                        ];
+
+                        let elementsArray = [];
+
+                        fieldsArray.forEach(function(field) {
+                            elementsArray.push(
+                                {
+                                    from: "trick_medias_" + fromId + "_" + field,
+                                    to: "trick_medias_" + toId + "_" + field,
+                                    nameFrom: "trick[medias][" + fromId + "][" + field + "]",
+                                    nameTo: "trick[medias][" + toId + "][" + field + "]"
+                                }
+                            );
+                        });
+
+                        // elementsArray contains something like this:
+                        // [
+                        //     {
+                        //         from: "trick_medias_3_fileUrl",
+                        //         to: "trick_medias_2_fileUrl",
+                        //         nameFrom: "trick[medias][3][fileUrl]",
+                        //         nameTo: "trick[medias][2][fileUrl]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_file",
+                        //         to: "trick_medias_2_file",
+                        //         nameFrom: "trick[medias][3][file]",
+                        //         nameTo: "trick[medias][2][file]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_title",
+                        //         to: "trick_medias_2_title",
+                        //         nameFrom: "trick[medias][3][title]",
+                        //         nameTo: "trick[medias][2][title]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_alt",
+                        //         to: "trick_medias_2_alt",
+                        //         nameFrom: "trick[medias][3][alt]",
+                        //         nameTo: "trick[medias][2][alt]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_defaultCover",
+                        //         to: "trick_medias_2_defaultCover",
+                        //         nameFrom: "trick[medias][3][defaultCover]",
+                        //         nameTo: "trick[medias][2][defaultCover]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_fileType",
+                        //         to: "trick_medias_2_fileType",
+                        //         nameFrom: "trick[medias][3][fileType]",
+                        //         nameTo: "trick[medias][2][fileType]"
+                        //     },
+                        //     {
+                        //         from: "trick_medias_3_id",
+                        //         to: "trick_medias_2_id",
+                        //         nameFrom: "trick[medias][3][id]",
+                        //         nameTo: "trick[medias][2][id]"
+                        //     }
+                        // ];
+
+                        elementsArray.forEach(function(element) {
+                            $("[id='" + element.from + "']").attr("id", element.to);
+                            $("[for='" + element.from + "']").attr("for", element.to);
+                            $("[name='" + element.nameFrom + "']").attr("name", element.nameTo);
+                        });
+                    }
+                })
+            }
+
+            if (targetFieldset.is(":visible")) {
+                targetFieldset.slideUp(400, function() {
+                    targetFieldset.remove();
+                });
+            } else {
+                targetFieldset.remove();
+            }
+            shiftFieldsets(fieldsetNum);
         }
 
         $(document).ready(function () {
@@ -266,6 +382,57 @@
                 $('html, body').animate({
                     scrollTop: $("#trick_medias").offset().top - 70
                 }, 600);
+            });
+
+            $(".js-delete-media").on("click", function (e) {
+                e.preventDefault();
+
+                // It seems that Javascript keeps track of previous classes given
+                // to elements on page load. So, dynamically removing the
+                // 'js-delete-media' class and replacing it with 'do-nothing'
+                // is not sufficient. We need to check the class once more.
+                if($(this).hasClass("js-delete-media")) {
+                    if(confirm("{{'confirm_delete_media'|trans }}")) {
+                        var url = $(this).attr("href");
+                        var token = $(this).data("token");
+
+                        $.post(url, {token: token}
+                        ).done(function (data) {
+                            var id = JSON.parse(data).id;
+                            // We remove from the form the fieldset related to the deleted media.
+                            removeMediaFieldset(id);
+
+                            // We hide the deleted image div with an collapse animation.
+                            $( "article[media-id=" + id + "]" ).parent().animate({
+                                    opacity: 0.25,
+                                    width: 0
+                                }, 500, function() {
+                                // Animation complete.
+                                $( "article[media-id=" + id + "]" ).parent().remove();
+                                checkImageNumber();
+                            });
+
+                            // On success, the unsetCover method returns the id and image
+                            // file extension of the default cover image (the one with the
+                            // lowest id in the database).
+                            var coverFilename = JSON.parse(data).coverFile;
+                            let previousCoverFile = $('.trick-header').find('img').attr('src');
+                            let imgPath = previousCoverFile.substring(
+                                0,
+                                previousCoverFile.lastIndexOf('/')
+                            );
+                            let newCoverFile = imgPath + "/" + coverFilename;
+                            $('.trick-header').find('img').attr('src', newCoverFile);
+                        }).fail(function () {
+                            alert("Could not be deleted.");
+                        });
+                    }
+                }
+                else {
+                    alert("{{'image_deletion_impossible_need_one_for_cover'|trans }}");
+                }
+
+                //el.css("opacity", 1).css("cursor", "pointer");
             });
 
             // On page load and after an image removal we check the number of
@@ -393,62 +560,6 @@
                         alert("{{'cover_image_unset_failed'|trans }}");
                     });
                 }
-            });
-
-            $(".js-delete-media").on("click", function (e) {
-                e.preventDefault();
-                /*let el = $(this).find(".fa-trash-alt");
-                alert(el.attr("title"));
-                el.css("opacity", 0.4).css("cursor", "default");
-                */
-
-                // It seems that Javascript keeps track of previous classes given
-                // to elements on page load. So, dynamically removing the
-                // 'js-delete-media' class and replacing it with 'do-nothing'
-                // is not sufficient. We need to check the class once more.
-                if($(this).hasClass("js-delete-media")) {
-                    if(confirm("{{'confirm_delete_media'|trans }}")) {
-                        var url = $(this).attr("href");
-                        var token = $(this).data("token");
-
-                        $.post(url, {token: token}
-                        ).done(function (data) {
-                            var id = JSON.parse(data).id;
-                            // We remove from the form the fieldset related to the deleted media.
-                            let targetFielset = $("input[id$='_id'][value='" + id + "']")
-                                .parent("fieldset.form-group");
-                            targetFielset.remove();
-                            // We hide the deleted image div with an collapse animation.
-                            $( "article[media-id=" + id + "]" ).parent().animate({
-                                    opacity: 0.25,
-                                    width: 0
-                                }, 500, function() {
-                                // Animation complete.
-                                $( "article[media-id=" + id + "]" ).parent().remove();
-                                checkImageNumber();
-                            });
-
-                            // On success, the unsetCover method returns the id and image
-                            // file extension of the default cover image (the one with the
-                            // lowest id in the database).
-                            var coverFilename = JSON.parse(data).coverFile;
-                            let previousCoverFile = $('.trick-header').find('img').attr('src');
-                            let imgPath = previousCoverFile.substring(
-                                0,
-                                previousCoverFile.lastIndexOf('/')
-                            );
-                            let newCoverFile = imgPath + "/" + coverFilename;
-                            $('.trick-header').find('img').attr('src', newCoverFile);
-                        }).fail(function () {
-                            alert("Could not be deleted.");
-                        });
-                    }
-                }
-                else {
-                    alert("{{'image_deletion_impossible_need_one_for_cover'|trans }}");
-                }
-
-                //el.css("opacity", 1).css("cursor", "pointer");
             });
 
             $(".do-nothing").on("click", function (e) {

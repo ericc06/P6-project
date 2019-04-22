@@ -128,7 +128,7 @@ class UserController extends Controller
                         $fileName
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    // ... handle exception if sth happens during file upload
                 }
             }
 
@@ -195,7 +195,7 @@ class UserController extends Controller
                 }
 
                 $request->getSession()->getFlashBag()->add(
-                    'error',
+                    'danger',
                     $this->i18n->trans('error_sending_pwd_reset_email')
                 );
 
@@ -206,7 +206,7 @@ class UserController extends Controller
             }
 
             $request->getSession()->getFlashBag()->add(
-                'error',
+                'danger',
                 $this->i18n->trans('no_account_found_with_this_email')
             );
         }
