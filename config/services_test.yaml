@@ -7,3 +7,4 @@ services:
     # aliases are prefixed with test. For example:
     #
     # test.App\Service\MyService: '@App\Service\MyService'
+    test.App\Service\TrickManager: '@App\Service\TrickManager'
