@@ -22,7 +22,7 @@ class PasswordManager extends Controller
     private $i18n;
     private $tools;
     private $mailer;
-    private $entMan;
+    private $entityManager;
 
     public function __construct(
         Container $container,
@@ -38,7 +38,7 @@ class PasswordManager extends Controller
         $this->i18n = $translator;
         $this->tools = $tools;
         $this->mailer = $mailer;
-        $this->entMan = $this->getDoctrine()->getManager();
+        $this->entityManager = $this->getDoctrine()->getManager();
     }
 
     // Returns an encoded user password.
@@ -122,8 +122,11 @@ class PasswordManager extends Controller
 
         $urlToken = $request->query->get('t');
 
-        $dateNow = new \DateTime('now');
+        $dateNow = new \DateTime();
         $tokenDate = $user->getPwdTokenCreationDate();
+        if (null === $tokenDate) {
+            return false;//$this->redirectToRoute('pwd_already_changed');
+        }
         $dateDiffSecs = $dateNow->getTimestamp() - $tokenDate->getTimestamp();
 
         // The token validity duration in 10 minutes (600 seconds).

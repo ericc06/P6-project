@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6227d59125d9df1a3198c69e3c422828",
+    "content-hash": "3c309e116f9e5e2d268b910180b034f3",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -749,7 +749,7 @@
             "keywords": [
                 "event",
                 "eventdispatcher",
-                "eventmanager"
+                "eventityManagerager"
             ],
             "time": "2018-06-11T11:59:03+00:00"
         },
@@ -4992,7 +4992,7 @@
             },
             "require": {
                 "php": "^7.1",
-                "zendframework/zend-eventmanager": "^2.6 || ^3.0"
+                "zendframework/zend-eventityManagerager": "^2.6 || ^3.0"
             },
             "require-dev": {
                 "doctrine/annotations": "~1.0",
@@ -5030,16 +5030,16 @@
             "time": "2018-08-13T20:36:59+00:00"
         },
         {
-            "name": "zendframework/zend-eventmanager",
+            "name": "zendframework/zend-eventityManagerager",
             "version": "3.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/zend-eventmanager.git",
+                "url": "https://github.com/zendframework/zend-eventityManagerager.git",
                 "reference": "a5e2583a211f73604691586b8406ff7296a946dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/a5e2583a211f73604691586b8406ff7296a946dd",
+                "url": "https://api.github.com/repos/zendframework/zend-eventityManagerager/zipball/a5e2583a211f73604691586b8406ff7296a946dd",
                 "reference": "a5e2583a211f73604691586b8406ff7296a946dd",
                 "shasum": ""
             },
@@ -5066,7 +5066,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Zend\\EventManager\\": "src/"
+                    "Zend\\EventityManagerager\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5074,10 +5074,10 @@
                 "BSD-3-Clause"
             ],
             "description": "Trigger and listen to events within a PHP application",
-            "homepage": "https://github.com/zendframework/zend-eventmanager",
+            "homepage": "https://github.com/zendframework/zend-eventityManagerager",
             "keywords": [
                 "event",
-                "eventmanager",
+                "eventityManagerager",
                 "events",
                 "zf2"
             ],

@@ -377,7 +377,7 @@
     "zendframework/zend-code": {
         "version": "3.3.1"
     },
-    "zendframework/zend-eventmanager": {
+    "zendframework/zend-eventityManagerager": {
         "version": "3.2.1"
     }
 }

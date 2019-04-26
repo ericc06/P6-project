@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends Controller
 {
@@ -236,7 +237,7 @@ class UserController extends Controller
             )
             ) {
                 $request->getSession()->getFlashBag()->add(
-                    'notice',
+                    'success',
                     $this->i18n->trans('new_pwd_successfuly_saved')
                 );
 
@@ -275,5 +276,26 @@ class UserController extends Controller
         );
 
         return $this->redirectToRoute('user_forgotten_pwd');
+    }
+    
+    /**
+     * @Route("/logout", name="app_logout", methods={"GET"})
+     */
+    public function logout()
+    {
+        // controller can be blank: it will never be executed!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
+    }
+
+    // Without this method, a 404 error occurs before the firewall is called.
+    // The result is that a connected user is not detected anymore on the
+    // 404 error page, and he appears disconnected.
+    // See https://github.com/symfony/symfony/issues/5320#issuecomment-56401080
+    /**
+     * @Route("/{something}", name="page_not_found")
+     */
+    public function pageNotFound()
+    {
+        throw new NotFoundHttpException();
     }
 }
