@@ -19,7 +19,7 @@ class TrickManager extends Controller
     protected $container;
     private $router;
     private $session;
-    private $entMan;
+    private $entityManager;
 
     public function __construct(
         Container $container,
@@ -29,7 +29,7 @@ class TrickManager extends Controller
         $this->container = $container;
         $this->router = $router;
         $this->session = $session;
-        $this->entMan = $this->getDoctrine()->getManager();
+        $this->entityManager = $this->getDoctrine()->getManager();
     }
 
     // Inserts or updates a trick into the database.
@@ -38,8 +38,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->entMan->persist($trick);
-            $this->entMan->flush();
+            $this->entityManager->persist($trick);
+            $this->entityManager->flush();
 
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';
@@ -53,7 +53,7 @@ class TrickManager extends Controller
             $result['message_params'] = [
                 '%link_start%' => '<a href="'
                     . $this->generateUrl('trick_edit', [
-                        'id' => $this->entMan->getRepository(Trick::class)
+                        'id' => $this->entityManager->getRepository(Trick::class)
                             ->findByName($trick->getName())[0]->getId()
                     ]) . '">',
                 '%link_end%' => '</a>'
@@ -71,8 +71,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->entMan->remove($trick);
-            $this->entMan->flush();
+            $this->entityManager->remove($trick);
+            $this->entityManager->flush();
 
             $result['msg_type'] = 'success';
             $result['message'] = 'trick_deleted_successfully';
@@ -114,7 +114,7 @@ class TrickManager extends Controller
         // to avoid "Entity passed to the choice field must be managed.
         // Maybe you forget to persist it in the entity manager?" error.
         $trickGroup = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->merge(unserialize($this->session->remove('trickGroup')));
         $trick->setTrickGroup($trickGroup);
 
@@ -130,8 +130,8 @@ class TrickManager extends Controller
         $result = [];
 
         try {
-            $this->entMan->remove($media);
-            $this->entMan->flush();
+            $this->entityManager->remove($media);
+            $this->entityManager->flush();
 
             $result['msg_type'] = 'success';
             $result['message'] = 'media_deleted_successfully';
@@ -158,7 +158,7 @@ class TrickManager extends Controller
     // for the homepage (no media).
     public function getTricksForIndexPage($limit, $offset)
     {
-        $tricks = $this->entMan->getRepository(Trick::class)
+        $tricks = $this->entityManager->getRepository(Trick::class)
         ->findAllTricksForPagination($limit, $offset);
 
         $tricksArray = [];
@@ -178,7 +178,7 @@ class TrickManager extends Controller
     // Returns an array with the medias from a trick id.
     public function getMediasArrayByTrickId($trickId)
     {
-        return $this->entMan->getRepository(Media::class)
+        return $this->entityManager->getRepository(Media::class)
             ->findMediasByTrickIdOrderedByFileType($trickId);
     }
 
@@ -199,7 +199,7 @@ class TrickManager extends Controller
     // Returns the cover image file name from a trick id.
     public function getCoverImageByTrickId($trickId)
     {
-        $cover_image_details = $this->entMan->getRepository(Media::class)
+        $cover_image_details = $this->entityManager->getRepository(Media::class)
             ->findCoverImageOrDefault($trickId);
 
         return $cover_image_details[0]->getId() . '.'
@@ -209,7 +209,7 @@ class TrickManager extends Controller
     // Returns the group name from a trick id.
     public function getGroupNameByTrickGroupId($trickId)
     {
-        return $this->entMan->getRepository(TrickGroup::class)
+        return $this->entityManager->getRepository(TrickGroup::class)
             ->findGroupNameByGroupId($trickId);
     }
 
@@ -217,18 +217,13 @@ class TrickManager extends Controller
     public function setTrickCover($trick, $newCoverMedia)
     {
         // First, we unset any set cover.
-        $medias = $trick->getMedias();
-
-        foreach ($medias as $media) {
-            $media->setDefaultCover(false);
-            $this->entMan->persist($media);
-        }
+        self::unsetTrickCover($trick);
 
         // Then we set the new cover image
         $newCoverMedia->setDefaultCover(true);
-        $this->entMan->persist($newCoverMedia);
+        $this->entityManager->persist($newCoverMedia);
 
-        $this->entMan->flush();
+        $this->entityManager->flush();
     }
 
     // Unset the cover image for the given trick.
@@ -239,9 +234,9 @@ class TrickManager extends Controller
 
         foreach ($medias as $media) {
             $media->setDefaultCover(false);
-            $this->entMan->persist($media);
+            $this->entityManager->persist($media);
         }
 
-        $this->entMan->flush();
+        $this->entityManager->flush();
     }
 }

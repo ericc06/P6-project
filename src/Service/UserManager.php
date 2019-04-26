@@ -18,7 +18,7 @@ class UserManager extends Controller
     protected $container;
     private $encoder;
     private $mailer;
-    private $entMan;
+    private $entityManager;
 
     public function __construct(
         Container $container,
@@ -28,7 +28,7 @@ class UserManager extends Controller
         $this->container = $container;
         $this->encoder = $encoder;
         $this->mailer = $mailer;
-        $this->entMan = $this->getDoctrine()->getManager();
+        $this->entityManager = $this->getDoctrine()->getManager();
     }
 
     /**
@@ -49,8 +49,8 @@ class UserManager extends Controller
         $result = [];
 
         try {
-            $this->entMan->persist($user);
-            $this->entMan->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';
@@ -64,7 +64,7 @@ class UserManager extends Controller
             $result['message_params'] = [
                 '%link_start%' => '<a href="'
                     . $this->generateUrl('user_edit', [
-                        'id' => $this->entMan->getRepository(User::class)
+                        'id' => $this->entityManager->getRepository(User::class)
                             ->findByUsername($user->getUsername())[0]->getId()
                     ]) . '">',
                 '%link_end%' => '</a>'
@@ -79,8 +79,8 @@ class UserManager extends Controller
     // Deletes a user from the database.
     public function deleteUserFromDB(User $user)
     {
-        $this->entMan->remove($user);
-        $this->entMan->flush();
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
     }
 
     // Initializes the login form.

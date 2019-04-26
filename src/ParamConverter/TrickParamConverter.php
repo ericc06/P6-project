@@ -12,15 +12,15 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TrickParamConverter implements ParamConverterInterface
 {
-    private $entMan;
+    private $entityManager;
     private $trickManager;
 
     public function __construct(
-        EntityManagerInterface $entMan,
+        EntityManagerInterface $entityManager,
         TrickManager $trickManager
     ) {
         $this->trickManager = $trickManager;
-        $this->entMan = $entMan;
+        $this->entityManager = $entityManager;
     }
 
     public function supports(ParamConverter $configuration)
@@ -37,7 +37,7 @@ class TrickParamConverter implements ParamConverterInterface
     public function apply(Request $request, ParamConverter $configuration)
     {
         // On récupère la valeur actuelle de l'attribut
-        $trick = $this->entMan->getRepository(Trick::class)
+        $trick = $this->entityManager->getRepository(Trick::class)
         ->find($request->attributes->get('id'));
 
         // If the given trick id does not exist, we set the trick

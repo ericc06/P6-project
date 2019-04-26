@@ -57,9 +57,9 @@ class TrickRepositoryTest extends KernelTestCase
     public function trickPaginationParams()
     {
         return [
-            [5,  0, 5],
-            [5,  5, 5],
-            [5, 10, 1]
+            [5,  0, 5], // Getting the first 5 tricks out of 11.
+            [5,  5, 5], // Getting the 6th to 10th tricks out of 11.
+            [5, 10, 1]  // Getting the 11th (and last) trick.
         ];
     }
 
