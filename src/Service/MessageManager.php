@@ -12,7 +12,7 @@ class MessageManager extends Controller
 {
     protected $container;
     private $session;
-    private $entMan;
+    private $entityManager;
 
     public function __construct(
         SessionInterface $session,
@@ -20,7 +20,7 @@ class MessageManager extends Controller
     ) {
         $this->container = $container;
         $this->session = $session;
-        $this->entMan = $this->getDoctrine()->getManager();
+        $this->entityManager = $this->getDoctrine()->getManager();
     }
 
     // Inserts or updates a forum message into the database.
@@ -29,8 +29,8 @@ class MessageManager extends Controller
         $result = [];
 
         try {
-            $this->entMan->persist($message);
-            $this->entMan->flush();
+            $this->entityManager->persist($message);
+            $this->entityManager->flush();
 
             $result['is_successful'] = true;
             $result['msg_type'] = 'success';

@@ -22,3 +22,4 @@ security:
             guard:
                 authenticators:
                     - App\Security\FormLoginAuthenticator
+            logout_on_user_change: true
