@@ -29,7 +29,6 @@ class TrickController extends Controller
     private $homeTricksInitNbr;
     private $homeTricksLoadLimit;
     private $trickPageMsgLimit;
-    private $logger;
 
     public function __construct(
         TrickManager $trickManager,
@@ -38,8 +37,7 @@ class TrickController extends Controller
         SessionInterface $session,
         Int $homeTricksInitNbr,
         Int $homeTricksLoadLimit,
-        Int $trickPageMsgLimit,
-        LoggerInterface $logger
+        Int $trickPageMsgLimit
     ) {
         $this->trickManager = $trickManager;
         $this->messageManager = $messageManager;
@@ -48,7 +46,6 @@ class TrickController extends Controller
         $this->homeTricksInitNbr = $homeTricksInitNbr;
         $this->homeTricksLoadLimit = $homeTricksLoadLimit;
         $this->trickPageMsgLimit = $trickPageMsgLimit;
-        $this->logger = $logger;
     }
 
     /**

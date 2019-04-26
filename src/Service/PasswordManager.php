@@ -124,6 +124,9 @@ class PasswordManager extends Controller
 
         $dateNow = new \DateTime();
         $tokenDate = $user->getPwdTokenCreationDate();
+        if (null === $tokenDate) {
+            return false;//$this->redirectToRoute('pwd_already_changed');
+        }
         $dateDiffSecs = $dateNow->getTimestamp() - $tokenDate->getTimestamp();
 
         // The token validity duration in 10 minutes (600 seconds).

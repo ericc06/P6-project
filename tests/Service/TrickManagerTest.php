@@ -7,10 +7,8 @@ use App\Entity\Media;
 use App\Entity\TrickGroup;
 use App\Service\TrickManager;
 use Doctrine\ORM\EntityManager;
-//use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-//use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -423,7 +421,42 @@ class TrickManagerTest extends KernelTestCase
         $groupName = $this->trickManager
             ->getGroupNameByTrickGroupId($trickGroupId);
 
-        $this->assertEquals("Flip", $groupName);
+        $this->assertSame("Flip", $groupName);
+    }
+
+    // ######################################################
+    //   Testing unsetTrickCover($trick)
+    // ######################################################
+
+    public function testUnsetTrickCover()
+    {
+        // In a previous test, we set a new cover image for the "Front flip"
+        // trick. We'll check it before after unsetting it.
+        $trick = $this->entityManager
+            ->getRepository(Trick::class)
+            ->findByName("Front flip")[0]
+        ;
+
+        // Normally, we should get 1 element (if a cover is set)
+        // or 0 (if no cover is set).
+        // In our case, after the previous testSetAndGetCoverImageByTrickId
+        // test, we must have 1.
+        $coverArray = $this->entityManager
+            ->getRepository(Media::class)
+            ->findBy(['defaultCover' => 1, 'trick' => $trick])
+        ;
+
+        $this->assertEquals(1, sizeOf($coverArray));
+
+        $this->trickManager->unsetTrickCover($trick);
+
+        // Now we should have 0 default cover for this trick.
+        $coverArray = $this->entityManager
+            ->getRepository(Media::class)
+            ->findBy(['defaultCover' => 1, 'trick' => $trick])
+        ;
+
+        $this->assertEquals(0, sizeOf($coverArray));
     }
 
     // ######################################################
