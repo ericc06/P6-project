@@ -302,20 +302,9 @@ class Media
         $this->getTrick()->updateLastUpdateDate();
     }
 
-    public function getUploadDir()
-    {
-        // On retourne le chemin relatif vers l'image pour un navigateur
-        return 'uploads/images/tricks';
-    }
-
     protected function getUploadRootDir()
     {
         // On retourne le chemin relatif vers l'image pour notre code PHP
-        return __DIR__ . '/../../public/' . $this->getUploadDir();
-    }
-
-    public function getFixturesPath()
-    {
-        return __DIR__ . '/../../src/DataFixtures/images/';
+        return __DIR__ . '/../../public/uploads/images/tricks';
     }
 }

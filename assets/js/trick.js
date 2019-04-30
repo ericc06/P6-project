@@ -2,15 +2,15 @@
 // which is included in the templates before this script.
 
 // La fonction qui ajoute un lien de suppression d'un media
-function addDeleteLink($prototype) { // Création du lien
-    var $deleteLink = $("<a href='#' class='btn btn-danger'>"
+function addDeleteLink(prototype) { // Création du lien
+    var deleteLink = $("<a href='#' class='btn btn-danger'>"
         + translations["remove_media_trans"] + "</a>");
     // Ajout du lien
-    $prototype.append($deleteLink);
+    prototype.append(deleteLink);
 
     // Ajout du listener sur le clic du lien pour effectivement supprimer le media
-    $deleteLink.click(function(e) {
-        $prototype.remove();
+    deleteLink.click(function(e) {
+        prototype.remove();
 
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
@@ -36,12 +36,50 @@ $(document).ready(function () {
 
     // On récupère la balise <div> en question qui contient l'attribut
     // "data-prototype" qui nous intéresse.
-    var $container = $("div#trick_medias");
+    var container = $("div#trick_medias");
     // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
-    var index = $container.find(":input").length;
+    var index = container.find(":input").length;
+
+    function manageImageFields(index) {
+        // On montre le champ d'upload de l'image et on cache celui
+        // de saisie de l'URL de la video
+        $("input#trick_medias_" + index + "_file").parent().closest("div").show();
+        let radioButton = $("input#trick_medias_" + index + "_defaultCover");
+        let radioName = radioButton.attr("name");
+        radioButton.attr("original-name", radioName).on("click", function (e) {
+            let name = $(this).attr("original-name");
+            $("form input:radio").attr("name", name);
+            // We need this, else the radio button is not always checked.
+            $(this).prop("checked", true);
+        });
+        $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").hide();
+        // On initialise le champ hidden "fileType" à 0 (valeur pour une image)
+        $("input#trick_medias_" + index + "_fileType").val(0);
+
+        // We set the "required" attribute to all required elements 
+        $("input#trick_medias_" + index + "_file").attr("required", "required");
+        $("input#trick_medias_" + index + "_title").attr("required", "required");
+        $("input#trick_medias_" + index + "_alt").attr("required", "required");
+    }
+
+    function manageVideoFields(index) {
+        // On cache le champ d'upload de l'image et on montre celui de saisie
+        // de l'URL de la video
+        $("input#trick_medias_" + index + "_file").parent().closest("div").hide();
+        $("input#trick_medias_" + index + "_defaultCover").parent()
+            .closest("div.form-group").hide();
+        $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").show();
+        // On initialise le champ hidden "fileType" à 1 (valeur pour une video)
+        $("input#trick_medias_" + index + "_fileType").val(1);
+
+        // We set the "required" attribute to all required elements 
+        $("input#trick_medias_" + index + "_fileUrl").attr("required", "required");
+        $("input#trick_medias_" + index + "_title").attr("required", "required");
+        $("input#trick_medias_" + index + "_alt").attr("required", "required");
+    }
 
     // La fonction qui ajoute un formulaire MediaType
-    function addMedia($container, $mediaType, $fieldsetLabel, $showRemoveButton = true) {
+    function addMedia(container, mediaType, fieldsetLabel, showRemoveButton = true) {
         $(".trick_edit_form_container").find(".well").children()
             .not(".edit_form_buttons_div").css("display", "block");
         $(".trick_edit_form_container").find(".well")
@@ -49,58 +87,26 @@ $(document).ready(function () {
         // Dans le contenu de l'attribut « data-prototype », on remplace :
         // - le texte "__name__label__" qu'il contient par le label du champ
         // - le texte "__name__" qu'il contient par le numéro du champ
-        var template = $container.attr("data-prototype")
-            .replace(/__name__label__/g, $fieldsetLabel)
+        var template = container.attr("data-prototype")
+            .replace(/__name__label__/g, fieldsetLabel)
             .replace(/__name__/g, index);
         // On crée un objet jquery qui contient ce template
-        var $prototype = $(template);
+        var prototype = $(template);
         // On ajoute au prototype un bouton pour pouvoir supprimer le media
         // si $showRemoveButton n'a pas été passé avec la valeur false
-        if ($showRemoveButton) {
-            addDeleteLink($prototype);
+        if (showRemoveButton) {
+            addDeleteLink(prototype);
         }
         // On ajoute le prototype modifié à la fin de la balise <div>
-        $container.append($prototype.css("display", "block")
+        container.append(prototype.css("display", "block")
             .css("border", "3px dashed #bbb"));
         
-        switch ($mediaType) {
+        switch (mediaType) {
             case "image":
-                // On montre le champ d'upload de l'image et on cache celui
-                // de saisie de l'URL de la video
-                $("input#trick_medias_" + index + "_file").parent().closest("div").show();
-                let radioButton = $("input#trick_medias_" + index + "_defaultCover");
-                let radioName = radioButton.attr("name");
-                radioButton.attr("original-name", radioName).on("click", function (e) {
-                    let name = $(this).attr("original-name");
-                    $("form input:radio").attr("name", name);
-                    // We need this, else the radio button is not always checked.
-                    $(this).prop("checked", true);
-                });
-                $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").hide();
-                // On initialise le champ hidden "fileType" à 0 (valeur pour une image)
-                $("input#trick_medias_" + index + "_fileType").val(0);
-
-                // We set the "required" attribute to all required elements 
-                $("input#trick_medias_" + index + "_file").attr("required", "required");
-                $("input#trick_medias_" + index + "_title").attr("required", "required");
-                $("input#trick_medias_" + index + "_alt").attr("required", "required");
-
+                manageImageFields(index);
                 break;
             case "video":
-                // On cache le champ d'upload de l'image et on montre celui de saisie
-                // de l'URL de la video
-                $("input#trick_medias_" + index + "_file").parent().closest("div").hide();
-                $("input#trick_medias_" + index + "_defaultCover").parent()
-                    .closest("div.form-group").hide();
-                $("input#trick_medias_" + index + "_fileUrl").parent().closest("div").show();
-                // On initialise le champ hidden "fileType" à 1 (valeur pour une video)
-                $("input#trick_medias_" + index + "_fileType").val(1);
-
-                // We set the "required" attribute to all required elements 
-                $("input#trick_medias_" + index + "_fileUrl").attr("required", "required");
-                $("input#trick_medias_" + index + "_title").attr("required", "required");
-                $("input#trick_medias_" + index + "_alt").attr("required", "required");
-
+                manageVideoFields(index);
                 break;
             default:
                 break;
@@ -111,12 +117,12 @@ $(document).ready(function () {
 
     // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
     $("#add_image").click(function (e) {
-        addMedia($container, "image", translations["added_image_trans"]);
+        addMedia(container, "image", translations["added_image_trans"]);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
     });
     $("#add_video").click(function (e) {
-        addMedia($container, "video", translations["added_video_trans"]);
+        addMedia(container, "video", translations["added_video_trans"]);
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
         return false;
     });
@@ -124,14 +130,14 @@ $(document).ready(function () {
     // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un
     // (cas d'une nouvelle figure par exemple).
     if (index === 0) {
-        addMedia($container, "image", translations["at_least_one_image_trans"], false);
+        addMedia(container, "image", translations["at_least_one_image_trans"], false);
     } else {
         // S'il existe déjà des medias, on ajoute un lien de suppression
         // pour chacun d'entre eux. C'est le cas si le formulaire est rechargé
         // après une erreur de validation.
         // Par contre il ne faut pas ces boutons pour les médias dejà existants
         // en base (cas de l'édition d'un trick).
-        $container.children("fieldset").each(function () {
+        container.children("fieldset").each(function () {
             let fieldsetNumber = $(this).children("legend").html();
             if (fieldsetNumber !== "0") {
                 // Existing medias (trick modification) have a "#trick_medias_X_id"

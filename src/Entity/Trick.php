@@ -61,6 +61,15 @@ class Trick
      */
     private $medias;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Message",
+     *     mappedBy="trick",
+     *     cascade={"persist", "remove"}
+     * )
+     * @Assert\Valid()
+     */
+    private $messages;
 
     /**
      * Constructor
@@ -135,6 +144,18 @@ class Trick
         return $this;
     }
 
+    public function getTrickGroup(): ?TrickGroup
+    {
+        return $this->trickGroup;
+    }
+
+    public function setTrickGroup(?TrickGroup $trickGroup): self
+    {
+        $this->trickGroup = $trickGroup;
+
+        return $this;
+    }
+
     /**
      * Add media
      *
@@ -182,14 +203,33 @@ class Trick
         return $this;
     }
 
-    public function getTrickGroup(): ?TrickGroup
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
     {
-        return $this->trickGroup;
+        return $this->messages;
     }
 
-    public function setTrickGroup(?TrickGroup $trickGroup): self
+    public function addMessage(Message $message): self
     {
-        $this->trickGroup = $trickGroup;
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getTrick() === $this) {
+                $message->setTrick(null);
+            }
+        }
 
         return $this;
     }

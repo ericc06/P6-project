@@ -9,31 +9,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
-//use Symfony\Component\Validator\Constraints\DateTime;
 
 class RegistrationManager extends Controller
 {
     protected $container;
     private $userManager;
-    private $tools;
     private $mailer;
     private $encoder;
+    private $i18n;
 
     public function __construct(
         Container $container,
         UserManager $userManager,
-        Tools $tools,
         \Swift_Mailer $mailer,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        TranslatorInterface $translator
     ) {
         $this->container = $container;
         $this->userManager = $userManager;
-        $this->tools = $tools;
         $this->mailer = $mailer;
         $this->encoder = $encoder;
+        $this->i18n = $translator;
     }
 
     // Returns an encoded user password.
@@ -70,16 +69,9 @@ class RegistrationManager extends Controller
             throw new Exception('username_already_exists', 2);
         }
 
-        /*$user->setPassword(PasswordManager::encodePwd(
-            $user,
-            $user->getPassword())
-        );
-        */
-        //$tools = $this->container->get('tools');
-
         $user->setPassword($this->encodePwd($user, $user->getPassword()));
         $user->setIsActiveAccount(false);
-        $user->setActivationToken($this->tools->generateToken());
+        $user->setActivationToken((new Tools)->generateToken());
         $user->setRoles(["ROLE_USER"]);
 
         $this->userManager->saveUserToDB($user);
@@ -92,29 +84,41 @@ class RegistrationManager extends Controller
     // Returns false if the email could not be sent.
     public function sendValidationEmail(User $user)
     {
+        $message = self::buildEmailMessage($user);
+
+        if (0 !== $this->mailer->send($message)) {
+            return true;
+        }
+
+        // En cas d'échec d'envoi du mail de vérification,
+        // on supprime le compte pour permettre à l'utilisateur
+        // de le recréer pour renvoyer le mail.
+        self::deleteUserOnEmailFailure($user);
+    }
+
+    private function buildEmailMessage(User $user)
+    {
         $validation_url = $this->generateUrl(
             'registration_confirm',
-            [
-                'm' => $user->getEmail(),
-                't' => $user->getActivationToken(),
-            ],
+            [ 'm' => $user->getEmail(), 't' => $user->getActivationToken() ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $message = (new \Swift_Message("Demande de confirmation d'inscription"))
+        $message = (new \Swift_Message($this->i18n->trans('reg_confirm_request', [], 'emails')))
             ->setFrom('contact@monsite.loc')
-            ->setTo('eric.codron@gmail.com')
+            ->setTo($user->getEmail())
         ;
+
+        $logo_path = realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\logo.png";
+        $img_path =  realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\emails\\homepage-500.jpg";
 
         $data = [
             'userName' => $user->getUsername(),
             'validationUrl' => $validation_url,
-            'logo_src' => $message
-                ->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\logo.png")),
-            'image_src' => $message
-                ->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\emails\\homepage-500.jpg")),
+            'logo_src' => $message->embed(\Swift_Image::fromPath($logo_path)),
+            'image_src' => $message->embed(\Swift_Image::fromPath($img_path)),
         ];
 
         $message->setBody(
@@ -122,15 +126,13 @@ class RegistrationManager extends Controller
             'text/html'
         );
 
-        $result = $this->mailer->send($message);
+        return $message;
+    }
 
-        if (0 !== $result) {
-            return true;
-        }
-
-        // En cas d'échec d'envoi du mail de vérification,
-        // on supprime le compte pour permettre à l'utilisateur
-        // de le recréer pour renvoyer le mail.
+    // Called on user registration validation email sending failure
+    // to delete the user account to allow him to retry the operation.
+    public function deleteUserOnEmailFailure(User $user)
+    {
         $userToDelete = $this->getDoctrine()
             ->getRepository(User::class)
             ->findOneByEmail($user->getEmail())
@@ -170,6 +172,14 @@ class RegistrationManager extends Controller
             return $result;
         }
 
+        return self::manageValidationEmail($user);
+    }
+
+    // Send user registration validation email with exception management.
+    // Returns an array containing the result data.
+    public function manageValidationEmail(User $user)
+    {
+        $result = [];
         try {
             self::sendValidationEmail($user);
             $result['msg_type'] = 'success';

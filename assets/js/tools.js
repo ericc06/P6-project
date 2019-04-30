@@ -2,10 +2,10 @@ function displayMessage(msgType, message, targetElem) {
     targetElem.html(message);
     switch (msgType) {
         case "success":
-            targetElem.removeClass('error').addClass('success');
+            targetElem.removeClass("error").addClass("success");
             break;
         case "error":
-            targetElem.removeClass('success').addClass('error');
+            targetElem.removeClass("success").addClass("error");
             break;
         default:
     }

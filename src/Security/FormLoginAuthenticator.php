@@ -28,6 +28,7 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
     private $router;
     private $csrfTokenManager;
     private $passwordEncoder;
+    private $i18n;
 
     public function __construct(
         EntityManagerInterface $entityManager,
