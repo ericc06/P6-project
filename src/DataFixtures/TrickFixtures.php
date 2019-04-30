@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TrickFixtures extends Fixture
 {
-    
+    const FIXTURES_IMAGES_PATH = __DIR__ . '/../../src/DataFixtures/images/';
+
     public function load(ObjectManager $manager)
     {
         $this->loadGroups($manager);
@@ -145,11 +146,11 @@ class TrickFixtures extends Fixture
             $fileName = $image['file_name'] . '.' . $media->getFileUrl();
             $fileCopyName = $image['file_name'] . '-copy.' . $media->getFileUrl();
 
-            copy($media->getFixturesPath() . $trick->getSlug() . '/'
-                . $fileName, $media->getFixturesPath()
+            copy(self::FIXTURES_IMAGES_PATH . $trick->getSlug() . '/'
+                . $fileName, self::FIXTURES_IMAGES_PATH
                 . $trick->getSlug() . '/' . $fileCopyName);
 
-            $file = new UploadedFile($media->getFixturesPath() . $trick->getSlug()
+            $file = new UploadedFile(self::FIXTURES_IMAGES_PATH . $trick->getSlug()
                 . '/' . $fileCopyName, 'Image1', null, null, null, true);
 
             $media->setFile($file);

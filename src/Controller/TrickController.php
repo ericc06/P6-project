@@ -115,10 +115,7 @@ class TrickController extends Controller
             return $this->redirectToRoute($result['dest_page']);
         }
 
-        return $this->render('trick/add.html.twig', [
-            'form' => $form->createView(),
-            'trick' => $trick,
-        ]);
+        return $this->render('trick/add.html.twig', ['form' => $form->createView(), 'trick' => $trick,]);
     }
 
     /**
@@ -137,19 +134,16 @@ class TrickController extends Controller
 
         $medias = $this->trickManager->getMediasArrayByTrickId($trick->getId());
 
-        $cover_image_file = $this->trickManager
-            ->getCoverImageByTrickId($trick->getId());
+        $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
-        $group_name = $this->trickManager
-            ->getGroupNameByTrickGroupId($trick->getTrickGroup());
+        $group_name = $this->trickManager->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findTrickMsgForPagination($trick->getId(), self::TRICK_PAGE_MSG_LIMIT, 0);
 
         $message_form = $this->createForm(MessageType::class);
 
-        $nbrOfMsgForTrick = $this->getDoctrine()
-            ->getRepository(Message::class)
+        $nbrOfMsgForTrick = $this->getDoctrine()->getRepository(Message::class)
             ->getMessagesNumberForTrick($trick->getId());
 
         return $this->render('trick/view.html.twig', [
@@ -176,9 +170,7 @@ class TrickController extends Controller
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findTrickMsgForPagination($trick, $limit, $offset);
 
-        return $this->render('trick/messagesBlock.html.twig', [
-            'messagesArray' => $messagesArray
-        ]);
+        return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
     }
 
     /**
@@ -194,8 +186,7 @@ class TrickController extends Controller
             $message = new Message();
             $message->setDate(new \Datetime());
             $message->setUser($this->get('security.token_storage')->getToken()->getUser());
-            $trick = $this->getDoctrine()
-                ->getRepository(Trick::class)
+            $trick = $this->getDoctrine()->getRepository(Trick::class)
                 ->find($request->request->get('trick-id'));
             $message->setTrick($trick);
         }
@@ -214,14 +205,10 @@ class TrickController extends Controller
             }
             $messagesArray = [$message];
 
-            return $this->render('trick/messagesBlock.html.twig', [
-                'messagesArray' => $messagesArray
-            ]);
+            return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
         }
 
-        return $this->render('trick/messagesBlock.html.twig', [
-            'messagesArray' => []
-        ]);
+        return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => []]);
     }
 
     /**
@@ -307,7 +294,6 @@ class TrickController extends Controller
         ]);
     }
 
-
     /**
      * @Route(
      *      "/tricks/{id}/ajax-delete",
@@ -320,10 +306,7 @@ class TrickController extends Controller
     public function deleteTrickAjax(Trick $trick, Request $request)
     {
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid(
-                'delete_trick_tk',
-                $request->request->get('token')
-            ))
+            && ($this->isCsrfTokenValid('delete_trick_tk', $request->request->get('token')))
         ) {
             $trickId = $trick->getId();
             $this->trickManager->deleteTrickFromDB($trick);
@@ -352,25 +335,19 @@ class TrickController extends Controller
     public function deleteMedia(Media $media, Request $request)
     {
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid(
-                'delete_media_tk',
-                $request->request->get('token')
-            ))
+            && ($this->isCsrfTokenValid('delete_media_tk', $request->request->get('token')))
         ) {
             $mediaId = $media->getId();
             $trick = $media->getTrick();
             $this->trickManager->deleteMediaFromDB($media);
 
-            // In case the delete media was used as the cover image
-            // we return the cover image to update the trick edition
-            // page header image. Of course, it can be the same image
-            // then previouly.
-            $defaultCover = $this->trickManager
-                ->getCoverImageByTrickId($trick->getId());
+            // In case the delete media was used as the cover image we return
+            // the cover image to update the trick edition page header image.
+            // Of course, it can be the same image then previouly.
+            $defaultCover = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
             // Returns image file name including extension.
-            return new Response('{"id":' . $mediaId
-                . ', "coverFile": "' . $defaultCover . '"}');
+            return new Response('{"id":' . $mediaId . ', "coverFile": "' . $defaultCover . '"}');
         }
 
         return new JsonResponse(['message' => 'Error'], 400);
@@ -395,15 +372,11 @@ class TrickController extends Controller
     public function setCover(Trick $trick, Media $media, Request $request)
     {
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid(
-                'update_cover_tk',
-                $request->request->get('token')
-            ))
+            && ($this->isCsrfTokenValid('update_cover_tk', $request->request->get('token')))
         ) {
             $this->trickManager->setTrickCover($trick, $media);
 
-            return new Response('{"id":' . $media->getId()
-                . ', "extension": "' . $media->getFileUrl() . '"}');
+            return new Response('{"id":'.$media->getId().', "extension": "'.$media->getFileUrl().'"}');
         }
 
         return new JsonResponse(['message' => 'Error'], 400);
@@ -421,15 +394,11 @@ class TrickController extends Controller
     public function unsetCover(Trick $trick, Request $request)
     {
         if ($request->isMethod('POST')
-            && ($this->isCsrfTokenValid(
-                'unset_cover_tk',
-                $request->request->get('token')
-            ))
+            && ($this->isCsrfTokenValid('unset_cover_tk', $request->request->get('token')))
         ) {
             $this->trickManager->unsetTrickCover($trick);
 
-            $defaultCover = $this->trickManager
-                ->getCoverImageByTrickId($trick->getId());
+            $defaultCover = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
             // Returns image file name including extension.
             return new Response('{"coverFile": "' . $defaultCover . '"}');

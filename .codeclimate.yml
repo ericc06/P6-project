@@ -1,0 +1,4 @@
+## Excluding some folders from analysis
+exclude_patterns:
+- "src/DataFixtures/"
+- "tests/"

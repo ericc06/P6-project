@@ -49,7 +49,7 @@ class PasswordManager extends Controller
 
         (new UserManager($this->container, $this->encoder, $this->mailer))->saveUserToDB($user);
 
-        $message = self::buildEmailMessage($user);
+        $message = self::getMailMessage($user);
 
         if (0 !== $this->mailer->send($message)) {
             return true;
@@ -58,7 +58,7 @@ class PasswordManager extends Controller
         return false;
     }
 
-    private function buildEmailMessage(User $user)
+    private function getMailMessage(User $user)
     {
         $pwd_reset_url = $this->generateUrl(
             'user_new_pwd',
@@ -71,16 +71,13 @@ class PasswordManager extends Controller
             ->setTo($user->getEmail())
         ;
 
-        $logo_path = realpath(__DIR__ . "\\..\\..\\")
-            . "\\public\\build\\images\\logo.png";
-        $img_path =  realpath(__DIR__ . "\\..\\..\\")
-            . "\\public\\build\\images\\emails\\homepage-500.jpg";
-
         $data = [
             'userName' => $user->getUsername(),
             'pwdResetUrl' => $pwd_reset_url,
-            'logo_src' => $message->embed(\Swift_Image::fromPath($logo_path)),
-            'image_src' => $message->embed(\Swift_Image::fromPath($img_path)),
+            'logo_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
+                . "\\public\\build\\images\\logo.png")),
+            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
+                . "\\public\\build\\images\\emails\\homepage-500.jpg"))
         ];
 
         $message->setBody(
