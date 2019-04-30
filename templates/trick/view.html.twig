@@ -4,6 +4,9 @@
 
 {% extends 'layout.html.twig' %}
 
+{% set nbrOfInitDisplMsg =
+    constant('App\\Controller\\TrickController::TRICK_PAGE_MSG_LIMIT') %}
+
 {% block content %}
     <!-- Detail page ================================================== -->
     <div class="page-bg container-fluid"
@@ -150,7 +153,7 @@
     </div>
 
     <input type="hidden" class="messagesTotalNumber" value="{{ nbrOfMsgForTrick }}">
-    <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
+    <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ nbrOfInitDisplMsg }}">
 {% endblock %}
 
 {% block javascripts %}

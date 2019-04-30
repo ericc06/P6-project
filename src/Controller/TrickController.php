@@ -18,7 +18,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Psr\Log\LoggerInterface;
 
 class TrickController extends Controller
 {
@@ -26,26 +25,26 @@ class TrickController extends Controller
     private $messageManager;
     private $i18n;
     private $session;
-    private $homeTricksInitNbr;
-    private $homeTricksLoadLimit;
-    private $trickPageMsgLimit;
+
+    // See https://symfony.com/doc/current/best_practices/configuration.html
+    // Number ot tricks displayed on homepage load.
+    const HOME_TRICKS_INIT_NBR = 5;
+    // Number ot tricks loaded when clicking the "load mode" button.
+    const HOME_TRICKS_LOAD_LIMIT = 5;
+    // Number ot messages loaded on the trick details page
+    // when clicking the "load mode" button.
+    const TRICK_PAGE_MSG_LIMIT = 10;
 
     public function __construct(
         TrickManager $trickManager,
         MessageManager $messageManager,
         TranslatorInterface $translator,
-        SessionInterface $session,
-        $homeTricksInitNbr,
-        $homeTricksLoadLimit,
-        $trickPageMsgLimit
+        SessionInterface $session
     ) {
         $this->trickManager = $trickManager;
         $this->messageManager = $messageManager;
         $this->i18n = $translator;
         $this->session = $session;
-        $this->homeTricksInitNbr = $homeTricksInitNbr;
-        $this->homeTricksLoadLimit = $homeTricksLoadLimit;
-        $this->trickPageMsgLimit = $trickPageMsgLimit;
     }
 
     /**
@@ -55,19 +54,14 @@ class TrickController extends Controller
     {
         $env = getenv('APP_ENV');
 
-        $tricksArray = $this->trickManager
-            ->getTricksForIndexPage($this->homeTricksInitNbr, 0);
+        $tricksArray = $this->trickManager->getTricksForIndexPage(self::HOME_TRICKS_INIT_NBR, 0);
 
-        $totalNumberOfTricks = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->getTricksNumber();
+        $totalNumberOfTricks = $this->getDoctrine()->getRepository(Trick::class)->getTricksNumber();
 
         return $this->render('index.html.twig', [
             'env_name' => $env,
             'tricksArray' => $tricksArray,
-            'totalNumberOfTricks' => $totalNumberOfTricks,
-            'numberOfInitialLoadedTricks' => $this->homeTricksInitNbr,
-            'tricksLoadMoreLimit' => $this->homeTricksLoadLimit
+            'totalNumberOfTricks' => $totalNumberOfTricks
         ]);
     }
 
@@ -81,12 +75,9 @@ class TrickController extends Controller
      */
     public function getTricksHtmlBlock($limit = null, $offset = 0)
     {
-        $tricksArray = $this->trickManager
-            ->getTricksForIndexPage($limit, $offset);
+        $tricksArray = $this->trickManager->getTricksForIndexPage($limit, $offset);
 
-        return $this->render('trick/tricksBlock.html.twig', [
-            'tricksArray' => $tricksArray
-        ]);
+        return $this->render('trick/tricksBlock.html.twig', ['tricksArray' => $tricksArray]);
     }
 
     /**
@@ -103,11 +94,7 @@ class TrickController extends Controller
             $trick = new Trick();
         }
 
-        $form = $this->createForm(
-            TrickType::class,
-            $trick,
-            ['validation_groups' => 'media_creation']
-        );
+        $form = $this->createForm(TrickType::class, $trick, ['validation_groups' => 'media_creation']);
 
         $form->handleRequest($request);
 
@@ -157,11 +144,7 @@ class TrickController extends Controller
             ->getGroupNameByTrickGroupId($trick->getTrickGroup());
 
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
-            ->findTrickMessagesForPagination(
-                $trick->getId(),
-                $this->trickPageMsgLimit,
-                0
-            );
+            ->findTrickMsgForPagination($trick->getId(), self::TRICK_PAGE_MSG_LIMIT, 0);
 
         $message_form = $this->createForm(MessageType::class);
 
@@ -176,9 +159,7 @@ class TrickController extends Controller
             'group_name' => $group_name,
             'messagesArray' => $messagesArray,
             'message_form' => $message_form->createView(),
-            'nbrOfMsgForTrick' => $nbrOfMsgForTrick,
-            'nbrOfInitDisplMsg' => $this->trickPageMsgLimit,
-            'numberOfLoadedMsg' => $this->trickPageMsgLimit
+            'nbrOfMsgForTrick' => $nbrOfMsgForTrick
         ]);
     }
 
@@ -193,7 +174,7 @@ class TrickController extends Controller
     public function getMessagesHtmlBlock(Trick $trick, $limit = null, $offset = 0)
     {
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
-            ->findTrickMessagesForPagination($trick, $limit, $offset);
+            ->findTrickMsgForPagination($trick, $limit, $offset);
 
         return $this->render('trick/messagesBlock.html.twig', [
             'messagesArray' => $messagesArray
@@ -212,9 +193,7 @@ class TrickController extends Controller
         } else {
             $message = new Message();
             $message->setDate(new \Datetime());
-            $message->setUser($this->get('security.token_storage')
-                ->getToken()
-                ->getUser());
+            $message->setUser($this->get('security.token_storage')->getToken()->getUser());
             $trick = $this->getDoctrine()
                 ->getRepository(Trick::class)
                 ->find($request->request->get('trick-id'));
@@ -231,9 +210,7 @@ class TrickController extends Controller
             // In case of error, we store the message content to the session
             // to be able to initialize the form with it.
             if (isset($result['forum_message'])) {
-                $this->messageManager->storeMessageInSession(
-                    $result['forum_message']
-                );
+                $this->messageManager->storeMessageInSession($result['forum_message']);
             }
             $messagesArray = [$message];
 
@@ -267,8 +244,7 @@ class TrickController extends Controller
 
         $trick->setMedias($medias);
 
-        $cover_image_file = $this->trickManager
-            ->getCoverImageByTrickId($trick->getId());
+        $cover_image_file = $this->trickManager->getCoverImageByTrickId($trick->getId());
 
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -301,9 +277,7 @@ class TrickController extends Controller
      */
     public function delete(Request $request, $id)
     {
-        $trick = $this->getDoctrine()
-            ->getRepository(Trick::class)
-            ->find($id);
+        $trick = $this->getDoctrine()->getRepository(Trick::class)->find($id);
 
         if (null === $trick) {
             throw new NotFoundHttpException(
@@ -386,8 +360,6 @@ class TrickController extends Controller
             $mediaId = $media->getId();
             $trick = $media->getTrick();
             $this->trickManager->deleteMediaFromDB($media);
-
-            //return new Response('{"id":' . $mediaId . '}');
 
             // In case the delete media was used as the cover image
             // we return the cover image to update the trick edition

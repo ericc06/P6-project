@@ -51,7 +51,7 @@ class MessageRepository extends ServiceEntityRepository
     /**
      * @return Message[] Returns an array of Message objects
      */
-    public function findTrickMessagesForPagination($trickId, $limit, $offset)
+    public function findTrickMsgForPagination($trickId, $limit, $offset)
     {
         return $this->findBy(
             ['trick' => $trickId],

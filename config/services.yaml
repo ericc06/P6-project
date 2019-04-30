@@ -19,12 +19,12 @@ parameters:
     tricks_img_directory: '%kernel.project_dir%/public/uploads/images/tricks'
     avatars_directory: '%kernel.project_dir%/public/uploads/images/users'
     # Number ot tricks displayed on homepage load.
-    homepage_tricks_initial_number: 5
+    #homepage_tricks_initial_number: 5
     # Number ot tricks loaded when clicking the "load mode" button.
-    homepage_tricks_load_limit: 5
+    #homepage_tricks_load_limit: 5
     # Number ot messages loaded on the trick details page
     # when clicking the "load mode" button.
-    trick_page_messages_load_limit: 10
+    #trick_page_messages_load_limit: 10
 
 services:
     # default configuration for services in *this* file
@@ -53,14 +53,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-    App\Controller\TrickController:
-        #resource: '../src/Controller/TrickController.php'
-        arguments:
-            $homeTricksInitNbr: '%homepage_tricks_initial_number%'
-            $homeTricksLoadLimit: '%homepage_tricks_load_limit%'
-            $trickPageMsgLimit: '%trick_page_messages_load_limit%'
-
 
     #App\Entity\Media:
     #    calls:

@@ -12,26 +12,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-//use Symfony\Component\Validator\Constraints\DateTime;
-
 class RegistrationManager extends Controller
 {
     protected $container;
     private $userManager;
-    private $tools;
     private $mailer;
     private $encoder;
 
     public function __construct(
         Container $container,
         UserManager $userManager,
-        Tools $tools,
         \Swift_Mailer $mailer,
         UserPasswordEncoderInterface $encoder
     ) {
         $this->container = $container;
         $this->userManager = $userManager;
-        $this->tools = $tools;
         $this->mailer = $mailer;
         $this->encoder = $encoder;
     }
@@ -70,16 +65,9 @@ class RegistrationManager extends Controller
             throw new Exception('username_already_exists', 2);
         }
 
-        /*$user->setPassword(PasswordManager::encodePwd(
-            $user,
-            $user->getPassword())
-        );
-        */
-        //$tools = $this->container->get('tools');
-
         $user->setPassword($this->encodePwd($user, $user->getPassword()));
         $user->setIsActiveAccount(false);
-        $user->setActivationToken($this->tools->generateToken());
+        $user->setActivationToken((new Tools)->generateToken());
         $user->setRoles(["ROLE_USER"]);
 
         $this->userManager->saveUserToDB($user);
@@ -92,40 +80,9 @@ class RegistrationManager extends Controller
     // Returns false if the email could not be sent.
     public function sendValidationEmail(User $user)
     {
-        $validation_url = $this->generateUrl(
-            'registration_confirm',
-            [
-                'm' => $user->getEmail(),
-                't' => $user->getActivationToken(),
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $message = self::buildEmailMessage($user);
 
-        $message = (new \Swift_Message("Demande de confirmation d'inscription"))
-            ->setFrom('contact@monsite.loc')
-            //->setTo('eric.codron@gmail.com')
-            ->setTo($user->getEmail())
-        ;
-
-        $data = [
-            'userName' => $user->getUsername(),
-            'validationUrl' => $validation_url,
-            'logo_src' => $message
-                ->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\logo.png")),
-            'image_src' => $message
-                ->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\emails\\homepage-500.jpg")),
-        ];
-
-        $message->setBody(
-            $this->renderView('emails/registration.html.twig', $data),
-            'text/html'
-        );
-
-        $result = $this->mailer->send($message);
-
-        if (0 !== $result) {
+        if (0 !== $this->mailer->send($message)) {
             return true;
         }
 
@@ -133,6 +90,39 @@ class RegistrationManager extends Controller
         // on supprime le compte pour permettre à l'utilisateur
         // de le recréer pour renvoyer le mail.
         self::deleteUserOnEmailFailure($user);
+    }
+
+    private function buildEmailMessage(User $user)
+    {
+        $validation_url = $this->generateUrl(
+            'registration_confirm',
+            [ 'm' => $user->getEmail(), 't' => $user->getActivationToken() ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        
+        $message = (new \Swift_Message($this->i18n->trans('reg_confirm_request', [], 'emails')))
+            ->setFrom('contact@monsite.loc')
+            ->setTo($user->getEmail())
+        ;
+
+        $logo_path = realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\logo.png";
+        $img_path =  realpath(__DIR__ . "\\..\\..\\")
+            . "\\public\\build\\images\\emails\\homepage-500.jpg";
+
+        $data = [
+            'userName' => $user->getUsername(),
+            'validationUrl' => $validation_url,
+            'logo_src' => $message->embed(\Swift_Image::fromPath($logo_path)),
+            'image_src' => $message->embed(\Swift_Image::fromPath($img_path)),
+        ];
+
+        $message->setBody(
+            $this->renderView('emails/registration.html.twig', $data),
+            'text/html'
+        );
+
+        return $message;
     }
 
     // Called on user registration validation email sending failure

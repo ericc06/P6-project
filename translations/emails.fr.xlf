@@ -7,6 +7,10 @@
                 <source>pwd_reinitialization</source>
                 <target>Réinitialisation de votre mot de passe</target>
             </trans-unit>
+            <trans-unit id="reg_confirm_request">
+                <source>reg_confirm_request</source>
+                <target>Demande de confirmation d'inscription</target>
+            </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
                 <target>xxxxxxxxxxxxxxxx</target>

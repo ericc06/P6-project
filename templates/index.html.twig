@@ -1,6 +1,11 @@
 {# templates/index.html.twig #}
 {% trans_default_domain 'gui' %}
+
 {% extends 'layout.html.twig' %}
+
+{% set nbrOfInitLoadedTricks = constant('App\\Controller\\TrickController::HOME_TRICKS_INIT_NBR') %}
+{% set tricksLoadMoreLimit = constant('App\\Controller\\TrickController::HOME_TRICKS_LOAD_LIMIT') %}
+
 {% block content %}
     <!-- Home ================================================== -->
     <div class="container-fluid">
@@ -46,7 +51,7 @@
     </div>
 
     <input type="hidden" class="totalNumberOfTricks" value="{{ totalNumberOfTricks }}">
-    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ numberOfInitialLoadedTricks }}">
+    <input type="hidden" class="numberOfInitialLoadedTricks" value="{{ nbrOfInitLoadedTricks }}">
     <input type="hidden" class="tricksLoadMoreLimit" value="{{ tricksLoadMoreLimit }}">
 {% endblock %}
 

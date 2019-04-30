@@ -209,28 +209,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (true === $this->pwdManager->checkAndSaveNewPwd($request)) {
-                $request->getSession()->getFlashBag()->add(
-                    'success',
-                    $this->i18n->trans('new_pwd_successfuly_saved')
-                );
-
-                return $this->redirectToRoute('user_login');
-            }
-
-            $request->getSession()->getFlashBag()->add(
-                'warning',
-                $this->i18n->trans('new_pwd_confirmation_failed')
-            );
-
-            return $this->render(
-                'user/forgotten-pwd-step2.twig',
-                [
-                    'form' => $form->createView(),
-                    'email' => $request->request->get('m'),
-                    'token' => $request->request->get('t')
-                ]
-            );
+            return self::handleNewPwdSubmit($request, $form);
         }
 
         if (true === $this->pwdManager->confirmPwdResetEmail($request)) {
@@ -250,5 +229,31 @@ class UserController extends Controller
         );
 
         return $this->redirectToRoute('user_forgotten_pwd');
+    }
+
+    private function handleNewPwdSubmit(Request $request, $form)
+    {
+        if (true === $this->pwdManager->checkAndSaveNewPwd($request)) {
+            $request->getSession()->getFlashBag()->add(
+                'success',
+                $this->i18n->trans('new_pwd_successfuly_saved')
+            );
+
+            return $this->redirectToRoute('user_login');
+        }
+
+        $request->getSession()->getFlashBag()->add(
+            'warning',
+            $this->i18n->trans('new_pwd_confirmation_failed')
+        );
+
+        return $this->render(
+            'user/forgotten-pwd-step2.twig',
+            [
+                'form' => $form->createView(),
+                'email' => $request->request->get('m'),
+                'token' => $request->request->get('t')
+            ]
+        );
     }
 }
