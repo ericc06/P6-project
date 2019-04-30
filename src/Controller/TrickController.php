@@ -231,7 +231,7 @@ class TrickController extends Controller
             ['messagesArray' => $messagesArray]
         );
     }
-    
+
     /**
      * Trick update form.
      *

@@ -145,7 +145,7 @@ class UserController extends Controller
             $result['msg_type'],
             $this->i18n->trans($result['message'], [], 'gui')
         );
-        
+
         return $result['dest_page'];
     }
 

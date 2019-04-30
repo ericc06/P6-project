@@ -103,7 +103,7 @@ class RegistrationManager extends Controller
             [ 'm' => $user->getEmail(), 't' => $user->getActivationToken() ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        
+
         $message = (new \Swift_Message($this->i18n->trans('reg_confirm_request', [], 'emails')))
             ->setFrom('contact@monsite.loc')
             ->setTo($user->getEmail())

@@ -202,7 +202,7 @@ class Trick
 
         return $this;
     }
-    
+
     /**
      * @return Collection|Message[]
      */
