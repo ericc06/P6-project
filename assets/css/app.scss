@@ -581,9 +581,12 @@ footer {
 
 .fieldset-thumbnail {
     width: 100%;
-    height: auto;
     border: 1px solid black!important;
     margin-bottom: 10px;
+}
+
+.trick-video-thumbnail > iframe.fieldset-thumbnail {
+    height: auto;
 }
 
 /*.trick_edit_form_container .well {
