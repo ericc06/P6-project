@@ -29,16 +29,22 @@ class Message
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
+     * @ORM\ManyToOne(
+     *     targetEntity="App\Entity\User",
+     *     inversedBy="messages"
+     * )
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(
+     *     targetEntity="App\Entity\Trick",
+     *     inversedBy="messages"
+     * )
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $trick = null;
+    private $trick;
 
     public function getId(): ?int
     {

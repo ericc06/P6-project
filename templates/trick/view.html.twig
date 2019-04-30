@@ -114,6 +114,7 @@
                             {{ form_widget(message_form.content) }}
                             {{ form_errors(message_form.content) }}
                             {{ form_row(message_form._token) }}
+                            <input type="hidden" id="trick-id" name="trick-id" value="{{trick.id}}">
                             <button type="submit"
                                 class="btn btn-primary center-button submit-button">
                                 {{ 'leave_a_comment'|trans}}
@@ -134,15 +135,21 @@
             </section>
             <div class="container">
                 <section class="row">
-                    <button type="button" class="btn btn-primary center-button load-more-button">
-                        {{ 'load_more'|trans}}
-                    </button>
+                    {% if (nbrOfMsgForTrick == 0) %}
+                    <div class="no-message-div auto-center">
+                       <p>{{ 'there_is_no_message'|trans }}</p>
+                    </div>
+                    {% elseif (nbrOfMsgForTrick > nbrOfInitDisplMsg) %}
+                        <button type="button" class="btn btn-primary center-button load-more-button">
+                        {{ 'load_more'|trans }}
+                        </button>
+                    {% endif %}
                 </section>
             </div>
         </div>
     </div>
 
-    <input type="hidden" class="messagesTotalNumber" value="{{ totalNumberOfMsg }}">
+    <input type="hidden" class="messagesTotalNumber" value="{{ nbrOfMsgForTrick }}">
     <input type="hidden" class="numberOfInitialLoadedMessages" value="{{ numberOfLoadedMsg }}">
 {% endblock %}
 
@@ -213,6 +220,7 @@
                             url: url,
                             data: $form.serialize()
                         }).done(function (data) {
+                            $('.no-message-div').hide('fast');
                             let container = $('#messages-list');
                             container.prepend(data);
                             displayMessage(
@@ -249,9 +257,9 @@
                     $this.data('original-text', $(this).html());
                     $this.html(loadingText);
                 }
-                // We add the limit and the offset at the end of the "load_tricks" route
-                var url = "{{ path('load_messages') }}/" + messagesLoadingLimit + "/" + loadedMessages;
-
+                // We add the limit and the offset at the end of the "load_messages" route
+                var url = "{{ url('load_messages', {'id': trick.id} ) }}/"  + messagesLoadingLimit + "/" + loadedMessages;
+console.log("URL : " + url);
                 loadMessages(url);
             
                 function loadMessages(url) {

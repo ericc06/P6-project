@@ -351,6 +351,10 @@
                 <source>leave_a_comment</source>
                 <target>Publier</target>
             </trans-unit>
+            <trans-unit id="there_is_no_message">
+                <source>there_is_no_message</source>
+                <target>Il n'y a aucun commentaire pour cette figure.</target>
+            </trans-unit>
             <trans-unit id="action_running">
                 <source>action_running</source>
                 <target>En cours...</target>

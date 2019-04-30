@@ -76,7 +76,8 @@ class PasswordManager extends Controller
 
         $message = (new \Swift_Message($message_subject))
             ->setFrom('contact@monsite.loc')
-            ->setTo('eric.codron@gmail.com')
+            //->setTo('eric.codron@gmail.com')
+            ->setTo($user->getEmail())
         ;
 
         $logo_path = realpath(__DIR__ . "\\..\\..\\")

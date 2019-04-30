@@ -103,7 +103,8 @@ class RegistrationManager extends Controller
 
         $message = (new \Swift_Message("Demande de confirmation d'inscription"))
             ->setFrom('contact@monsite.loc')
-            ->setTo('eric.codron@gmail.com')
+            //->setTo('eric.codron@gmail.com')
+            ->setTo($user->getEmail())
         ;
 
         $data = [
