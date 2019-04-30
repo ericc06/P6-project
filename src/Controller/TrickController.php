@@ -99,13 +99,13 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return handleNewTrickSubmit($trick);
+            return self::handleNewTrickSubmit($trick, $request);
         }
 
         return $this->render('trick/add.html.twig', ['form' => $form->createView(), 'trick' => $trick,]);
     }
 
-    private function handleNewTrickSubmit($trick)
+    private function handleNewTrickSubmit($trick, $request)
     {
         $result = $this->trickManager->saveTrickToDB($trick);
 

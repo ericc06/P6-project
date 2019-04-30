@@ -106,7 +106,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $destPage = self::handleUserSubmit($user);
+            $destPage = self::handleUserSubmit($user, $request);
 
             return $this->redirectToRoute($destPage);
         }
@@ -117,7 +117,7 @@ class UserController extends Controller
         ]);
     }
 
-    private function handleUserSubmit(User $user)
+    private function handleUserSubmit(User $user, Request $request)
     {
         // $file stores the uploaded image file
         /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
@@ -163,7 +163,7 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('email');
 
-            $result = self::handleForgottenPwdSubmit($email, $form);
+            $result = self::handleForgottenPwdSubmit($email, $form, $request);
 
             if (null !== $result) {
                 return $result;
@@ -178,7 +178,7 @@ class UserController extends Controller
         return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
     }
 
-    private function handleForgottenPwdSubmit($email, $form)
+    private function handleForgottenPwdSubmit($email, $form, Request $request)
     {
         if (null !== $user = $this->getDoctrine()->getRepository(User::class)
             ->findOneByEmail($email)) {
