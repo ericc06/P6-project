@@ -99,23 +99,25 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->trickManager->saveTrickToDB($trick);
-
-            $request->getSession()->getFlashBag()->add(
-                $result['msg_type'],
-                $this->i18n->trans(
-                    $result['message'],
-                    $result['message_params']
-                )
-            );
-
-            if (isset($result['trick'])) {
-                $this->trickManager->storeTrickInSession($result['trick']);
-            }
-            return $this->redirectToRoute($result['dest_page']);
+            return handleNewTrickSubmit($trick);
         }
 
         return $this->render('trick/add.html.twig', ['form' => $form->createView(), 'trick' => $trick,]);
+    }
+
+    private function handleNewTrickSubmit($trick)
+    {
+        $result = $this->trickManager->saveTrickToDB($trick);
+
+        $request->getSession()->getFlashBag()->add(
+            $result['msg_type'],
+            $this->i18n->trans($result['message'], $result['message_params'])
+        );
+
+        if (isset($result['trick'])) {
+            $this->trickManager->storeTrickInSession($result['trick']);
+        }
+        return $this->redirectToRoute($result['dest_page']);
     }
 
     /**
@@ -196,21 +198,26 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->messageManager->saveMessageToDB($message);
-
-            // In case of error, we store the message content to the session
-            // to be able to initialize the form with it.
-            if (isset($result['forum_message'])) {
-                $this->messageManager->storeMessageInSession($result['forum_message']);
-            }
-            $messagesArray = [$message];
-
-            return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
+            return self::handleNewMessageSubmit($message);
         }
 
         return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => []]);
     }
 
+    private function handleNewMessageSubmit($message)
+    {
+        $result = $this->messageManager->saveMessageToDB($message);
+
+        // In case of error, we store the message content to the session
+        // to be able to initialize the form with it.
+        if (isset($result['forum_message'])) {
+            $this->messageManager->storeMessageInSession($result['forum_message']);
+        }
+        $messagesArray = [$message];
+
+        return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
+    }
+    
     /**
      * Trick update form.
      *

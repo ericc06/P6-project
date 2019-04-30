@@ -163,26 +163,10 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('email');
 
-            if (null !== $user = $this->getDoctrine()
-                ->getRepository(User::class)
-                ->findOneByEmail($email)
-            ) {
-                if (true === $this->pwdManager->sendPwdResetEmail($user)) {
-                    return $this->render(
-                        'user/pwd-reset-email-sent.html.twig',
-                        []
-                    );
-                }
+            $result = self::handleForgottenPwdSubmit($email, $form);
 
-                $request->getSession()->getFlashBag()->add(
-                    'danger',
-                    $this->i18n->trans('error_sending_pwd_reset_email')
-                );
-
-                return $this->render(
-                    'user/forgotten-pwd-step1.twig',
-                    ['form' => $form->createView()]
-                );
+            if (null !== $result) {
+                return $result;
             }
 
             $request->getSession()->getFlashBag()->add(
@@ -191,10 +175,26 @@ class UserController extends Controller
             );
         }
 
-        return $this->render(
-            'user/forgotten-pwd-step1.twig',
-            ['form' => $form->createView()]
-        );
+        return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
+    }
+
+    private function handleForgottenPwdSubmit($email, $form)
+    {
+        if (null !== $user = $this->getDoctrine()->getRepository(User::class)
+            ->findOneByEmail($email)) {
+            if (true === $this->pwdManager->sendPwdResetEmail($user)) {
+                return $this->render('user/pwd-reset-email-sent.html.twig', []);
+            }
+
+            $request->getSession()->getFlashBag()->add(
+                'danger',
+                $this->i18n->trans('error_sending_pwd_reset_email')
+            );
+
+            return $this->render('user/forgotten-pwd-step1.twig', ['form' => $form->createView()]);
+        }
+
+        return null;
     }
 
     /**

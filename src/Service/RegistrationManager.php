@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -18,17 +19,20 @@ class RegistrationManager extends Controller
     private $userManager;
     private $mailer;
     private $encoder;
+    private $i18n;
 
     public function __construct(
         Container $container,
         UserManager $userManager,
         \Swift_Mailer $mailer,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        TranslatorInterface $translator
     ) {
         $this->container = $container;
         $this->userManager = $userManager;
         $this->mailer = $mailer;
         $this->encoder = $encoder;
+        $this->i18n = $translator;
     }
 
     // Returns an encoded user password.
