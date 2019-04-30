@@ -132,6 +132,13 @@ class RegistrationManager extends Controller
         // En cas d'échec d'envoi du mail de vérification,
         // on supprime le compte pour permettre à l'utilisateur
         // de le recréer pour renvoyer le mail.
+        self::deleteUserOnEmailFailure($user);
+    }
+
+    // Called on user registration validation email sending failure
+    // to delete the user account to allow him to retry the operation.
+    public function deleteUserOnEmailFailure(User $user)
+    {
         $userToDelete = $this->getDoctrine()
             ->getRepository(User::class)
             ->findOneByEmail($user->getEmail())
@@ -171,6 +178,14 @@ class RegistrationManager extends Controller
             return $result;
         }
 
+        return self::manageValidationEmail($user);
+    }
+
+    // Send user registration validation email with exception management.
+    // Returns an array containing the result data.
+    public function manageValidationEmail(User $user)
+    {
+        $result = [];
         try {
             self::sendValidationEmail($user);
             $result['msg_type'] = 'success';

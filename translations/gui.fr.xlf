@@ -51,6 +51,14 @@
                 <source>create_an_account</source>
                 <target>Créer un compte</target>
             </trans-unit>
+            <trans-unit id="user_not_found">
+                <source>user_not_found</source>
+                <target>Utilisateur non trouvé</target>
+            </trans-unit>
+            <trans-unit id="user_profile_does_not_exist">
+                <source>user_profile_does_not_exist</source>
+                <target>Ce compte d'utilisateur n'existe pas.</target>
+            </trans-unit>
             <trans-unit id="welcome_homepage">
                 <source>welcome_homepage</source>
                 <target>Bienvenue au paradis des tricks de snowboard !</target>

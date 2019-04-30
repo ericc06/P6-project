@@ -7,3 +7,7 @@
 
 #app_logout:
 #    path: /logout
+
+page_not_found:
+    path: /{something}
+    controller: App\Controller\SecurityController::pageNotFound

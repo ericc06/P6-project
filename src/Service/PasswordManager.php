@@ -144,14 +144,13 @@ class PasswordManager extends Controller
     // But we delete the password reset token from the database.
     // Returns true if the verification is successful.
     // Returns false if the verification fails.
-    public function checkAndSaveNewPwd(
-        String $email,
-        String $token,
-        Request $request
-    ) {
-
+    public function checkAndSaveNewPwd(Request $request)
+    {
         // TODO: Check that pwd length is < 4096 haracters
         // (https://symfony.com/doc/4.0/security/password_encoding.html)
+
+        $email = $request->request->get('m');
+        $token = $request->request->get('t');
 
         // For the second and last time, we check the email address
         // and token consistency.
