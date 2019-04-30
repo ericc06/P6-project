@@ -56,7 +56,8 @@ class TrickController extends Controller
 
         $tricksArray = $this->trickManager->getTricksForIndexPage(self::HOME_TRICKS_INIT_NBR, 0);
 
-        $totalNumberOfTricks = $this->getDoctrine()->getRepository(Trick::class)->getTricksNumber();
+        $totalNumberOfTricks = $this->getDoctrine()
+            ->getRepository(Trick::class)->getTricksNumber();
 
         return $this->render('index.html.twig', [
             'env_name' => $env,
@@ -94,7 +95,11 @@ class TrickController extends Controller
             $trick = new Trick();
         }
 
-        $form = $this->createForm(TrickType::class, $trick, ['validation_groups' => 'media_creation']);
+        $form = $this->createForm(
+            TrickType::class,
+            $trick,
+            ['validation_groups' => 'media_creation']
+        );
 
         $form->handleRequest($request);
 
@@ -102,7 +107,10 @@ class TrickController extends Controller
             return self::handleNewTrickSubmit($trick, $request);
         }
 
-        return $this->render('trick/add.html.twig', ['form' => $form->createView(), 'trick' => $trick,]);
+        return $this->render(
+            'trick/add.html.twig',
+            ['form' => $form->createView(), 'trick' => $trick,]
+        );
     }
 
     private function handleNewTrickSubmit($trick, $request)
@@ -172,7 +180,10 @@ class TrickController extends Controller
         $messagesArray = $this->getDoctrine()->getRepository(Message::class)
             ->findTrickMsgForPagination($trick, $limit, $offset);
 
-        return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
+        return $this->render(
+            'trick/messagesBlock.html.twig',
+            ['messagesArray' => $messagesArray]
+        );
     }
 
     /**
@@ -215,7 +226,10 @@ class TrickController extends Controller
         }
         $messagesArray = [$message];
 
-        return $this->render('trick/messagesBlock.html.twig', ['messagesArray' => $messagesArray]);
+        return $this->render(
+            'trick/messagesBlock.html.twig',
+            ['messagesArray' => $messagesArray]
+        );
     }
     
     /**
@@ -383,7 +397,8 @@ class TrickController extends Controller
         ) {
             $this->trickManager->setTrickCover($trick, $media);
 
-            return new Response('{"id":'.$media->getId().', "extension": "'.$media->getFileUrl().'"}');
+            return new Response('{"id":' . $media->getId()
+                . ', "extension": "' . $media->getFileUrl() . '"}');
         }
 
         return new JsonResponse(['message' => 'Error'], 400);
