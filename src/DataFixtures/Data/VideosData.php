@@ -160,7 +160,7 @@ class VideosData
                     'file_type' => 1,
                 ],
                 [
-                    'file_url' => '<iframe src="http://www.zapiks.fr/index.php?action=playerIframe&media_id=99159&width=640&height=360&autoStart=false&language=fr" style="position : absolute; top : 0; left : 0; width : 100%; height : 100%;" frameborder="0" scrolling="no" allowfullscreen></iframe>',
+                    'file_url' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/g2ukrqydjMw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
                     'title' => 'Method Air au ralenti',
                     'alt' => 'Method Air au ralenti video',
                     'file_type' => 1,
