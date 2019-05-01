@@ -36,12 +36,25 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return int Returns the number of existing Message objects for a trick
+     */
+    public function getMessagesNumberForTrick($trickId)
+    {
+        $qbuilder = $this->createQueryBuilder('m');
+        $qbuilder->select('count(m.id)')
+            ->where('m.trick = :id')
+            ->setParameter('id', $trickId);
+
+        return $qbuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * @return Message[] Returns an array of Message objects
      */
-    public function findAllMessagesForPagination($limit, $offset)
+    public function findTrickMsgForPagination($trickId, $limit, $offset)
     {
         return $this->findBy(
-            [], // No criteria
+            ['trick' => $trickId],
             ['date' => 'desc'],
             $limit,
             $offset

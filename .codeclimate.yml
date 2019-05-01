@@ -1,0 +1,20 @@
+version: "2"
+checks:
+  argument-count:
+    enabled: true
+    config:
+      threshold: 5
+  method-count:
+    enabled: false
+    config:
+      threshold: 20
+  similar-code:
+    enabled: false
+    config:
+      threshold: #language-specific defaults. overrides affect all languages.
+
+## Excluding some folders from analysis
+exclude_patterns:
+- "src/DataFixtures/"
+- "src/Form/"
+- "tests/"

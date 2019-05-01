@@ -56,7 +56,7 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
-            'id' => null,
+            //'id' => null,
             'translation_domain' => 'gui'
         ]);
     }
