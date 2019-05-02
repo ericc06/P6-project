@@ -109,10 +109,8 @@ class RegistrationManager extends Controller
             ->setTo($user->getEmail())
         ;
 
-        $logo_path = realpath(__DIR__ . "\\..\\..\\")
-            . "\\public\\build\\images\\logo.png";
-        $img_path =  realpath(__DIR__ . "\\..\\..\\")
-            . "\\public\\build\\images\\emails\\homepage-500.jpg";
+        $logo_path = __DIR__ . "/../../public/build/images/logo.png";
+        $img_path =  __DIR__ . "/../../public/build/images/emails/homepage-500.jpg";
 
         $data = [
             'userName' => $user->getUsername(),

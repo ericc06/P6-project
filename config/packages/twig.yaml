@@ -6,3 +6,6 @@ twig:
 
     globals:
         app_env: '%env(APP_ENV)%'
+
+    date:
+        timezone: Europe/Paris
