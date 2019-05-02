@@ -74,10 +74,10 @@ class PasswordManager extends Controller
         $data = [
             'userName' => $user->getUsername(),
             'pwdResetUrl' => $pwd_reset_url,
-            'logo_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\logo.png")),
-            'image_src' => $message->embed(\Swift_Image::fromPath(realpath(__DIR__ . "\\..\\..\\")
-                . "\\public\\build\\images\\emails\\homepage-500.jpg"))
+            'logo_src' => $message->embed(\Swift_Image::fromPath(__DIR__
+                . "/../../public/build/images/logo.png")),
+            'image_src' => $message->embed(\Swift_Image::fromPath(__DIR__
+                . "/../../public/build/images/emails/homepage-500.jpg"))
         ];
 
         $message->setBody(
