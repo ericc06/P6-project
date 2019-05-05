@@ -518,13 +518,13 @@
 
                             displayMessage(
                                 "success",
-                                "{{'change_saved_successfully'|trans }}",
+                                "{{'change_saved_successfully'|trans([], 'messages')}}",
                                 msgTarget
                             );
                         }).fail(function () {
                             displayMessage(
                                 "error",
-                                "{{'change_failed'|trans }}",
+                                "{{'change_failed'|trans([], 'messages')}}",
                                 msgTarget
                             );
                         });
@@ -535,7 +535,7 @@
 
             $(".js-unset-cover").on("click", function (e) {
                 e.preventDefault();
-                if(confirm("{{'confirm_unset_cover'|trans }}")) {
+                if(confirm("{{'confirm_unset_cover'|trans}}")) {
                     var url = $(this).attr("href");
                     var token = $(this).data("token");
                     $.post(url, {token: token}

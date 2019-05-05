@@ -32,7 +32,7 @@ class TrickFixtures extends Fixture
 
     public function loadGroups(ObjectManager $manager)
     {
-        $groupsNameArray = [
+        $groupNamesArray = [
             'Grab',
             'Rotation',
             'Flip',
@@ -42,7 +42,7 @@ class TrickFixtures extends Fixture
             'Old School',
         ];
 
-        foreach ($groupsNameArray as $groupName) {
+        foreach ($groupNamesArray as $groupName) {
             $group = new TrickGroup();
             $group->setName($groupName);
 

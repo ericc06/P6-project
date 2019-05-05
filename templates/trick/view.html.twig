@@ -197,13 +197,13 @@
                 if ($.trim($('#message_content').val()) === "") {
                     displayMessage(
                         "error",
-                        "{{ 'message_cant_be_empty'|trans}}",
+                        "{{ 'message_cant_be_empty'|trans([], 'messages')}}",
                         $('.result-message')
                     );
                 } else if ($('#message_content').val().length >= 2500) {
                     displayMessage(
                         "error",
-                        "{{ 'message_too_long'|trans}}",
+                        "{{ 'message_too_long'|trans([], 'messages')}}",
                         $('.result-message')
                     );
                 } else {
@@ -228,7 +228,7 @@
                             container.prepend(data);
                             displayMessage(
                                 "success",
-                                "{{ 'message_saved'|trans}}",
+                                "{{ 'message_saved'|trans([], 'messages')}}",
                                 $('.result-message')
                             );
                             $('#message_content').val('')
@@ -240,7 +240,7 @@
                         }).fail(function () {
                             displayMessage(
                                 "error",
-                                "{{ 'message_creation_failure'|trans}}",
+                                "{{ 'message_creation_failure'|trans([], 'messages')}}",
                                 $('.result-message')
                             );
                             $this.html($this.data('original-text'));

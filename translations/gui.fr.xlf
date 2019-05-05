@@ -235,22 +235,6 @@
                 <source>choose_a_cover_image</source>
                 <target>Sélectionnez une image de couverture :</target>
             </trans-unit>
-            <trans-unit id="cover_image_change_success">
-                <source>cover_image_change_success</source>
-                <target>La nouvelle image de couverture a bien été sauvegardée.</target>
-            </trans-unit>
-            <trans-unit id="change_saved_successfully">
-                <source>change_saved_successfully</source>
-                <target>Modification sauvegardée.</target>
-            </trans-unit>
-            <trans-unit id="change_failed">
-                <source>change_failed</source>
-                <target>Echec de la modification.</target>
-            </trans-unit>
-            <trans-unit id="cover_image_change_failed">
-                <source>cover_image_change_failed</source>
-                <target>Echec de sauvegarde de la nouvelle image de couverture.</target>
-            </trans-unit>
             <trans-unit id="confirm_unset_cover">
                 <source>confirm_unset_cover</source>
                 <target>Ne plus utiliser cette image comme couverture et utiliser la photo par défaut ?</target>
@@ -367,22 +351,6 @@
                 <source>action_running</source>
                 <target>En cours...</target>
             </trans-unit>
-            <trans-unit id="message_saved">
-                <source>message_saved</source>
-                <target>Votre message a bien été ajouté.</target>
-            </trans-unit>
-            <trans-unit id="message_creation_failure">
-                <source>message_creation_failure</source>
-                <target>Echec d'ajout du message. Merci d'essayer de nouveau.</target>
-            </trans-unit>
-            <trans-unit id="message_cant_be_empty">
-                <source>message_cant_be_empty</source>
-                <target>Le message ne peut pas être vide.</target>
-            </trans-unit>
-            <trans-unit id="message_too_long">
-                <source>message_too_long</source>
-                <target>La longeur du message ne peut excéder 2500 caractères.</target>
-            </trans-unit>
             <trans-unit id="user_profile_update">
                 <source>user_profile_update</source>
                 <target>Modification de votre profil</target>
@@ -402,14 +370,6 @@
             <trans-unit id="update_profile">
                 <source>update_profile</source>
                 <target>Valider</target>
-            </trans-unit>
-            <trans-unit id="profile_saved_successfully">
-                <source>profile_saved_successfully</source>
-                <target>Votre profil a bien été mis à jour.</target>
-            </trans-unit>
-            <trans-unit id="email_address_already_exists">
-                <source>email_address_already_exists</source>
-                <target>Cette adresse e-mail est déjà utilisée.</target>
             </trans-unit>
             <trans-unit id="XXXXXXXX">
                 <source>XXXXXXXX</source>
