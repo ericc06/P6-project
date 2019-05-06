@@ -143,7 +143,7 @@ class UserController extends Controller
 
         $request->getSession()->getFlashBag()->add(
             $result['msg_type'],
-            $this->i18n->trans($result['message'], [], 'gui')
+            $this->i18n->trans($result['message'])
         );
 
         return $result['dest_page'];
