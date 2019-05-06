@@ -13,7 +13,7 @@ Codacy and Codeclimate code analysis accessible here:
 
 # To install the application on a production server from the development server:
 
-1. On the production server launch these commands:
+1. On the production server, in the root folder of the web site, launch these commands:
 
         wget https://github.com/ericc06/P6-project/archive/master.zip  
         unzip master.zip  
@@ -32,7 +32,8 @@ and transfer these files to the production server using FTP or rsync.
   a. At this point, make sure that the Document Root of the web site is the root directory of the web site: check that no virtualhost is configured for the Document Root to be a subdirectory.
   
   b. Check that the Symfony requirements are OK:  
-  https://symfony.com/doc/current/reference/requirements.html
+  https://symfony.com/doc/current/reference/requirements.html  
+  If not, fix the issues.
   
   c. Make a copy of the ".env.dist", call this copy ".env" and edit it this way:
   
@@ -47,7 +48,7 @@ o	mysql_server_IP = MySQL server IP address (ex : 127.0.0.1)
 o	mysql_port_number = MySQL server port (ex : 3306)  
 o	database_name = database name
       
-  d. Create the MySQL database manually and grant all privileges for the MySQL user configured in the ".env" file.
+  d. Manually create the MySQL database and grant all privileges for the MySQL user configured in the ".env" file.
   
   e. Execute these commands:
   
