@@ -15,17 +15,17 @@ Codacy and Codeclimate code analysis accessible here:
 
 1. On the production server launch these commands:
 
-wget https://github.com/ericc06/P6-project/archive/master.zip  
-unzip master.zip  
-mv P6-project-master/* P6-project-master/.* .  
-rm -r P6-project-master/  
-rm master.zip
+        wget https://github.com/ericc06/P6-project/archive/master.zip  
+        unzip master.zip  
+        mv P6-project-master/* P6-project-master/.* .  
+        rm -r P6-project-master/  
+        rm master.zip
 
 2. On the dev server, build the assets files for the production:
 
-./node_modules/.bin/encore production
+        ./node_modules/.bin/encore production
 
-And transfer these files to the production server using FTP ou rsync.
+and transfer these files to the production server using FTP or rsync.
 
 3. On the production server:
 
@@ -51,15 +51,15 @@ o	database_name = database name
   
   e. Execute these commands:
   
-  composer install --no-dev --optimize-autoloader --no-scripts  
-  composer require symfony/dotenv  
-  php bin/console cache:clear  
-  php bin/console doctrine:schema:create  
+      composer install --no-dev --optimize-autoloader --no-scripts  
+      composer require symfony/dotenv  
+      php bin/console cache:clear  
+      php bin/console doctrine:schema:create  
       
   f. Configure a virtualhost for the Document Root to be the "public" folder.
   
 4. Through a web navigator, browse to this URL to initialize the hard-coded trick groups:  
-https://<domaine>/trickgroups/init-list
+https://domain.tld/trickgroups/init-list
   
 ==> The production server is ready to go!
 
@@ -72,9 +72,9 @@ insert the database connection details like in the ".env" file.
    
 2. Run these commands to load the fixtures and perform the unit tests:
 
-composer update  
-php bin/console doctrine:fixtures:load  
-php bin/phpunit  
+        composer update  
+        php bin/console doctrine:fixtures:load  
+        php bin/phpunit  
     
 ==> If the unit tests are OK, the development environment is ready.
 
