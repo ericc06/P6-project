@@ -58,8 +58,6 @@ class TrickManagerTest extends KernelTestCase
         $slug,
         $description,
         $creationDate,
-        //$lastUpdateDate,
-        //$trickGroup,
         $medias,
         $expectedDestPage
     ) {
@@ -76,7 +74,7 @@ class TrickManagerTest extends KernelTestCase
         $trick->setTrickGroup($trickGroup);
         $trick->addMedia($medias);
 
-        $result = $this->trickManager->saveTrickToDB($trick);
+        $result = $this->trickManager->saveTrickToDB($trick, 'test');
 
         $this->assertSame($expectedDestPage, $result['dest_page']);
 
@@ -113,11 +111,7 @@ class TrickManagerTest extends KernelTestCase
         return [
             ["Name 01", "name-01", "Descr. 01", $date,  $media01, "homepage"],
             ["Name 02", "name-02", "Descr. 02", $date,  $media02, "homepage"],
-            ["Name 02", "name-02", "Descr. 03", $date,  $media03, "trick_new"]
-          /*["Name 01", "name-01", "Descr. 01", $date,  $group, $media01, "homepage"],
-            ["Name 02", "name-02", "Descr. 02", $date,  $group, $media02, "homepage"],
-            ["Name 02", "name-01", "Descr. 03", $date,  $group, $media03, "trick_new"]
-            */
+            ["Name 02", "name-02", "Descr. 03", $date,  $media03, "test"]
         ];
     }
 
@@ -145,57 +139,6 @@ class TrickManagerTest extends KernelTestCase
         $this->assertSame("success", $result['msg_type']);
         $this->assertEquals(12, $remainingTricks);
     }
-
-    /*
-    // ######################################################
-    //   Testing storeTrickInSession(Trick $trick)
-    // ######################################################
-
-    // Testing with sessions
-    // See https://symfony.com/doc/current/components/http_foundation/session_testing.html
-    public function testStoreTrickInSession()
-    {
-        $session = new Session(new MockFileSessionStorage());
-
-        $trickGroup = $this->entityManager
-            ->getRepository(TrickGroup::class)
-            ->findByName('Grab')[0]
-        ;
-
-        $media = new Media();
-        $media->setFileUrl("jpg");
-        $media->setTitle("Title 01");
-        $media->setAlt("Alt 01");
-        $media->setFileType(0);
-        $media->setDefaultCover(false);
-
-        $trick = new Trick();
-        $trick->setName("Name");
-        $trick->setSlug("name");
-        $trick->setDescription("This is the description.");
-        $trick->setCreationDate(new \DateTime());
-        $trick->setTrickGroup($trickGroup);
-        $trick->addMedia($media);
-
-        $this->trickManager->storeTrickInSession($trick);
-
-        // Reading the trick and the trickGroup from the session.
-        // Symfony remove() session method deletes a session attribute
-        // and returns its value.
-        $readTrick = unserialize($session->remove('trick'));
-
-        $readTrickGroup = $this->entityManager
-            ->merge(unserialize($session->remove('trickGroup')));
-
-        $readTrick->setTrickGroup($readTrickGroup);
-
-        $validator = Validation::createValidator();
-
-        $errorsCount = $validator->validate($readTrick)->count();
-
-        $this->assertEquals(0, $errorsCount);
-    }
-    */
 
     // ######################################################
     //   Testing storeTrickInSession(Trick $trick)
