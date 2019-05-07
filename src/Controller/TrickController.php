@@ -115,7 +115,7 @@ class TrickController extends Controller
 
     private function handleNewTrickSubmit($trick, $request)
     {
-        $result = $this->trickManager->saveTrickToDB($trick);
+        $result = $this->trickManager->saveTrickToDB($trick, 'trick_new');
 
         $request->getSession()->getFlashBag()->add(
             $result['msg_type'],
@@ -259,14 +259,14 @@ class TrickController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->trickManager->saveTrickToDB($trick);
+            $result = $this->trickManager->saveTrickToDB($trick, 'trick_edit', ['id' => $trick->getId()]);
 
             $request->getSession()->getFlashBag()->add(
                 $result['msg_type'],
-                $this->i18n->trans($result['message'])
+                $this->i18n->trans($result['message'], $result['message_params'])
             );
 
-            return $this->redirectToRoute($result['dest_page']);
+            return $this->redirectToRoute($result['dest_page'], $result['dest_page_params']);
         }
 
         return $this->render('trick/edit.html.twig', [

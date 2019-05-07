@@ -33,7 +33,7 @@ class TrickManager extends Controller
     }
 
     // Inserts or updates a trick into the database.
-    public function saveTrickToDB(Trick $trick)
+    public function saveTrickToDB(Trick $trick, $fromRoute, $routeParams = [])
     {
         $result = [];
 
@@ -58,9 +58,10 @@ class TrickManager extends Controller
                     ]) . '">',
                 '%link_end%' => '</a>'
             ];
-            $result['dest_page'] = 'trick_new';
+            $result['dest_page'] = $fromRoute;
             $result['trick'] = $trick;
         }
+        $result['dest_page_params'] = $routeParams;
 
         return $result;
     }

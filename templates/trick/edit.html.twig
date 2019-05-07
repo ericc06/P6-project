@@ -10,14 +10,16 @@
             style="background-image: url({{ asset('./uploads/images/tricks/' ~ cover_image) }})">
         </div>
         <div class="container main">
-            {# On affiche tous les messages flash #}
-            {% for label, messages in app.session.flashbag.all %}
-                {% for message in messages %}
-                    <div class="flash flash-{{ label }} alert-{{ label }}">
-                        {{ message }}
-                    </div>
+            <div class="well">
+                {# On affiche tous les messages flash #}
+                {% for label, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                        <div class="flash flash-{{ label }} alert-{{ label }}">
+                            {{ message|raw }}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
+            </div>
             <div class="trick-update-warning-title">
                 <i class="fas fa-pen" aria-hidden="true"></i>
                 {{'update_a_trick'|trans }}
