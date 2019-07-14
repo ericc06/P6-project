@@ -18,6 +18,8 @@
         "build": "encore production"
     },
     "dependencies": {
+        "fstream": "^1.0.12",
+        "lodash": "^4.17.14",
         "lodash.mergewith": "^4.6.2"
     }
 }
